@@ -2,19 +2,19 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import { useState } from "react";
 import {Form, Button} from "react-bootstrap";
-import Node from "./components/Node";
+import Canvas from "./components/Canvas";
+import BST from "./classes/BST";
 
 
 export default function App() {
 
-  console.log("h")
-
   const [input, setInput] = useState("");
   const [nodes, setNodes] = useState([]);
-  const [numNodes, setNumNodes] = useState(0);
+  const [tree, setTree] = useState(new BST());
    
   const addNode = () => {
-    setNodes([...nodes, {value: input}]);
+    tree.insert(parseInt(input));
+    setNodes(tree.values());
   }
 
 
@@ -39,12 +39,7 @@ export default function App() {
         </Button>
 
       </Form.Group>
-    
-      <svg width="500" height="1000">
-        {nodes.map(node => {
-          return <Node key={node.value} value={node.value}/>
-        })}
-      </svg>
+      <Canvas nodes={nodes}/>
     </div>
   );
 }

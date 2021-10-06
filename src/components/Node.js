@@ -1,18 +1,17 @@
 
-export default function Node({value}){
+export default function Node({node}){
 
     return (
         <g>
-            <circle cx="50" cy="50" r="20" stroke="green" strokeWidth="4" fill="white">
+            <circle cx={node.x} cy={node.y} r="20" stroke="green" strokeWidth="4" fill="white">
             </circle>
-            <text x="50" y="50" 
+            <text x={node.x} y={node.y}
                 textAnchor="middle"
                 stroke="red"
                 strokeWidth="1px"
-                
                 alignmentBaseline="middle"
             >
-            {value}
+            {node.value}
             </text>
         </g>
         
