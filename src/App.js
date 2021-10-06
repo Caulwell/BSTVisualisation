@@ -1,25 +1,50 @@
-import logo from './logo.svg';
-import './App.css';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
+import { useState } from "react";
+import {Form, Button} from "react-bootstrap";
+import Node from "./components/Node";
 
-function App() {
+
+export default function App() {
+
+  console.log("h")
+
+  const [input, setInput] = useState("");
+  const [nodes, setNodes] = useState([]);
+  const [numNodes, setNumNodes] = useState(0);
+   
+  const addNode = () => {
+    setNodes([...nodes, {value: input}]);
+  }
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+      <Form.Group className="d-flex">
+
+        <Form.Control
+          type="input"
+          placeholder="New node"
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          style={{width: "100px", marginRight: "10px"}}
+          maxLength={4}
+        />
+
+        <Button
+          variant="primary"
+          onClick={addNode}
         >
-          Learn React
-        </a>
-      </header>
+          Add
+        </Button>
+
+      </Form.Group>
+    
+      <svg width="500" height="1000">
+        {nodes.map(node => {
+          return <Node key={node.value} value={node.value}/>
+        })}
+      </svg>
     </div>
   );
 }
-
-export default App;
