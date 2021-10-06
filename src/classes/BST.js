@@ -1,9 +1,11 @@
 import BSTNode from "./BSTNode";
+import { insertAnimation } from "../util/animations";
 
-export default class BST {
+export default class BST { 
 
     constructor(){
         this.root = null;
+        this.numNodes = 0;
     }
 
     shiftNodes(node, side){
@@ -17,10 +19,13 @@ export default class BST {
     }
 
     insertAtTop(value){
-        const node = new BSTNode(value);
+        const node = new BSTNode(value, this.numNodes);
         this.root = node;
         node.x = window.innerWidth * 0.4;
         node.y = window.innerHeight * 0.1;
+        this.numNodes++;
+        console.log(node.id);
+        // insertAnimation(node.id);
     }
 
     addLeftChild(insertSide, curr, node){
@@ -28,6 +33,7 @@ export default class BST {
             // Adding a right child on the left tree - shift left tree to left
             let node = this.root.right;
             this.shiftNodes(node, insertSide);
+            
         } 
 
         curr.left = node;
@@ -35,6 +41,9 @@ export default class BST {
         node.x = node.parent.x - 50;
         node.y = node.parent.y + 50;
         node.lr = "l";
+        this.numNodes++;
+        console.log(node.id);
+        // insertAnimation(node.id);
 
     }
 
@@ -50,11 +59,15 @@ export default class BST {
         node.x = node.parent.x + 50;
         node.y = node.parent.y + 50;
         node.lr = "r";
+        this.numNodes++;
+        console.log(node.id);
+        // insertAnimation(node.id);
+
     }
 
     insert(value){
         let curr = this.root;
-        const node = new BSTNode(value);
+        const node = new BSTNode(value, this.numNodes);
 
         if(this.root === null){
             this.insertAtTop(value);
@@ -94,6 +107,7 @@ export default class BST {
                 }
             }
         }
+        
     }
 
     values() {
