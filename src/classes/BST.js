@@ -6,6 +6,16 @@ export default class BST {
         this.root = null;
     }
 
+    shiftNodes(node, side){
+        if(node == null){
+            return;
+        }
+
+        this.shiftNodes(node.left, side);
+        side === "l" ? node.x = node.x -30 : node.x = node.x + 30;
+        this.shiftNodes(node.right, side);
+    }
+
     insertAtTop(value){
         const node = new BSTNode(value);
         this.root = node;
@@ -17,6 +27,7 @@ export default class BST {
         if(insertSide === "r"){
             // Adding a right child on the left tree - shift left tree to left
             let node = this.root.right;
+            this.shiftNodes(node, insertSide);
         } 
 
         curr.left = node;
@@ -24,12 +35,14 @@ export default class BST {
         node.x = node.parent.x - 50;
         node.y = node.parent.y + 50;
         node.lr = "l";
+
     }
 
     addRightChild(insertSide, curr, node){
         if(insertSide === "l"){
             // Adding a left child on the right tree - shift right tree to right
             let node = this.root.left;
+            this.shiftNodes(node, insertSide);
         } 
 
         curr.right = node;
