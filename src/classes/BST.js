@@ -9,6 +9,7 @@ export default class BST {
     }
 
     shiftNodes(node, side, shiftedNodes){
+
         if(node == null){
             return;
         }
@@ -28,18 +29,57 @@ export default class BST {
         shiftNodesAnimation(shiftedNodes);
     }
 
+    checkShiftNeeded(){
+
+        let mostCenterLeft = null;
+        let mostCenterRight = null;
+
+        if(this.root.left == null || this.root.right == null) return false;
+
+        let curr = this.root.left;
+        
+        while(true){
+            if(curr.right == null){
+                mostCenterLeft = curr;
+                break;
+            } else {
+                curr = curr.right;
+            }
+        }
+
+        curr = this.root.right;
+
+        while(true){
+            if(curr.left == null){
+                mostCenterRight = curr;
+                break;
+            } else {
+                curr = curr.left;
+            }
+        }
+
+        if(mostCenterLeft == null || mostCenterRight == null){
+            return false;
+        } else if (Math.abs(mostCenterRight.x - mostCenterLeft.x) <= 50 && Math.abs(mostCenterRight.y - mostCenterLeft.y) <= 50) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     insertAtTop(value){
         const node = new BSTNode(value, this.numNodes);
         this.root = node;
         node.x = window.innerWidth * 0.4;
         node.y = window.innerHeight * 0.1;
         this.numNodes++;
-        // insertAnimation(node.id);
     }
 
     addLeftChild(insertSide, curr, node){
 
-        if(insertSide === "r"){
+        console.log(this.checkShiftNeeded());
+
+        if(insertSide === "r" && this.checkShiftNeeded()){
             // Adding a right child on the left tree - shift left tree to left
             let node = this.root.right;
             this.shiftNodes(node, insertSide, []);
@@ -52,12 +92,15 @@ export default class BST {
         node.y = node.parent.y + 50;
         node.lr = "l";
         this.numNodes++;
-        // insertAnimation(node.id);
+        
 
     }
 
     addRightChild(insertSide, curr, node){
-        if(insertSide === "l"){
+
+        console.log(this.checkShiftNeeded());
+                
+        if(insertSide === "l" && this.checkShiftNeeded()){
             // Adding a left child on the right tree - shift right tree to right
             let node = this.root.left;
             this.shiftNodes(node, insertSide, []);
@@ -113,7 +156,6 @@ export default class BST {
                 }
             }
         }
-        
     }
 
     values() {
