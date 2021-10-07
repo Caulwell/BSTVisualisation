@@ -16,10 +16,10 @@ export default class BST {
         this.shiftNodes(node.left, side, shiftedNodes);
 
         if(side === "l"){
-            node.x -= 30;
+            node.x -= 50;
             shiftedNodes = [...shiftedNodes, node];
         } else if(side === "r"){
-            node.x += 30;
+            node.x += 50;
             shiftedNodes = [...shiftedNodes, node];
         }
 
