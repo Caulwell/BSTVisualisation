@@ -15,6 +15,7 @@ export default class BST {
         }
 
         this.shiftNodes(node.left, side, shiftedNodes);
+        this.shiftNodes(node.right, side, shiftedNodes);
 
         if(side === "l"){
             node.x -= 50;
@@ -23,8 +24,6 @@ export default class BST {
             node.x += 50;
             shiftedNodes = [...shiftedNodes, node];
         }
-
-        this.shiftNodes(node.right, side, shiftedNodes);
 
         shiftNodesAnimation(shiftedNodes);
     }
@@ -60,7 +59,11 @@ export default class BST {
 
         if(mostCenterLeft == null || mostCenterRight == null){
             return false;
-        } else if (Math.abs(mostCenterRight.x - mostCenterLeft.x) <= 50 && Math.abs(mostCenterRight.y - mostCenterLeft.y) <= 50) {
+        } else if (Math.abs(mostCenterRight.x - mostCenterLeft.x) <= 50 
+                    || Math.abs(mostCenterRight.y - mostCenterLeft.y) <= 50
+                    || Math.abs(mostCenterRight.parent.x - mostCenterLeft.x) <=50
+                    || Math.abs(mostCenterRight.parent.y - mostCenterLeft.y) <=50) {
+            
             return true;
         } else {
             return false;
