@@ -11,7 +11,7 @@ export default function Node({node}){
     },[]);
 
     return (
-        <g className={!inserted && "insertNode"}>
+        <g className={!inserted ? "insertNode" : undefined} id={node.id}>
             <circle cx="20" cy="20" r="20" stroke="green" strokeWidth="4" fill="white" className={node.id}>
             </circle>
             <text x="20" y="20"

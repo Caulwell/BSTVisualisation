@@ -1,4 +1,5 @@
 import BSTNode from "./BSTNode";
+import {shiftNodesAnimation} from "../util/animations";
 
 export default class BST { 
 
@@ -7,14 +8,24 @@ export default class BST {
         this.numNodes = 0;
     }
 
-    shiftNodes(node, side){
+    shiftNodes(node, side, shiftedNodes){
         if(node == null){
             return;
         }
 
-        this.shiftNodes(node.left, side);
-        side === "l" ? node.x = node.x -30 : node.x = node.x + 30;
-        this.shiftNodes(node.right, side);
+        this.shiftNodes(node.left, side, shiftedNodes);
+
+        if(side === "l"){
+            node.x -= 30;
+            shiftedNodes = [...shiftedNodes, node];
+        } else if(side === "r"){
+            node.x += 30;
+            shiftedNodes = [...shiftedNodes, node];
+        }
+
+        this.shiftNodes(node.right, side, shiftedNodes);
+
+        shiftNodesAnimation(shiftedNodes);
     }
 
     insertAtTop(value){
@@ -28,10 +39,11 @@ export default class BST {
     }
 
     addLeftChild(insertSide, curr, node){
+
         if(insertSide === "r"){
             // Adding a right child on the left tree - shift left tree to left
             let node = this.root.right;
-            this.shiftNodes(node, insertSide);
+            this.shiftNodes(node, insertSide, []);
             
         } 
 
@@ -50,7 +62,7 @@ export default class BST {
         if(insertSide === "l"){
             // Adding a left child on the right tree - shift right tree to right
             let node = this.root.left;
-            this.shiftNodes(node, insertSide);
+            this.shiftNodes(node, insertSide, []);
         } 
 
         curr.right = node;
