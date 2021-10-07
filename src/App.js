@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {Form, Button} from "react-bootstrap";
 import Canvas from "./components/Canvas";
 import Node from "./components/Node";
@@ -14,12 +14,18 @@ export default function App() {
   const [tree, setTree] = useState(new BST());
    
   const addNode = () => {
+    console.log("hello2");
     tree.insert(parseInt(input));
-      setNodes(tree.values());
-    
-    
+    setNodes(tree.values());
+    setInput("");
   }
 
+  const handleKeypress = e => {
+    if(e.key === "Enter"){
+      addNode();
+      
+    }
+  }
 
   return (
     <div className="App">
@@ -32,11 +38,14 @@ export default function App() {
           onChange={e => setInput(e.target.value)}
           style={{width: "100px", marginRight: "10px"}}
           maxLength={4}
+          autoFocus={true}
+          onKeyPress={handleKeypress}
         />
 
         <Button
           variant="primary"
           onClick={addNode}
+    
         >
           Add
         </Button>
