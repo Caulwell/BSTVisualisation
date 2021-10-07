@@ -6,7 +6,6 @@ export default function Node({node}){
     const [inserted, setInserted] = useState(false);
 
     useEffect(() => {
-        console.log(node.parent);
         insertAnimation(node);
         setInserted(true);
     },[]);
@@ -33,13 +32,17 @@ export default function Node({node}){
             {node.value}
             </text>
         </g>
-        <g>
+        
+        <g id={`arrow${node.id}`}>
 
         {node.parent && <>
                 
-            {node.lr == "l" ? <line x1={node.parent.x-13} y1={node.parent.y+13} x2={node.x+13} y2={node.y-13} stroke="#000" strokeWidth="5" markerEnd="url(#arrow)" /> 
+            {node.lr == "l" ? 
             
-            : <line x1={node.parent.x+13} y1={node.parent.y+13} x2={node.x-13} y2={node.y-13} stroke="#000" strokeWidth="5" markerEnd="url(#arrow)" />}
+               <path d={`M ${node.parent.x-13},${node.parent.y+13} L ${node.x+13},${node.y-13}`} style={{stroke: "green", strokeWidth: 2}}/>
+            
+            : <path d={`M ${node.parent.x+13},${node.parent.y+13} L ${node.x-13},${node.y-13}`} style={{stroke: "green", strokeWidth: 2}}/>
+            }
 
         </> 
         }

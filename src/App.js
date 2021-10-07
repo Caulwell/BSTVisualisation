@@ -15,7 +15,9 @@ export default function App() {
    
   const addNode = () => {
     tree.insert(parseInt(input));
-    setNodes(tree.values());
+      setNodes(tree.values());
+    
+    
   }
 
 

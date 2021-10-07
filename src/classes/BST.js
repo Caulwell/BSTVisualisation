@@ -34,7 +34,6 @@ export default class BST {
         node.x = window.innerWidth * 0.4;
         node.y = window.innerHeight * 0.1;
         this.numNodes++;
-        console.log(node.id);
         // insertAnimation(node.id);
     }
 
@@ -53,7 +52,6 @@ export default class BST {
         node.y = node.parent.y + 50;
         node.lr = "l";
         this.numNodes++;
-        console.log(node.id);
         // insertAnimation(node.id);
 
     }
@@ -71,7 +69,6 @@ export default class BST {
         node.y = node.parent.y + 50;
         node.lr = "r";
         this.numNodes++;
-        console.log(node.id);
         // insertAnimation(node.id);
 
     }
@@ -90,7 +87,6 @@ export default class BST {
 
             for(;;){
                 if(value < curr.value ){
-                    console.log("value: " + value + " < " + curr.value);
                     // set which side we are traversing from root
                     if(curr === this.root){
                         insertSide = "l";
@@ -104,7 +100,6 @@ export default class BST {
                     curr = curr.left; 
 
                 } else if(value > curr.value || value === curr.value) {
-                    console.log("value: " + value + " > " + curr.value);
                     // set which side we are traversing from root
                     if(curr === this.root){
                         insertSide = "r";
