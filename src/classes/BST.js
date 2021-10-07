@@ -1,5 +1,4 @@
 import BSTNode from "./BSTNode";
-import { insertAnimation } from "../util/animations";
 
 export default class BST { 
 

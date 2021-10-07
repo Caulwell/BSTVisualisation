@@ -3,6 +3,7 @@ import "./App.css";
 import { useState } from "react";
 import {Form, Button} from "react-bootstrap";
 import Canvas from "./components/Canvas";
+import Node from "./components/Node";
 import BST from "./classes/BST";
 
 
@@ -39,7 +40,14 @@ export default function App() {
         </Button>
 
       </Form.Group>
-      <Canvas nodes={nodes}/>
+      {/* <Canvas nodes={nodes}/> */}
+
+      <svg width={window.innerWidth - 40} height="500">
+            {nodes.map(node => {
+            return <Node key={node.id} node={node} />
+            })}
+        </svg>
+
     </div>
   );
 }

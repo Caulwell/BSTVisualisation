@@ -1,16 +1,17 @@
 import { insertAnimation } from "../util/animations";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 
 export default function Node({node}){
 
+    const [inserted, setInserted] = useState(false);
+
     useEffect(() => {
         insertAnimation(node);
+        setInserted(true);
     },[]);
 
     return (
-        <g className="insertNode">
-            {/* <circle cx={node.x} cy={node.y} r="20" stroke="green" strokeWidth="4" fill="white">
-            </circle> */}
+        <g className={!inserted && "insertNode"}>
             <circle cx="20" cy="20" r="20" stroke="green" strokeWidth="4" fill="white" className={node.id}>
             </circle>
             <text x="20" y="20"
