@@ -28,44 +28,40 @@ export default class BST {
         shiftNodesAnimation(shiftedNodes);
     }
 
-    checkShiftNeeded(){
+    getMostCenterNode(curr, side, centerNode){
 
-        let mostCenterLeft = null;
-        let mostCenterRight = null;
+        if(curr==null){
+            return;
+        } 
 
-        if(this.root.left == null || this.root.right == null) return false;
+        if(curr.left != null) centerNode = this.getMostCenterNode(curr.left, side, centerNode);
+        if(curr.right != null) centerNode = this.getMostCenterNode(curr.right, side, centerNode);
 
-        let curr = this.root.left;
-        
-        while(true){
-            if(curr.right == null){
-                mostCenterLeft = curr;
-                break;
-            } else {
-                curr = curr.right;
-            }
-        }
+        if(curr != null && side == "l" && curr.x > centerNode.x) centerNode = curr;
+        if(curr != null && side == "r" && curr.x < centerNode.x) centerNode = curr;
 
-        curr = this.root.right;
+        return centerNode;
 
-        while(true){
-            if(curr.left == null){
-                mostCenterRight = curr;
-                break;
-            } else {
-                curr = curr.left;
-            }
-        }
+    }
 
-        if(mostCenterLeft == null || mostCenterRight == null){
-            return false;
-        } else if (Math.abs(mostCenterRight.x - mostCenterLeft.x) <= 50 
-                    || Math.abs(mostCenterRight.y - mostCenterLeft.y) <= 50
-                    || Math.abs(mostCenterRight.parent.x - mostCenterLeft.x) <=50
-                    || Math.abs(mostCenterRight.parent.y - mostCenterLeft.y) <=50) {
-            
-            return true;
+
+
+    checkShiftNeeded(insertSide){
+
+        let curr;
+        let mostCenterNode = null;
+
+        if (insertSide == "l"){
+            curr = this.root.left;
+            mostCenterNode = this.getMostCenterNode(curr, "l", curr);
         } else {
+            curr = this.root.right;
+            mostCenterNode = this.getMostCenterNode(curr, "r", curr);
+        }
+
+        if(mostCenterNode != null && Math.abs(this.root.x - mostCenterNode.x ) <= 50){
+            return true;
+        }  else {
             return false;
         }
     }
@@ -73,7 +69,8 @@ export default class BST {
     checkForOverlap(node, curr, insertSide){
         // When two nodes with the same parent - the left one has a right child, the right one has a left child
         // If so move right node to the right if in right tree/move left node to left if in left tree
-        if(curr == null || node.parent == null || node.parent.parent == null || node.parent.parent.right == null || node.parent.parent.left == null){
+        // if(curr == null || node.parent == null || node.parent.parent == null || node.parent.parent.right == null || node.parent.parent.left == null){
+        if(curr == null || node.parent == null || node.parent.parent == null){
             return;
         }
         this.checkForOverlap(node, curr.left, insertSide);
@@ -88,16 +85,41 @@ export default class BST {
                 } else if(node.lr == "l"){
                     curr.x -=50;
                     curr.parent.x -=50;
-                    shiftNodesAnimation([node.parent]);
+                    shiftNodesAnimation([curr.parent, curr]);
                 }
             } else if(insertSide == "r"){
                 if(node.lr == "r"){
                     curr.x +=50;
                     curr.parent.x +=50;
-                    shiftNodesAnimation([node.parent]);
+                    shiftNodesAnimation([curr.parent, curr]);
                 } else if(node.lr == "l"){
                     node.parent.x +=50;
                     node.x += 50;
+                    shiftNodesAnimation([node.parent]);
+                }
+            }
+        }
+
+        if(curr.y == node.y && Math.abs(node.x -curr.x) <=50 && (node.x == curr.parent.x && curr.x == node.parent.x)){
+            console.log(node, curr);
+            if(insertSide == "l"){
+                if(node.lr == "r"){
+                    node.parent.x -=50;
+                    node.x -=50;
+                    shiftNodesAnimation([node.parent]);
+                } else if(node.lr == "l"){
+                    curr.parent.x -=50;
+                    curr.x -=50;
+                    shiftNodesAnimation([curr.parent, curr]);
+                }
+            } else if(insertSide = "r"){
+                if(node.lr == "r"){
+                    curr.parent.x +=50;
+                    curr.x +=50;
+                    shiftNodesAnimation([curr.parent, curr]);
+                } else if(node.lr == "l"){
+                    node.parent.x +=50;
+                    node.x +=50;
                     shiftNodesAnimation([node.parent]);
                 }
             }
@@ -117,7 +139,7 @@ export default class BST {
 
     addLeftChild(insertSide, curr, node){
 
-        if(insertSide === "r" && this.checkShiftNeeded()){
+        if(insertSide === "r" && this.checkShiftNeeded(insertSide)){
             // Adding a right child on the left tree - shift left tree to left
             let node = this.root.right;
             this.shiftNodes(node, insertSide, []);
@@ -139,7 +161,7 @@ export default class BST {
 
     addRightChild(insertSide, curr, node){
                 
-        if(insertSide === "l" && this.checkShiftNeeded()){
+        if(insertSide === "l" && this.checkShiftNeeded(insertSide)){
             // Adding a left child on the right tree - shift right tree to right
             let node = this.root.left;
             this.shiftNodes(node, insertSide, []);
