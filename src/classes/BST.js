@@ -70,9 +70,41 @@ export default class BST {
         }
     }
 
-    checkForDiamond(){
+    checkForOverlap(node, curr, insertSide){
         // When two nodes with the same parent - the left one has a right child, the right one has a left child
         // If so move right node to the right if in right tree/move left node to left if in left tree
+        if(curr == null || node.parent == null || node.parent.parent == null || node.parent.parent.right == null || node.parent.parent.left == null){
+            return;
+        }
+        this.checkForOverlap(node, curr.left, insertSide);
+
+        if(curr.x == node.x && curr.y == node.y && curr != node){
+            console.log(curr, node);
+            if(insertSide == "l"){
+                if(node.lr == "r"){
+                    node.parent.x -=50;
+                    node.x -=50;
+                    shiftNodesAnimation([node.parent]);
+                } else if(node.lr == "l"){
+                    curr.x -=50;
+                    curr.parent.x -=50;
+                    shiftNodesAnimation([node.parent]);
+                }
+            } else if(insertSide == "r"){
+                if(node.lr == "r"){
+                    curr.x +=50;
+                    curr.parent.x +=50;
+                    shiftNodesAnimation([node.parent]);
+                } else if(node.lr == "l"){
+                    node.parent.x +=50;
+                    node.x += 50;
+                    shiftNodesAnimation([node.parent]);
+                }
+            }
+        }
+
+        this.checkForOverlap(node, curr.right, insertSide);
+        
     }
 
     insertAtTop(value){
@@ -96,6 +128,8 @@ export default class BST {
         node.x = node.parent.x - 50;
         node.y = node.parent.y + 50;
         node.lr = "l";
+
+        this.checkForOverlap(node, insertSide == "l" ? this.root.left : this.root.right, insertSide);
         this.numNodes++;
 
       
@@ -116,6 +150,8 @@ export default class BST {
         node.x = node.parent.x + 50;
         node.y = node.parent.y + 50;
         node.lr = "r";
+
+        this.checkForOverlap(node, insertSide == "l" ? this.root.left : this.root.right, insertSide);
         this.numNodes++;
         
         
