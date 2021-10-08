@@ -70,6 +70,11 @@ export default class BST {
         }
     }
 
+    checkForDiamond(){
+        // When two nodes with the same parent - the left one has a right child, the right one has a left child
+        // If so move right node to the right if in right tree/move left node to left if in left tree
+    }
+
     insertAtTop(value){
         const node = new BSTNode(value, this.numNodes);
         this.root = node;
@@ -80,13 +85,10 @@ export default class BST {
 
     addLeftChild(insertSide, curr, node){
 
-        console.log(this.checkShiftNeeded());
-
         if(insertSide === "r" && this.checkShiftNeeded()){
             // Adding a right child on the left tree - shift left tree to left
             let node = this.root.right;
             this.shiftNodes(node, insertSide, []);
-            
         } 
 
         curr.left = node;
@@ -95,19 +97,19 @@ export default class BST {
         node.y = node.parent.y + 50;
         node.lr = "l";
         this.numNodes++;
+
+      
         
 
     }
 
     addRightChild(insertSide, curr, node){
-
-        console.log(this.checkShiftNeeded());
                 
         if(insertSide === "l" && this.checkShiftNeeded()){
             // Adding a left child on the right tree - shift right tree to right
             let node = this.root.left;
             this.shiftNodes(node, insertSide, []);
-        } 
+        }
 
         curr.right = node;
         node.parent = curr;
@@ -115,7 +117,8 @@ export default class BST {
         node.y = node.parent.y + 50;
         node.lr = "r";
         this.numNodes++;
-        // insertAnimation(node.id);
+        
+        
 
     }
 
