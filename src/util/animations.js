@@ -1,6 +1,24 @@
 import anime from "animejs";
 
 
+function passingHighlightNode(node){
+
+    let HTMLnode = document.getElementById(node.id);
+    HTMLnode.classList.add("highlighting");
+
+    anime({
+        targets: ".highlighting",
+        scale: {value: 1.5, duration: 500}
+    }).finished.then(() => 
+    anime({
+        targets: ".highlighting",
+        scale: 1,
+        duration: 500
+    }));
+
+    HTMLnode.classList.remove("highlighting");
+}
+
 function insertAnimation(node){
 
     const differenceX = node.x-20;
@@ -56,4 +74,4 @@ function shiftNodesAnimation(nodes){
 
 
 
-export {insertAnimation, shiftNodesAnimation};
+export {insertAnimation, shiftNodesAnimation, passingHighlightNode};

@@ -1,11 +1,143 @@
 import BSTNode from "./BSTNode";
-import {shiftNodesAnimation} from "../util/animations";
+import {shiftNodesAnimation, passingHighlightNode} from "../util/animations";
 
 export default class BST { 
 
     constructor(){
         this.root = null;
         this.numNodes = 0;
+    }
+
+    values() {
+        if (!this.root) return [];
+        var array = [];
+        search(this.root, 1);
+    
+        function search(node, level) {
+          if (node !== null) {
+            array.push(node);
+            search(node.left, level + 1);
+            search(node.right, level + 1);
+          }
+        }
+        return array;
+    }
+
+    search(value){
+        let curr = this.root;
+
+        while(true){
+            if(curr == null){
+                console.log("value: " + value + " not found");
+                break;
+            } 
+            if(curr.value == value){
+                console.log("found : " + curr.value);
+                break;
+            } else if(value < curr.value){
+                console.log("value : " + value + " < " + "curr: " + curr.value);
+                // passingHighlightNode(curr);
+                curr = curr.left;
+            } else if(value > curr.value){
+                console.log("value : " + value + " > " + "curr: " + curr.value);
+                // passingHighlightNode(curr);
+                curr = curr.right;
+                
+            }
+        }
+    }
+
+    insert(value){
+        let curr = this.root;
+        const node = new BSTNode(value, this.numNodes);
+
+        if(this.root === null){
+            this.insertAtTop(value);
+            return;
+
+        } else {
+
+            let insertSide = "";
+
+            for(;;){
+                if(value < curr.value ){
+                    // set which side we are traversing from root
+                    if(curr === this.root){
+                        insertSide = "l";
+                    }
+
+                    if(curr.left === null){
+                        this.addLeftChild(insertSide, curr, node)
+                        return;
+                    }
+
+                    curr = curr.left; 
+
+                } else if(value > curr.value || value === curr.value) {
+                    // set which side we are traversing from root
+                    if(curr === this.root){
+                        insertSide = "r";
+                    }
+                    if(curr.right === null){
+                        this.addRightChild(insertSide, curr, node);
+                        return;
+                    }
+
+                    curr = curr.right; 
+                }
+            }
+        }
+    }
+
+    insertAtTop(value){
+        const node = new BSTNode(value, this.numNodes);
+        this.root = node;
+        node.x = window.innerWidth * 0.4;
+        node.y = window.innerHeight * 0.1;
+        this.numNodes++;
+    }
+
+    addLeftChild(insertSide, curr, node){
+
+        if(insertSide === "r" && this.checkShiftNeeded(insertSide)){
+            // Adding a right child on the left tree - shift left tree to left
+            let node = this.root.right;
+            this.shiftNodes(node, insertSide, []);
+        } 
+
+        curr.left = node;
+        node.parent = curr;
+        node.x = node.parent.x - 50;
+        node.y = node.parent.y + 50;
+        node.lr = "l";
+
+        this.checkForOverlap(node, insertSide == "l" ? this.root.left : this.root.right, insertSide);
+        this.numNodes++;
+
+      
+        
+
+    }
+
+    addRightChild(insertSide, curr, node){
+                
+        if(insertSide === "l" && this.checkShiftNeeded(insertSide)){
+            // Adding a left child on the right tree - shift right tree to right
+            let node = this.root.left;
+            this.shiftNodes(node, insertSide, []);
+        }
+
+        curr.right = node;
+        node.parent = curr;
+        node.x = node.parent.x + 50;
+        node.y = node.parent.y + 50;
+        node.lr = "r";
+
+        this.checkForOverlap(node, insertSide == "l" ? this.root.left : this.root.right, insertSide);
+        this.numNodes++;
+        
+        
+
     }
 
     shiftNodes(node, side, shiftedNodes){
@@ -43,8 +175,6 @@ export default class BST {
         return centerNode;
 
     }
-
-
 
     checkShiftNeeded(insertSide){
 
@@ -128,113 +258,5 @@ export default class BST {
         this.checkForOverlap(node, curr.right, insertSide);
         
     }
-
-    insertAtTop(value){
-        const node = new BSTNode(value, this.numNodes);
-        this.root = node;
-        node.x = window.innerWidth * 0.4;
-        node.y = window.innerHeight * 0.1;
-        this.numNodes++;
-    }
-
-    addLeftChild(insertSide, curr, node){
-
-        if(insertSide === "r" && this.checkShiftNeeded(insertSide)){
-            // Adding a right child on the left tree - shift left tree to left
-            let node = this.root.right;
-            this.shiftNodes(node, insertSide, []);
-        } 
-
-        curr.left = node;
-        node.parent = curr;
-        node.x = node.parent.x - 50;
-        node.y = node.parent.y + 50;
-        node.lr = "l";
-
-        this.checkForOverlap(node, insertSide == "l" ? this.root.left : this.root.right, insertSide);
-        this.numNodes++;
-
-      
-        
-
-    }
-
-    addRightChild(insertSide, curr, node){
-                
-        if(insertSide === "l" && this.checkShiftNeeded(insertSide)){
-            // Adding a left child on the right tree - shift right tree to right
-            let node = this.root.left;
-            this.shiftNodes(node, insertSide, []);
-        }
-
-        curr.right = node;
-        node.parent = curr;
-        node.x = node.parent.x + 50;
-        node.y = node.parent.y + 50;
-        node.lr = "r";
-
-        this.checkForOverlap(node, insertSide == "l" ? this.root.left : this.root.right, insertSide);
-        this.numNodes++;
-        
-        
-
-    }
-
-    insert(value){
-        let curr = this.root;
-        const node = new BSTNode(value, this.numNodes);
-
-        if(this.root === null){
-            this.insertAtTop(value);
-            return;
-
-        } else {
-
-            let insertSide = "";
-
-            for(;;){
-                if(value < curr.value ){
-                    // set which side we are traversing from root
-                    if(curr === this.root){
-                        insertSide = "l";
-                    }
-
-                    if(curr.left === null){
-                        this.addLeftChild(insertSide, curr, node)
-                        return;
-                    }
-
-                    curr = curr.left; 
-
-                } else if(value > curr.value || value === curr.value) {
-                    // set which side we are traversing from root
-                    if(curr === this.root){
-                        insertSide = "r";
-                    }
-                    if(curr.right === null){
-                        this.addRightChild(insertSide, curr, node);
-                        return;
-                    }
-
-                    curr = curr.right; 
-                }
-            }
-        }
-    }
-
-    values() {
-        if (!this.root) return [];
-        var array = [];
-        search(this.root, 1);
-    
-        function search(node, level) {
-          if (node !== null) {
-            array.push(node);
-            search(node.left, level + 1);
-            search(node.right, level + 1);
-          }
-        }
-        return array;
-      }
     
 }

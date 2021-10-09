@@ -12,14 +12,23 @@ export default function App() {
   const [tree, setTree] = useState(new BST());
    
   const addNode = (value) => {
-    tree.insert(parseInt(value));
-    setNodes(tree.values());
+    if(value != ""){
+      tree.insert(parseInt(value));
+      setNodes(tree.values());
+    }
+    return;
+  }
+
+  const searchForNode = (value) => {
+    if(value != ""){
+      tree.search(parseInt(value));
+    }
   }
 
   return (
     <div className="App">
 
-    <Controls addNode={addNode} />
+    <Controls addNode={addNode} searchForNode={searchForNode} />
       {/* <Canvas nodes={nodes}/> */}
 
 
