@@ -26,25 +26,24 @@ export default class BST {
     search(value){
         let curr = this.root;
 
+        let nodes = [];
+
         while(true){
             if(curr == null){
-                console.log("value: " + value + " not found");
                 break;
             } 
             if(curr.value == value){
-                console.log("found : " + curr.value);
                 break;
             } else if(value < curr.value){
-                console.log("value : " + value + " < " + "curr: " + curr.value);
-                // passingHighlightNode(curr);
+                nodes.push(curr);
                 curr = curr.left;
             } else if(value > curr.value){
-                console.log("value : " + value + " > " + "curr: " + curr.value);
-                // passingHighlightNode(curr);
+                nodes.push(curr);
                 curr = curr.right;
                 
             }
         }
+        passingHighlightNode(nodes);
     }
 
     insert(value){

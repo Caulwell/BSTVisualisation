@@ -1,22 +1,30 @@
 import anime from "animejs";
 
 
-function passingHighlightNode(node){
+const tl = anime.timeline({
+    
+});
 
-    let HTMLnode = document.getElementById(node.id);
-    HTMLnode.classList.add("highlighting");
 
-    anime({
-        targets: ".highlighting",
-        scale: {value: 1.5, duration: 500}
-    }).finished.then(() => 
-    anime({
-        targets: ".highlighting",
-        scale: 1,
-        duration: 500
-    }));
+function passingHighlightNode(nodes){
 
-    HTMLnode.classList.remove("highlighting");
+    for(let i = 0; i < nodes.length; i++){
+
+        let node = nodes[i];
+        let HTMLnode = document.getElementById(node.id);
+        HTMLnode.classList.add(`highlighting${node.id}`);
+
+        tl.add({
+            targets: `.highlighting${node.id}`,
+            scale: {value: 1.5, duration: 1000},
+        })
+        tl.add({
+            targets: `.highlighting${node.id}`,
+            scale: {value: 1, duration: 1000}
+        });
+    
+    }  
+   
 }
 
 function insertAnimation(node){
