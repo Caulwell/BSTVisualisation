@@ -1,4 +1,4 @@
-import { insertAnimation } from "../util/animations";
+import { insertAnimation } from "../../util/animations";
 import {useEffect, useState} from "react";
 
 export default function Node({node}){
