@@ -1,12 +1,14 @@
 import anime from "animejs";
 
 
-const tl = anime.timeline({
-    
-});
 
 
 function passingHighlightNode(nodes){
+
+    const tl = anime.timeline({
+    
+    });
+    
 
     for(let i = 0; i < nodes.length; i++){
 
