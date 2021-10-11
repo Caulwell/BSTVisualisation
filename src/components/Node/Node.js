@@ -1,7 +1,7 @@
 import { insertAnimation } from "../../util/animations";
 import {useEffect, useState} from "react";
 
-export default function Node({node}){
+export default function Node({node, deleteNode}){
 
     const [inserted, setInserted] = useState(false);
 
@@ -10,9 +10,13 @@ export default function Node({node}){
         setInserted(true);
     },[]);
 
+    const handleClick = () => {
+        deleteNode(node);
+    }
+
     return (
         <svg>
-            <g className={!inserted ? "insertNode" : undefined} id={node.id}>
+            <g className={!inserted ? "insertNode" : undefined} id={node.id}  onClick={handleClick}>
             <circle 
                 cx="20" 
                 cy="20" 
@@ -21,6 +25,8 @@ export default function Node({node}){
                 strokeWidth="4" 
                 fill="white" 
                 className={node.id}
+                name={"node"+node.id}
+               
             />
             <text x="20" y="20"
                 textAnchor="middle"
@@ -37,7 +43,7 @@ export default function Node({node}){
 
         {node.parent && <>
                 
-            {node.lr == "l" ? 
+            {node.lr === "l" ? 
             
                <path d={`M ${node.parent.x-13},${node.parent.y+13} L ${node.x+13},${node.y-13}`} style={{stroke: "green", strokeWidth: 2}}/>
             

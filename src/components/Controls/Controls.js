@@ -10,13 +10,13 @@ export default function Controls({addNode, searchForNode}){
 
     const handleKeypress = e => {
         if(e.key === "Enter"){
-            if(e.target.name == "addInput"){
-                if(addInput != ""){
+            if(e.target.name === "addInput"){
+                if(addInput !== ""){
                     addNode(addInput);
                     setAddInput("");
                   } 
-            } else if(e.target.name == "searchInput"){
-                if(searchInput != ""){
+            } else if(e.target.name === "searchInput"){
+                if(searchInput !== ""){
                     searchForNode(searchInput);
                     setSearchInput("");
                 }
@@ -26,10 +26,10 @@ export default function Controls({addNode, searchForNode}){
       }
 
       const handleButtonPress = e => {
-          if(e.target.name == "addButton"){
+          if(e.target.name === "addButton"){
             addNode(addInput);
             setAddInput("");
-          } else if(e.target.name == "searchButton"){
+          } else if(e.target.name === "searchButton"){
               searchForNode(searchInput);
               setSearchInput("");
           }

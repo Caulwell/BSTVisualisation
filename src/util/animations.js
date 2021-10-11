@@ -41,47 +41,40 @@ function insertAnimation(node){
     });
 }
 
-function shiftNodesAnimation(nodes){
+function getTranslateXY(element) {
+    const style = window.getComputedStyle(element)
+    const matrix = new DOMMatrixReadOnly(style.transform)
+    return {
+        translateX: matrix.m41,
+        translateY: matrix.m42
+    }
+}
 
-    // A bit crude - AMEND IN FUTURE
+function moveNodes(nodes){
+
+    const tl = anime.timeline({
+    
+    });
+    
 
     for(let i = 0; i < nodes.length; i++){
 
-        let HTMLnode = document.getElementById(nodes[i].id);
-        let arrow = document.getElementById(`arrow${nodes[i].id}`);
         let node = nodes[i];
+        let HTMLnode = document.getElementById(node.id);
+        HTMLnode.classList.add(`moving${node.id}`);
 
-        arrow.classList.add("extending");
-        HTMLnode.classList.add("shifting");
-
-        anime({
-            targets: ".extending",
-            opacity: 0,
-            duration: 200
+        tl.add({
+            targets: `.moving${node.id}`,
+            translateX: {value: node.x-20, duration: 1000},
+            translateY: {value: node.y-20, duration: 1000}
         });
 
-        anime({
-            targets: ".shifting",
-            translateX: {value: node.x-20, duration: 200}
-        });
-
-        anime({
-            targets: ".extending",
-            opacity: 1,
-            duration: 200
-        });
-
-        
-        arrow.classList.remove("extending");
-        HTMLnode.classList.remove("shifting");
-        
+        HTMLnode.classList.remove(`moving${node.id}`);
+    
     }
-
 }
 
 
 
 
-
-
-export {insertAnimation, shiftNodesAnimation, passingHighlightNode};
+export {insertAnimation, passingHighlightNode, moveNodes};

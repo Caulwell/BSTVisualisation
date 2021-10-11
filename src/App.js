@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import { useEffect, useState } from "react";
+import {useState } from "react";
 import Node from "./components/Node/Node";
 import BST from "./classes/BST";
 import Controls from "./components/Controls/Controls";
@@ -12,17 +12,22 @@ export default function App() {
   const [tree, setTree] = useState(new BST());
    
   const addNode = (value) => {
-    if(value != ""){
+    if(value !== ""){
       tree.insert(parseInt(value));
-      setNodes(tree.values());
+      setNodes(tree.values(tree.getRoot()));
     }
     return;
   }
 
   const searchForNode = (value) => {
-    if(value != ""){
+    if(value !== ""){
       tree.search(parseInt(value));
     }
+  }
+
+  const deleteNode = (node) => {
+    tree.delete(node);
+    setNodes(tree.values(tree.getRoot()));
   }
 
   return (
@@ -32,9 +37,9 @@ export default function App() {
       {/* <Canvas nodes={nodes}/> */}
 
 
-      <svg width={window.innerWidth - 40} height="500">
+      <svg width={window.innerWidth - 40} height={window.innerHeight - 40}>
             {nodes.map(node => {
-            return <Node key={node.id} node={node} />
+            return <Node key={node.id} node={node} deleteNode={deleteNode} />
             })}
       </svg>
 
