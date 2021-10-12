@@ -121,15 +121,20 @@ export default class BST {
 
             let replacement = this.getLeftMostElement(node.right);
 
+            if(replacement.parent.left === replacement) replacement.parent.left = null;
+            if(replacement.parent.right === replacement) replacement.parent.right = null;
+
             // ready for animation - get it so its prior children are grabbed, not its new ones
             shiftNodes = this.values(replacement);
 
-            
-            
+        
             if(node !== this.root){
                 // set parent child relationship for replacement
                 if(node.parent.left === node) node.parent.setLeft(replacement);
                 if(node.parent.right === node) node.parent.setRight(replacement);
+            } else {
+                this.root = replacement;
+                replacement.parent = null;
             }
             
             // set replacement's new x and y
@@ -140,7 +145,7 @@ export default class BST {
             replacement.setLeft(node.left);
 
             // don't want to set right to itself, but if node did have a right, set it for replacement
-            if(node.right !== replacement) replacement.setRight(node.right);
+            if(node.right !== replacement && node.right !== null) replacement.setRight(node.right);
 
             // set new coordinates for prior children of replacement
             let portionToChange = shiftNodes.slice(1);
