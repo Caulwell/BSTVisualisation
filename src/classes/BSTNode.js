@@ -14,14 +14,19 @@ export default class BSTNode{
 
     setLeft(node){
         this.left = node;
-        if(node !== null) node.setParent(this);
-        node.setLR("l");
+        if(node !== null){
+            node.setParent(this);
+            node.setLR("l");
+        }
     }
 
     setRight(node){
         this.right = node;
-        if(node !== null) node.setParent(this);
-        node.setLR("r");
+        if(node !== null){
+            node.setParent(this);
+            node.setLR("r");
+        } 
+        
     }
 
     setParent(node){
@@ -37,6 +42,7 @@ export default class BSTNode{
     }
 
     setLR(value){
+        // required to position edge on the correct side
         this.lr = value;
     }
 

@@ -1,8 +1,5 @@
 import anime from "animejs";
 
-
-
-
 function passingHighlightNode(nodes){
 
     const tl = anime.timeline({
@@ -39,15 +36,6 @@ function insertAnimation(node){
         translateX: {value: differenceX, duration: 1200},
         translateY: {value: differenceY, duration: 1200}
     });
-}
-
-function getTranslateXY(element) {
-    const style = window.getComputedStyle(element)
-    const matrix = new DOMMatrixReadOnly(style.transform)
-    return {
-        translateX: matrix.m41,
-        translateY: matrix.m42
-    }
 }
 
 function moveNodes(nodes){

@@ -6,6 +6,7 @@ export default class BST {
     constructor(){
         this.root = null;
         this.numNodes = 0;
+        this.numInsertedTotal = 0;
     }
 
     getRoot(){
@@ -84,7 +85,13 @@ export default class BST {
             node.left.setX(node.x);
             node.left.setY(node.y);
 
+            // ready for animation
             shiftNodes = this.values(node.left);
+
+            // set new coordinates for children of left child
+            let portionToChange = shiftNodes.slice(1);
+            this.setNewCordsOnMove(portionToChange);
+
 
         // ONLY HAS A RIGHT CHILD
         } else if (node.right !== null && node.left === null){
@@ -102,15 +109,23 @@ export default class BST {
             node.right.setX(node.x);
             node.right.setY(node.y);
 
+            // ready for animation
             shiftNodes = this.values(node.right);
+
+            // set new coordinates for children of right child
+            let portionToChange = shiftNodes.slice(1);
+            this.setNewCordsOnMove(portionToChange);
 
         // HAS TWO CHILDREN
         } else if (node.right !== null && node.left !== null){
 
             let replacement = this.getLeftMostElement(node.right);
 
+            // ready for animation - get it so its prior children are grabbed, not its new ones
             shiftNodes = this.values(replacement);
 
+            
+            
             if(node !== this.root){
                 // set parent child relationship for replacement
                 if(node.parent.left === node) node.parent.setLeft(replacement);
@@ -127,16 +142,33 @@ export default class BST {
             // don't want to set right to itself, but if node did have a right, set it for replacement
             if(node.right !== replacement) replacement.setRight(node.right);
 
+            // set new coordinates for prior children of replacement
+            let portionToChange = shiftNodes.slice(1);
+            this.setNewCordsOnMove(portionToChange);
+
         }
 
         this.numNodes --;
-        console.log(shiftNodes);
         moveNodes(shiftNodes);
+    }
+
+    setNewCordsOnMove(nodes){
+
+        console.log(nodes);
+
+        nodes.forEach(node => {
+
+            node.setY(node.parent.y +50);
+            if(node.lr === "l") node.setX(node.parent.x -50);
+            if(node.lr === "r") node.setX(node.parent.x + 50);
+
+        });
+
     }
 
     insert(value){
         let curr = this.root;
-        const node = new BSTNode(value, this.numNodes);
+        const node = new BSTNode(value, this.numInsertedTotal);
 
         if(this.root === null){
             this.insertAtTop(value);
@@ -182,6 +214,7 @@ export default class BST {
         node.x = window.innerWidth * 0.4;
         node.y = window.innerHeight * 0.1;
         this.numNodes++;
+        this.numInsertedTotal++;
     }
 
     addLeftChild(insertSide, curr, node){
@@ -200,6 +233,7 @@ export default class BST {
 
         this.checkForOverlap(node, insertSide === "l" ? this.root.left : this.root.right, insertSide);
         this.numNodes++;
+        this.numInsertedTotal++;
 
       
         
@@ -222,6 +256,7 @@ export default class BST {
 
         this.checkForOverlap(node, insertSide === "l" ? this.root.left : this.root.right, insertSide);
         this.numNodes++;
+        this.numInsertedTotal++;
         
         
 
