@@ -13,6 +13,15 @@ export default class BST {
         return this.root;
     }
 
+    setRoot(node){
+        this.root = node;
+        if(node !== null){
+            node.setDepth(0);
+            node.setParent(null);
+        }
+        
+    }
+
     values(top) {
         if (!top) return [];
         var array = [];
@@ -61,7 +70,7 @@ export default class BST {
             
             if(node === this.root){
                 // is root node
-                this.root = null;
+                this.setRoot(null);
             } else {
                 // not root node
                 if(node.parent.left === node) node.parent.setLeft(null);
@@ -74,8 +83,7 @@ export default class BST {
   
             // is root node
             if(node === this.root){
-                this.root = node.left;
-                node.left.parent = null;
+                this.setRoot(node.left);
             // not root node
             } else {
                 if(node.parent.left === node) node.parent.setLeft(node.left);
@@ -98,8 +106,7 @@ export default class BST {
 
             // is root node
             if(node === this.root){
-                this.root = node.right;
-                node.right.parent = null;
+                this.setRoot(node.right);
             // not root node
             } else {
                 if(node.parent.left === node) node.parent.setLeft(node.right);
@@ -124,7 +131,7 @@ export default class BST {
             if(replacement.right !== null && replacement.parent !== node) replacement.parent.setLeft(replacement.right);
 
             if(replacement.parent.left === replacement) replacement.parent.left = null;
-            if(replacement.parent.right === replacement) replacement.parent.right = null
+            if(replacement.parent.right === replacement) replacement.parent.right = null;
 
             // ready for animation - get it so its prior children are grabbed, not its new ones
             shiftNodes = this.values(replacement);
@@ -135,8 +142,7 @@ export default class BST {
                 if(node.parent.left === node) node.parent.setLeft(replacement);
                 if(node.parent.right === node) node.parent.setRight(replacement);
             } else {
-                this.root = replacement;
-                replacement.parent = null;
+                this.setRoot(replacement);
             }
             
             // set replacement's new x and y
@@ -146,7 +152,7 @@ export default class BST {
 
 
             // replacement cannot have a left, so set it to node's left
-            replacement.setLeft(node.left)
+            replacement.setLeft(node.left);
 
             // don't want to set right to itself, but if node did have a right, set it for replacement
             if(node.right !== replacement && node.right !== null){
@@ -166,13 +172,12 @@ export default class BST {
 
     setNewCordsOnMove(nodes){
 
-        console.log(nodes);
-
         nodes.forEach(node => {
 
             node.setY(node.parent.y +50);
             if(node.lr === "l") node.setX(node.parent.x -50);
             if(node.lr === "r") node.setX(node.parent.x + 50);
+            node.setDepth(node.parent.depth + 1);
 
         });
 
@@ -222,7 +227,7 @@ export default class BST {
 
     insertAtTop(value){
         const node = new BSTNode(value, this.numNodes);
-        this.root = node;
+        this.setRoot(node);
         node.setX(window.innerWidth * 0.5);
         node.setY(window.innerHeight * 0.1);
         this.numNodes++;
@@ -237,11 +242,9 @@ export default class BST {
             this.shiftNodes(node, insertSide, []);
         } 
 
-        curr.left = node;
-        node.parent = curr;
-        node.x = node.parent.x - 50;
-        node.y = node.parent.y + 50;
-        node.lr = "l";
+        curr.setLeft(node);
+        node.setX(node.parent.x -50);
+        node.setY(node.parent.y + 50);
 
         this.checkForOverlap(node, insertSide === "l" ? this.root.left : this.root.right, insertSide);
         this.numNodes++;
@@ -260,11 +263,9 @@ export default class BST {
             this.shiftNodes(node, insertSide, []);
         }
 
-        curr.right = node;
-        node.parent = curr;
-        node.x = node.parent.x + 50;
-        node.y = node.parent.y + 50;
-        node.lr = "r";
+        curr.setRight(node);
+        node.setX(node.parent.x + 50);
+        node.setY(node.parent.y + 50);
 
         this.checkForOverlap(node, insertSide === "l" ? this.root.left : this.root.right, insertSide);
         this.numNodes++;
@@ -284,10 +285,10 @@ export default class BST {
         this.shiftNodes(node.right, side, shiftedNodes);
 
         if(side === "l"){
-            node.x -= 50;
+            node.setX(node.x -50);
             shiftedNodes = [...shiftedNodes, node];
         } else if(side === "r"){
-            node.x += 50;
+            node.setX(node.x +50);
             shiftedNodes = [...shiftedNodes, node];
         }
 
@@ -340,25 +341,24 @@ export default class BST {
         this.checkForOverlap(node, curr.left, insertSide);
 
         if(curr.x === node.x && curr.y === node.y && curr !== node){
-            console.log(curr, node);
             if(insertSide === "l"){
                 if(node.lr === "r"){
-                    node.parent.x -=50;
-                    node.x -=50;
+                    node.parent.setX(node.parent.x -50);
+                    node.setX(node.x-50);
                     moveNodes([node.parent]);
                 } else if(node.lr === "l"){
-                    curr.x -=50;
-                    curr.parent.x -=50;
+                    curr.setX(curr.x -50);
+                    curr.parent.setX(curr.parent.x -50);
                     moveNodes([curr.parent, curr]);
                 }
             } else if(insertSide === "r"){
                 if(node.lr === "r"){
-                    curr.x +=50;
-                    curr.parent.x +=50;
+                    curr.setX(curr.x +50);
+                    curr.parent.setX(curr.parent.x +50);
                     moveNodes([curr.parent, curr]);
                 } else if(node.lr === "l"){
-                    node.parent.x +=50;
-                    node.x += 50;
+                    node.parent.setX(node.parent.x +50);
+                    node.setX(node.x+50);
                     moveNodes([node.parent]);
                 }
             }
@@ -368,22 +368,22 @@ export default class BST {
             console.log(node, curr);
             if(insertSide === "l"){
                 if(node.lr === "r"){
-                    node.parent.x -=50;
-                    node.x -=50;
+                    node.parent.setX(node.parent.x -50);
+                    node.setX(node.x-50);
                     moveNodes([node.parent]);
                 } else if(node.lr === "l"){
-                    curr.parent.x -=50;
-                    curr.x -=50;
+                    curr.setX(curr.x -50);
+                    curr.parent.setX(curr.parent.x -50);
                     moveNodes([curr.parent, curr]);
                 }
             } else if(insertSide === "r"){
                 if(node.lr === "r"){
-                    curr.parent.x +=50;
-                    curr.x +=50;
+                    curr.setX(curr.x +50);
+                    curr.parent.setX(curr.parent.x +50);
                     moveNodes([curr.parent, curr]);
                 } else if(node.lr === "l"){
-                    node.parent.x +=50;
-                    node.x +=50;
+                    node.parent.setX(node.parent.x +50);
+                    node.setX(node.x+50);
                     moveNodes([node.parent]);
                 }
             }
