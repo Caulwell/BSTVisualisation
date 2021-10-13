@@ -121,8 +121,10 @@ export default class BST {
 
             let replacement = this.getLeftMostElement(node.right);
 
+            if(replacement.right !== null && replacement.parent !== node) replacement.parent.setLeft(replacement.right);
+
             if(replacement.parent.left === replacement) replacement.parent.left = null;
-            if(replacement.parent.right === replacement) replacement.parent.right = null;
+            if(replacement.parent.right === replacement) replacement.parent.right = null
 
             // ready for animation - get it so its prior children are grabbed, not its new ones
             shiftNodes = this.values(replacement);
@@ -139,13 +141,18 @@ export default class BST {
             
             // set replacement's new x and y
             replacement.setX(node.x);
+            
             replacement.setY(node.y);
 
+
             // replacement cannot have a left, so set it to node's left
-            replacement.setLeft(node.left);
+            replacement.setLeft(node.left)
 
             // don't want to set right to itself, but if node did have a right, set it for replacement
-            if(node.right !== replacement && node.right !== null) replacement.setRight(node.right);
+            if(node.right !== replacement && node.right !== null){
+                if(node.right.left === null) node.right.setLeft(replacement.right);
+                replacement.setRight(node.right);
+            } 
 
             // set new coordinates for prior children of replacement
             let portionToChange = shiftNodes.slice(1);
@@ -216,8 +223,8 @@ export default class BST {
     insertAtTop(value){
         const node = new BSTNode(value, this.numNodes);
         this.root = node;
-        node.x = window.innerWidth * 0.4;
-        node.y = window.innerHeight * 0.1;
+        node.setX(window.innerWidth * 0.5);
+        node.setY(window.innerHeight * 0.1);
         this.numNodes++;
         this.numInsertedTotal++;
     }
