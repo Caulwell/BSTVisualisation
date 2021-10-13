@@ -1,5 +1,5 @@
 import BSTNode from "./BSTNode";
-import {moveNodes, passingHighlightNode} from "../util/animations";
+import {moveNodes, searchAnimation} from "../util/animations";
 
 export default class BST { 
 
@@ -42,12 +42,14 @@ export default class BST {
         let curr = this.root;
 
         let nodes = [];
+        let foundNode = null;
 
         while(true){
             if(curr === null){
                 break;
             } 
             if(curr.value === value){
+                foundNode = curr;
                 break;
             } else if(value < curr.value){
                 nodes.push(curr);
@@ -58,7 +60,7 @@ export default class BST {
                 
             }
         }
-        passingHighlightNode(nodes);
+        searchAnimation(nodes, foundNode);
     }
 
     delete(node){

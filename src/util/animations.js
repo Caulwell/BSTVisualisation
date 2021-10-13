@@ -1,6 +1,6 @@
 import anime from "animejs";
 
-function passingHighlightNode(nodes){
+function searchAnimation(nodes, foundNode){
 
     const tl = anime.timeline({
     
@@ -15,14 +15,26 @@ function passingHighlightNode(nodes){
 
         tl.add({
             targets: `.highlighting${node.id}`,
-            scale: {value: 1.5, duration: 1000},
+            scale: {value: 1.5, duration: 500},
         })
         tl.add({
             targets: `.highlighting${node.id}`,
-            scale: {value: 1, duration: 1000}
+            scale: {value: 1, duration: 500}
         });
     
-    }  
+    }
+
+    let HTMLnode = document.getElementById(foundNode.id);
+    HTMLnode.classList.add("foundNodeHighlight");
+
+    tl.add({
+        targets: ".foundNodeHighlight",
+        scale: {value: 2, duration: 1000}
+    })
+    tl.add({
+        targets: ".foundNodeHighlight",
+        scale: {value: 1, duration: 500}
+    })
    
 }
 
@@ -33,19 +45,20 @@ function insertAnimation(node){
 
     anime({
         targets: ".insertNode",
-        translateX: {value: differenceX, duration: 1200},
-        translateY: {value: differenceY, duration: 1200}
+        translateX: {value: differenceX, duration: 1000},
+        translateY: {value: differenceY, duration: 1000}
     });
 }
 
 function moveNodes(nodes){
+    
 
     const tl = anime.timeline({
     
     });
     
 
-    for(let i = 0; i < nodes.length; i++){
+    for(let i = 0; i < nodes.length-1; i++){
 
         let node = nodes[i];
         let HTMLnode = document.getElementById(node.id);
@@ -53,8 +66,8 @@ function moveNodes(nodes){
 
         tl.add({
             targets: `.moving${node.id}`,
-            translateX: {value: node.x-20, duration: 1000},
-            translateY: {value: node.y-20, duration: 1000}
+            translateX: {value: node.x-20, duration: 500},
+            translateY: {value: node.y-20, duration: 500}
         });
 
         HTMLnode.classList.remove(`moving${node.id}`);
@@ -65,4 +78,4 @@ function moveNodes(nodes){
 
 
 
-export {insertAnimation, passingHighlightNode, moveNodes};
+export {insertAnimation, searchAnimation, moveNodes};
