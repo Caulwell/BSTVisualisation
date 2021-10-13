@@ -6,7 +6,6 @@ function searchAnimation(nodes, foundNode){
     
     });
     
-
     for(let i = 0; i < nodes.length; i++){
 
         let node = nodes[i];
@@ -16,7 +15,7 @@ function searchAnimation(nodes, foundNode){
         tl.add({
             targets: `.highlighting${node.id}`,
             scale: {value: 1.5, duration: 500},
-        })
+        });
         tl.add({
             targets: `.highlighting${node.id}`,
             scale: {value: 1, duration: 500}
@@ -30,11 +29,11 @@ function searchAnimation(nodes, foundNode){
     tl.add({
         targets: ".foundNodeHighlight",
         scale: {value: 2, duration: 1000}
-    })
+    });
     tl.add({
         targets: ".foundNodeHighlight",
         scale: {value: 1, duration: 500}
-    })
+    });
    
 }
 
@@ -53,12 +52,13 @@ function insertAnimation(node){
 function moveNodes(nodes){
     
 
+    console.log(nodes);
     const tl = anime.timeline({
     
     });
     
 
-    for(let i = 0; i < nodes.length-1; i++){
+    for(let i = 0; i < nodes.length; i++){
 
         let node = nodes[i];
         let HTMLnode = document.getElementById(node.id);
@@ -76,6 +76,31 @@ function moveNodes(nodes){
 }
 
 
+function traversalAnimation(nodes){
+
+    const tl = anime.timeline({
+    
+    });
+    
+    for(let i = 0; i < nodes.length; i++){
+
+        let node = nodes[i];
+        let HTMLnode = document.getElementById(node.id);
+        HTMLnode.classList.add(`highlighting${node.id}`);
+
+        tl.add({
+            targets: `.highlighting${node.id}`,
+            scale: {value: 1.5, duration: 500},
+        });
+        tl.add({
+            targets: `.highlighting${node.id}`,
+            scale: {value: 1, duration: 500}
+        });
+    
+    }
+}
 
 
-export {insertAnimation, searchAnimation, moveNodes};
+
+
+export {insertAnimation, searchAnimation, moveNodes, traversalAnimation};

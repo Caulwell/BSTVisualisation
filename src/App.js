@@ -17,23 +17,27 @@ export default function App() {
       setNodes(tree.values(tree.getRoot()));
     }
     return;
-  }
+  };
 
   const searchForNode = (value) => {
     if(value !== ""){
       tree.search(parseInt(value));
     }
-  }
+  };
 
   const deleteNode = (node) => {
     tree.delete(node);
     setNodes(tree.values(tree.getRoot()));
-  }
+  };
+
+  const traverseTree = (order) => {
+    tree.traversal(order);
+  };
 
   return (
     <div className="App">
 
-    <Controls addNode={addNode} searchForNode={searchForNode} />
+    <Controls addNode={addNode} searchForNode={searchForNode} traverseTree={traverseTree}/>
       {/* <Canvas nodes={nodes}/> */}
 
 

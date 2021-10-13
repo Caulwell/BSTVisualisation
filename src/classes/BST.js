@@ -1,5 +1,5 @@
 import BSTNode from "./BSTNode";
-import {moveNodes, searchAnimation} from "../util/animations";
+import {moveNodes, searchAnimation, traversalAnimation} from "../util/animations";
 
 export default class BST { 
 
@@ -36,6 +36,57 @@ export default class BST {
           }
         }
         return array;
+    }
+
+    traversal(order){
+        let nodes = [];
+        if(order === "in"){
+            nodes = this.inOrder(this.root, nodes);
+            traversalAnimation(nodes);
+        } else if(order === "pre"){
+            nodes = this.preOrder(this.root, nodes);
+            traversalAnimation(nodes);
+        } else if(order === "post"){
+            nodes = this.postOrder(this.root, nodes);
+            traversalAnimation(nodes);
+        }
+    }
+
+    inOrder(top, nodes){
+        if(top !== null){
+            this.inOrder(top.left, nodes);
+            if(!nodes.includes(top)) nodes.push(top);
+            this.inOrder(top.right, nodes);
+        }
+
+        if(nodes.length === this.numNodes){
+            return nodes;
+        }
+        
+    }
+
+    preOrder(top, nodes){
+        if(top !== null){
+            if(!nodes.includes(top)) nodes.push(top);
+            this.preOrder(top.left, nodes);
+            this.preOrder(top.right, nodes);
+        }
+
+        if(nodes.length === this.numNodes){
+            return nodes;
+        }
+    }
+
+    postOrder(top, nodes){
+        if(top !== null){
+            this.postOrder(top.left, nodes);
+            this.postOrder(top.right, nodes);
+            if(!nodes.includes(top)) nodes.push(top);
+        }
+
+        if(nodes.length === this.numNodes){
+            return nodes;
+        }
     }
 
     search(value){

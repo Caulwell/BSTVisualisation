@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import {Form, Button} from "react-bootstrap";
 
 
-export default function Controls({addNode, searchForNode}){
+export default function Controls({addNode, searchForNode, traverseTree}){
 
     const [addInput, setAddInput] = useState("");
     const [searchInput, setSearchInput] = useState("");
@@ -30,8 +30,14 @@ export default function Controls({addNode, searchForNode}){
             addNode(addInput);
             setAddInput("");
           } else if(e.target.name === "searchButton"){
-              searchForNode(searchInput);
-              setSearchInput("");
+            searchForNode(searchInput);
+            setSearchInput("");
+          } else if(e.target.name === "inOrderButton"){
+            traverseTree("in");
+          } else if(e.target.name === "preOrderButton"){
+            traverseTree("pre");
+          } else if(e.target.name === "postOrderButton"){
+            traverseTree("post");
           }
         
       }
@@ -75,10 +81,37 @@ export default function Controls({addNode, searchForNode}){
                     variant="primary"
                     name="searchButton"
                     onClick={handleButtonPress}
-                    >
-                    Search
+                >
+                Search
                 </Button>
 
+            </Form.Group>
+
+            <Form.Group className="d-flex">
+                <Button
+                    variant="primary"
+                    name="inOrderButton"
+                    onClick={handleButtonPress}
+                    style={{marginRight: "10px"}}
+                >
+                In-order
+                </Button>
+                <Button
+                    variant="primary"
+                    name="preOrderButton"
+                    onClick={handleButtonPress}
+                    style={{marginRight: "10px"}}
+                >
+                Pre-order
+                </Button>
+                <Button
+                    variant="primary"
+                    name="postOrderButton"
+                    onClick={handleButtonPress}
+                    style={{marginRight: "10px"}}
+                >
+                Post-order
+                </Button>
             </Form.Group>
         </div>
         
