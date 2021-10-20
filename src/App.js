@@ -6,6 +6,8 @@ import Register from "./pages/Auth/Register";
 import {useContext, useEffect, useCallback} from "react";
 import { UserContext } from "./context/UserContext";
 
+import Header from "./components/Navbar/Header";
+
 import {BrowserRouter as Router, Switch, Route, Link} from "react-router-dom";
 
 
@@ -34,6 +36,22 @@ export default function App() {
     });
   }, [setUserContext]);
 
+  const handleLogout = () => {
+    fetch("http://localhost:4000/logout", {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userContext.token}`,
+      },
+    }).then(async response => {
+      setUserContext(oldValues => {
+        return { ...oldValues, details: undefined, token: null }
+      });
+      window.localStorage.setItem("logout", Date.now())
+    });
+  };
+
+
   useEffect(() => {
     verifyUser();
   }, [verifyUser]);
@@ -42,18 +60,7 @@ export default function App() {
 
     <Router>
       <div>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/login">Login</Link>
-          </li>
-          <li>
-            <Link to="/register">Register</Link>
-          </li>
-        </ul>
-        <hr />
+      <Header handleLogout={handleLogout} loggedIn={userContext.token ? true : false}/>
       <Switch>
         <Route exact path="/">
           <Tree/>
