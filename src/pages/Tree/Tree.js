@@ -2,6 +2,7 @@ import {useEffect, useRef, useState } from "react";
 import Controls from "../../components/Controls/Controls";
 import Node from "../../components/Node/Node";
 import BST from "../../classes/BST";
+import "./Tree.css";
 
 
 export default function Tree(){
@@ -33,13 +34,16 @@ export default function Tree(){
   };
 
     return (
-    <div className="App">
-      <Controls addNode={addNode} searchForNode={searchForNode} traverseTree={traverseTree}/>
-        <svg  width={window.innerWidth - 40} height={window.innerHeight - 200} viewBox={`0 0 ${window.innerWidth-40} ${window.innerHeight-100}`} name="viewBox">
+      <>
+    <div className="Tree flex">
+    <Controls addNode={addNode} searchForNode={searchForNode} traverseTree={traverseTree}/>
+        <svg width={window.innerWidth - 200} height={window.innerHeight - 300} viewBox={`0 0 ${window.innerWidth-200} ${window.innerHeight-300}`} name="viewBox">
               {nodes.map(node => {
                   return <Node key={node.id} node={node} deleteNode={deleteNode} />
               })}
         </svg>
     </div>
+    
+    </>
     )
 }

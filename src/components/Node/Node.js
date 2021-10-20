@@ -1,5 +1,6 @@
 import { insertAnimation } from "../../util/animations";
 import {useEffect, useState} from "react";
+import { Tooltip } from "@mui/material";
 
 export default function Node({node, deleteNode}){
 
@@ -14,8 +15,11 @@ export default function Node({node, deleteNode}){
         deleteNode(node);
     }
 
+    const tooltipText = "Depth: " + node.depth + "\n";
+
     return (
         <svg name="viewBox">
+        <Tooltip title={tooltipText} arrow>
             <g className={!inserted ? "insertNode" : undefined} id={node.id}  onClick={handleClick}>
             <circle 
                 cx="20" 
@@ -38,6 +42,7 @@ export default function Node({node, deleteNode}){
             {node.value}
             </text>
         </g>
+        </Tooltip>
         
         <g id={`arrow${node.id}`}>
 

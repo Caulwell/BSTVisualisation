@@ -281,7 +281,7 @@ export default class BST {
     insertAtTop(value){
         const node = new BSTNode(value, this.numNodes);
         this.setRoot(node);
-        node.setX(window.innerWidth * 0.5);
+        node.setX(window.innerWidth * 0.43);
         node.setY(window.innerHeight * 0.1);
         this.numNodes++;
         this.numInsertedTotal++;

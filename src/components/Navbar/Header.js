@@ -1,45 +1,37 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import { Navbar, Container, Nav, NavDropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import {LinkContainer} from "react-router-bootstrap";
-
+import {AppBar, Toolbar, Typography, Button, } from "@mui/material";
 
 export default function Header({loggedIn, handleLogout, user}){
 
     return (
-        <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-            <Container>
-            <Link to="/" className="navbar-brand">TreeVis</Link>
-            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-            <Navbar.Collapse id="responsive-navbar-nav">
-                <Nav className="me-auto">
-                <Link className="nav-link" to="/bst">BST</Link>
-                <Link className="nav-link" to="/avl">AVL</Link>
-                <Link className="nav-link" to="/red-black">Red-Black</Link>
-                </Nav>
-                <Nav>
-                
-                {loggedIn ? 
-                <><NavDropdown title={user ? user.username : "User"} id="collasible-nav-dropdown">
-                <LinkContainer to="/savedTrees">
-                    <NavDropdown.Item>Trees</NavDropdown.Item>
-                </LinkContainer>
-                <LinkContainer to="/account">
-                    <NavDropdown.Item>Account</NavDropdown.Item>
-                </LinkContainer>
-                </NavDropdown>
-                <a className="nav-link" onClick={handleLogout}>Sign Out</a></>
-                :
-                    <><Link className="nav-link" to="/register">Register</Link><Link className="nav-link" to="/login">Login</Link></>
-                }
-                
-                </Nav>
-            </Navbar.Collapse>
-            </Container>
-        </Navbar>
+        <AppBar position="static">
+          <Toolbar>
+            <div className="titleLinks">
+              <Typography variant="h6" component={Link} to={"/"}>
+                TreeVis
+              </Typography>
+            </div>
+
+            <div className="treeLinks">
+              <Button color="inherit" component={Link} to={"/bst"}>BST</Button>
+              <Button color="inherit" component={Link} to={"/avl"}>AVL</Button>
+              <Button color="inherit" component={Link} to={"/red-black"}>Red-Black</Button>
+            </div>
+
             
-            
-        
-        
+              
+            <div className="authLinks">
+            {loggedIn ? 
+              <><Button color="inherit" component={Link} to={"/login"}>{user ? user.username : "User"}</Button>
+              <Button color="inherit" component={Link} to={"/logout"}>Logout</Button></>
+              :
+              <><Button color="inherit" component={Link} to={"/login"}>Login</Button>
+              <Button color="inherit" component={Link} to={"/register"}>Register</Button></>
+            }
+              
+            </div>
+          
+        </Toolbar>
+      </AppBar>             
     )
 }

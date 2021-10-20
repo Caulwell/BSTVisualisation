@@ -11,6 +11,13 @@ import Header from "./components/Navbar/Header";
 import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
 import Welcome from "./pages/Welcome/Welcome";
 import { Alert } from "react-bootstrap";
+import {createTheme, ThemeProvider} from "@mui/material/styles";
+
+const theme = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
 
 
 export default function App() {
@@ -19,7 +26,8 @@ export default function App() {
   const [message, setMessage] = useState({});
 
   const verifyUser = useCallback(() => {
-    fetch("http://localhost:4000/refreshToken", {
+    if(userContext.token){
+      fetch("http://localhost:4000/refreshToken", {
       method: "POST",
       credentials: "include",
       headers: {"Content-Type": "application/json"},
@@ -37,6 +45,8 @@ export default function App() {
       }
       setTimeout(verifyUser, 5*60*1000);
     });
+    }
+    
   }, [setUserContext]);
 
 
@@ -55,7 +65,7 @@ export default function App() {
       window.localStorage.setItem("logout", Date.now());
 
       setMessage({text: "You have successfully logged out", variant: "success"});
-      
+
       setTimeout(() => {
         setMessage({});
       },3000);
@@ -100,12 +110,14 @@ export default function App() {
     }
   }, [userContext.details, getUserData]);
 
+
   return (
 
     <Router>
-      <div>
+      <div id="App">
+      <ThemeProvider theme={theme}>
       <Header handleLogout={handleLogout} loggedIn={userContext.token ? true : false} user={userContext.details}/>
-      {message && <Alert variant={message.variant}>{message.text}</Alert>}
+      </ThemeProvider>
       <Switch>
         <Route exact path="/">
           <Welcome/>
