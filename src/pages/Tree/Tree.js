@@ -1,4 +1,4 @@
-import {useState } from "react";
+import {useEffect, useRef, useState } from "react";
 import Controls from "../../components/Controls/Controls";
 import Node from "../../components/Node/Node";
 import BST from "../../classes/BST";
@@ -8,7 +8,7 @@ export default function Tree(){
 
   const [nodes, setNodes] = useState([]);
   const [tree, setTree] = useState(new BST());
-   
+
   const addNode = (value) => {
     if(value !== ""){
       tree.insert(parseInt(value));
@@ -35,7 +35,7 @@ export default function Tree(){
     return (
     <div className="App">
       <Controls addNode={addNode} searchForNode={searchForNode} traverseTree={traverseTree}/>
-        <svg width={window.innerWidth - 40} height={window.innerHeight - 40}>
+        <svg  width={window.innerWidth - 40} height={window.innerHeight - 40} viewBox={`0 0 ${window.innerWidth-40} ${window.innerHeight-40}`} name="viewBox">
               {nodes.map(node => {
                   return <Node key={node.id} node={node} deleteNode={deleteNode} />
               })}

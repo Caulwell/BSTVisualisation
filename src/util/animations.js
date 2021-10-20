@@ -102,5 +102,4 @@ function traversalAnimation(nodes){
 
 
 
-
 export {insertAnimation, searchAnimation, moveNodes, traversalAnimation};

@@ -1,30 +1,30 @@
 import { Button, Form } from "react-bootstrap";
-import { useState } from "react";
-import { register } from "../../util/auth";
+import { useState, useContext } from "react";
 import validator from "validator";
+import { UserContext } from "../../context/UserContext";
 
 export default function Register(){
 
 
     const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [password2, setPassword2] = useState("");
     const [validated, setValidated] = useState(false);
     const [messages, setMessages] = useState({});
+    const [submitting, setSubmitting] = useState(false);
+    const [error, setError] = useState("");
+
+    const [userContext, setUserContext] = useContext(UserContext);
+    
 
 
     const checkValidation = () =>{
         let messages1 = {};
 
-        if(validator.isEmail(email) && validator.isStrongPassword(password) && password === password2){
+        if(validator.isStrongPassword(password) && password === password2){
             setMessages({});
             setValidated(true);
         } else {
-            if(!validator.isEmail(email)){
-                messages1.email = ("Please enter a valid email");
-            }
-    
             if(!validator.isStrongPassword(password)){
                 messages.password = ("Please enter a stronger password");
             }
@@ -42,23 +42,43 @@ export default function Register(){
     
 
 
-    const handleButtonPress = e => {
+    const handleSubmit = e => {
             e.preventDefault();
             checkValidation();
+            setSubmitting(true);
+            setError("");
 
             if(validated){
-                register({
-                    username,
-                    email,
-                    password
-                }).then(response => {
-                    console.log(response);
-                }).catch(err => {
-                    console.log(err);
+
+                fetch("http://localhost:4000/register", {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json"},
+                body: JSON.stringify({username, password}),
                 })
-            }
-            
-    }
+                .then(async response => {
+                    setSubmitting(false);
+                    if(!response.ok){
+                        if(response.status === 400){
+                            setError("Please fill all the fields correctly");
+                        } else if(response.status === 401){
+                            setError("Invalid credentials");
+                        } else if (response.status === 500){
+                            console.log(response);
+                            const data = await response.json();
+                            setUserContext(oldValues => {
+                                return {...oldValues, token:data.token};
+                            });
+                        }
+                    }
+                })
+                .catch(error => {
+                    setSubmitting(false);
+                    setError("Something went wrong. Please try again");
+                });
+                
+            }    
+    };
 
 
     return (
@@ -67,22 +87,11 @@ export default function Register(){
         <div>
             <h1>Register</h1>
 
-            <Form>
+            <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="username">
                     <Form.Label>Username</Form.Label>
                     <Form.Control type="text" placeholder="Choose a username" value={username} onChange={e => setUsername(e.target.value)} required/>
                     
-                </Form.Group>
-
-                <Form.Group className="mb-3" controlId="email">
-                    <Form.Label>Email address</Form.Label>
-                    <Form.Control type="email" placeholder="Enter email" value={email} onChange={e => setEmail(e.target.value)} required/>
-                    <Form.Text className="text-muted">
-                    We'll never share your email with anyone else.
-                    </Form.Text>
-                    {messages.email && <div className="alert alert-danger" role="alert">
-                        {messages.email}
-                    </div>}
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="password">
@@ -107,8 +116,7 @@ export default function Register(){
 
                 <Button 
                     variant="primary" 
-                    type="submit"
-                    onClick={handleButtonPress}>
+                    type="submit">
                     Submit
                 </Button>
             </Form>

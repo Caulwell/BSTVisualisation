@@ -15,7 +15,7 @@ export default function Node({node, deleteNode}){
     }
 
     return (
-        <svg>
+        <svg name="viewBox">
             <g className={!inserted ? "insertNode" : undefined} id={node.id}  onClick={handleClick}>
             <circle 
                 cx="20" 
