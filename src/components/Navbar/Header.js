@@ -1,12 +1,10 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Navbar, Container, Nav, NavDropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import {LinkContainer} from "react-router-bootstrap";
 
 
-export default function Header({loggedIn, handleLogout}){
-
-
-
+export default function Header({loggedIn, handleLogout, user}){
 
     return (
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -15,19 +13,20 @@ export default function Header({loggedIn, handleLogout}){
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="me-auto">
-                <Link className="nav-link" to="/BST">BST</Link>
-                <Link className="nav-link" to="/AVL">AVL</Link>
-                <Link className="nav-link" to="/Red-Black">Red-Black</Link>
+                <Link className="nav-link" to="/bst">BST</Link>
+                <Link className="nav-link" to="/avl">AVL</Link>
+                <Link className="nav-link" to="/red-black">Red-Black</Link>
                 </Nav>
                 <Nav>
                 
                 {loggedIn ? 
-                <><NavDropdown title="Dropdown" id="collasible-nav-dropdown">
-                    <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                    <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-                    <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                    <NavDropdown.Divider />
-                    <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
+                <><NavDropdown title={user ? user.username : "User"} id="collasible-nav-dropdown">
+                <LinkContainer to="/savedTrees">
+                    <NavDropdown.Item>Trees</NavDropdown.Item>
+                </LinkContainer>
+                <LinkContainer to="/account">
+                    <NavDropdown.Item>Account</NavDropdown.Item>
+                </LinkContainer>
                 </NavDropdown>
                 <a className="nav-link" onClick={handleLogout}>Sign Out</a></>
                 :

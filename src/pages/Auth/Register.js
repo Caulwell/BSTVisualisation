@@ -1,4 +1,4 @@
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Alert } from "react-bootstrap";
 import { useState, useContext } from "react";
 import validator from "validator";
 import { UserContext } from "../../context/UserContext";
@@ -64,7 +64,7 @@ export default function Register(){
                         } else if(response.status === 401){
                             setError("Invalid credentials");
                         } else if (response.status === 500){
-                            console.log(response);
+                            setError("A user with the given username is already registered");
                             const data = await response.json();
                             setUserContext(oldValues => {
                                 return {...oldValues, token:data.token};
@@ -86,6 +86,8 @@ export default function Register(){
         
         <div>
             <h1>Register</h1>
+
+            {error && <Alert variant="warning">{error}</Alert>}
 
             <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3" controlId="username">

@@ -3,17 +3,20 @@ import "./App.css";
 import Tree from "./pages/Tree/Tree";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
-import {useContext, useEffect, useCallback} from "react";
+import {useContext, useEffect, useCallback, useState} from "react";
 import { UserContext } from "./context/UserContext";
 
 import Header from "./components/Navbar/Header";
 
-import {BrowserRouter as Router, Switch, Route, Link} from "react-router-dom";
+import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
+import Welcome from "./pages/Welcome/Welcome";
+import { Alert } from "react-bootstrap";
 
 
 export default function App() {
 
   const [userContext, setUserContext] = useContext(UserContext);
+  const [message, setMessage] = useState({});
 
   const verifyUser = useCallback(() => {
     fetch("http://localhost:4000/refreshToken", {
@@ -36,6 +39,8 @@ export default function App() {
     });
   }, [setUserContext]);
 
+
+
   const handleLogout = () => {
     fetch("http://localhost:4000/logout", {
       credentials: "include",
@@ -47,29 +52,78 @@ export default function App() {
       setUserContext(oldValues => {
         return { ...oldValues, details: undefined, token: null }
       });
-      window.localStorage.setItem("logout", Date.now())
+      window.localStorage.setItem("logout", Date.now());
+
+      setMessage({text: "You have successfully logged out", variant: "success"});
+      
+      setTimeout(() => {
+        setMessage({});
+      },3000);
     });
   };
 
+  const getUserData = useCallback(() => {
+    fetch("http://localhost:4000/getUser", {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userContext.token}`,
+      },
+    })
+    .then(async response => {
+      if(response.ok){
+        const data = await response.json();
+        setUserContext(oldValues => {
+          return {...oldValues, details:data}
+        });
+      } else {
+        if(response.status === 401){
+          // window.location.reload();
+          console.log(response);
+        } else {
+          setUserContext(oldValues => {
+            return {...oldValues, details: null};
+          });
+        }
+      }
+    });
+  }, [setUserContext, userContext.token]);
 
   useEffect(() => {
     verifyUser();
   }, [verifyUser]);
 
+  useEffect(() => {
+    if(!userContext.details){
+      getUserData()
+    }
+  }, [userContext.details, getUserData]);
+
   return (
 
     <Router>
       <div>
-      <Header handleLogout={handleLogout} loggedIn={userContext.token ? true : false}/>
+      <Header handleLogout={handleLogout} loggedIn={userContext.token ? true : false} user={userContext.details}/>
+      {message && <Alert variant={message.variant}>{message.text}</Alert>}
       <Switch>
         <Route exact path="/">
+          <Welcome/>
+        </Route>
+        <Route exact path="/bst">
+          <Tree/>
+        </Route>
+        <Route exact path="/avl">
+          <Tree/>
+        </Route>
+        <Route exact path="/red-black">
           <Tree/>
         </Route>
         <Route path="/register">
-          <Register/>
+        {userContext.token ? <Redirect to="/"/> :  <Register/> }
         </Route>
         <Route path="/login">
-          <Login/>
+        {userContext.token ? <Redirect to="/"/> :  <Login/> }
         </Route>
       </Switch>
       </div>

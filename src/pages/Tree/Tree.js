@@ -35,7 +35,7 @@ export default function Tree(){
     return (
     <div className="App">
       <Controls addNode={addNode} searchForNode={searchForNode} traverseTree={traverseTree}/>
-        <svg  width={window.innerWidth - 40} height={window.innerHeight - 40} viewBox={`0 0 ${window.innerWidth-40} ${window.innerHeight-40}`} name="viewBox">
+        <svg  width={window.innerWidth - 40} height={window.innerHeight - 200} viewBox={`0 0 ${window.innerWidth-40} ${window.innerHeight-100}`} name="viewBox">
               {nodes.map(node => {
                   return <Node key={node.id} node={node} deleteNode={deleteNode} />
               })}
