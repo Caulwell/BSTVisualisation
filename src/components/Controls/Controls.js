@@ -1,16 +1,18 @@
-import {useState, useRef} from "react";
+import {useState, useRef, useContext} from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import {TextField, Button, Popper, Grow, Paper, Divider, ButtonGroup} from "@mui/material";
 import BuildOutlinedIcon from '@mui/icons-material/BuildOutlined';
 import "./Controls.css";
+import { UserContext } from "../../context/UserContext";
 
 
-export default function Controls({addNode, searchForNode, traverseTree}){
+export default function Controls({addNode, searchForNode, traverseTree, saveTree}){
 
     const [addInput, setAddInput] = useState("");
     const [searchInput, setSearchInput] = useState("");
     const anchorRef = useRef(null);
     const [open, setOpen] = useState(false);
+    const [userContext, setUserContext] = useContext(UserContext);
     
 
     const handleKeypress = e => {
@@ -31,18 +33,27 @@ export default function Controls({addNode, searchForNode, traverseTree}){
       };
 
       const handleButtonPress = e => {
-          if(e.target.name === "addButton"){
-            addNode(addInput);
-            setAddInput("");
-          } else if(e.target.name === "searchButton"){
-            searchForNode(searchInput);
-            setSearchInput("");
-          } else if(e.target.name === "inOrderButton"){
-            traverseTree("in");
-          } else if(e.target.name === "preOrderButton"){
-            traverseTree("pre");
-          } else if(e.target.name === "postOrderButton"){
-            traverseTree("post");
+          switch(e.target.name){
+            case "addButton":
+                addNode(addInput);
+                setAddInput("");
+                break;
+            case "searchButton":
+                searchForNode(searchInput);
+                setSearchInput("");
+                break;
+            case "inOrderButton":
+                traverseTree("in");
+                break;
+            case "preOrderButton":
+                traverseTree("pre");
+                break;
+            case "postOrderButton":
+                traverseTree("post");
+                break;
+            case "saveButton":
+                saveTree();
+                break;
           }
         
       };
@@ -101,6 +112,13 @@ export default function Controls({addNode, searchForNode, traverseTree}){
                                 <Button onClick={handleButtonPress} name="preOrderButton">Pre-Order</Button>
                                 <Button onClick={handleButtonPress} name="postOrderButton">Post-Order</Button>
                             </ButtonGroup>
+
+                            {userContext.token && 
+                            <>
+                                <Divider>Save Tree</Divider>
+                                <Button onClick={handleButtonPress} variant="contained" name="saveButton">Save</Button>
+                            </>
+                            }
 
                         </div>
                 </Paper>
