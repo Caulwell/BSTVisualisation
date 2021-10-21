@@ -54,6 +54,14 @@ export default function Tree(){
                 let data = await response.json();
                 let tree = fromJSON(data.tree);
 
+                let trees = UserContext.trees;
+                if(!trees) trees = [];
+                trees.push(tree);
+
+                setUserContext(oldValues => {
+                  return {...oldValues, trees: trees};
+              });
+
               } else {
                 console.log(response);
               }

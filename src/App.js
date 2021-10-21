@@ -12,6 +12,7 @@ import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom
 import Welcome from "./pages/Welcome/Welcome";
 import { Alert } from "react-bootstrap";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
+import TreeList from "./pages/TreeList/TreeList";
 
 const theme = createTheme({
   palette: {
@@ -130,6 +131,12 @@ export default function App() {
         </Route>
         <Route exact path="/red-black">
           <Tree/>
+        </Route>
+        
+        <Route exact path="/savedTrees">
+        <ThemeProvider theme={theme}>
+          <TreeList/>
+        </ThemeProvider>
         </Route>
         <Route path="/register">
         {userContext.token ? <Redirect to="/"/> :  <Register/> }

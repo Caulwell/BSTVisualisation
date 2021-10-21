@@ -1,7 +1,19 @@
 import { Link } from "react-router-dom";
-import {AppBar, Toolbar, Typography, Button, } from "@mui/material";
+import { useState } from "react";
+import {AppBar, Toolbar, Typography, Button, Menu, MenuItem } from "@mui/material";
 
 export default function Header({loggedIn, handleLogout, user}){
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  
+  const handleClick = e => {
+    setAnchorEl(e.currentTarget);
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  }
 
     return (
         <AppBar position="static">
@@ -22,8 +34,20 @@ export default function Header({loggedIn, handleLogout, user}){
               
             <div className="authLinks">
             {loggedIn ? 
-              <><Button color="inherit" component={Link} to={"/login"}>{user ? user.username : "User"}</Button>
-              <Button color="inherit" component={Link} to={"/logout"}>Logout</Button></>
+              <><Button id="userButton"color="inherit" onClick={handleClick} aria-controls="menu" aria-haspopup="true" aria-expanded={open ? "true" : undefined}>{user ? user.username : "User"}</Button>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  'aria-labelledby': 'userButton',
+                }}
+              >
+                <MenuItem component={Link} to={"/savedTrees"} onClick={handleClose}>Saved Trees</MenuItem>
+                <MenuItem onClick={handleClose}>My account</MenuItem>
+              </Menu>
+              <Button color="inherit" onClick={handleLogout}>Logout</Button></>
               :
               <><Button color="inherit" component={Link} to={"/login"}>Login</Button>
               <Button color="inherit" component={Link} to={"/register"}>Register</Button></>

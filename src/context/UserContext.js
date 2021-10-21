@@ -1,7 +1,9 @@
 import React,{ useState } from "react";
 
 
-const UserContext = React.createContext([{}, () => {}]);
+const UserContext = React.createContext({
+    trees: []
+});
 
 let initialState = {};
 
