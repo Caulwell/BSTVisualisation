@@ -5,6 +5,7 @@ import BST from "../../classes/BST";
 import "./Tree.css";
 import {stringify, parse, toJSON, fromJSON} from "flatted";
 import { UserContext } from "../../context/UserContext";
+import {Alert} from "@mui/material";
 
 
 export default function Tree(){
@@ -12,6 +13,7 @@ export default function Tree(){
   const [nodes, setNodes] = useState([]);
   const [tree, setTree] = useState(new BST());
   const [userContext, setUserContext] = useContext(UserContext);
+  const [alert, setAlert] = useState({});
 
   const addNode = (value) => {
     if(value !== ""){
@@ -51,19 +53,9 @@ export default function Tree(){
             })
             .then(async response => {
               if(response.ok){
-                let data = await response.json();
-                let tree = fromJSON(data.tree);
-
-                let trees = UserContext.trees;
-                if(!trees) trees = [];
-                trees.push(tree);
-
-                setUserContext(oldValues => {
-                  return {...oldValues, trees: trees};
-              });
-
+                setAlert({text: "Tree saved successfully", severity: "success"});
               } else {
-                console.log(response);
+                setAlert({text: "Something went wrong - could not save tree", severity: "error"});
               }
               
             });
@@ -71,6 +63,7 @@ export default function Tree(){
 ;
     return (
       <>
+      {alert ? <Alert severity={alert.severity}>{alert.text}</Alert>: null}
     <div className="Tree flex">
     <Controls addNode={addNode} searchForNode={searchForNode} traverseTree={traverseTree} saveTree={saveTree} />
         <svg width={window.innerWidth - 200} height={window.innerHeight - 300} viewBox={`0 0 ${window.innerWidth-200} ${window.innerHeight-300}`} name="viewBox">
