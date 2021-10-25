@@ -6,6 +6,7 @@ import "./Node.css";
 export default function Node({node, deleteNode}){
 
     const [inserted, setInserted] = useState(false);
+    const [tooltipOpen, setTooltipOpen] = useState(false);
 
     useEffect(() => {
         insertAnimation(node);
@@ -17,25 +18,33 @@ export default function Node({node, deleteNode}){
          
     }
 
-    const getTooltip = () => {
+    const handleTooltipClose = () => {
+        setTooltipOpen(false);
+    }
+
+    const handleTooltipOpen = () => {
+        setTooltipOpen(!tooltipOpen);
+    }
+    const getTooltipContent = () => {
         return (
             <>
             <div>{"Depth: " + node.depth}</div>
             <div>{node.parent ? "Parent: " + node.parent.value  : "Parent: null"}</div>
             <div>{node.left ? "Left: " + node.left.value  : "Left: null"}</div>
             <div>{node.right ? "Right: " + node.right.value  : "Right: null"}</div>
-            <div><Button onClick={handleClick} name="deleteButton" size="small" color="error" variant="contained" >Delete</Button></div>
+            <div className="tooltip-button"><Button onClick={handleClick} name="deleteButton" size="small" color="error" variant="contained" >Delete</Button></div>
             </>
         )
 
     }
 
-    const tooltipText = getTooltip();
+    const tooltipText = getTooltipContent();
 
     return (
         <svg name="viewBox">
-        <Tooltip title={tooltipText} arrow>
-            <g name="node" className={!inserted ? "insertNode node" : "node"} id={node.id}>
+        <ClickAwayListener onClickAway={handleTooltipClose}>
+        <Tooltip title={tooltipText} arrow  open={tooltipOpen} disableFocusListener disableHoverListener disableTouchListener onClose={handleTooltipClose}>
+            <g name="node" className={!inserted ? "insertNode node" : "node"} id={node.id} onClick={handleTooltipOpen}>
             <circle 
                 cx="20" 
                 cy="20" 
@@ -58,6 +67,7 @@ export default function Node({node, deleteNode}){
             </text>
         </g>
         </Tooltip>
+        </ClickAwayListener>
        
         
         <g id={`arrow${node.id}`}>
