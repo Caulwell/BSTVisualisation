@@ -51,8 +51,6 @@ function insertAnimation(node){
 
 function moveNodes(nodes){
     
-
-    console.log(nodes);
     const tl = anime.timeline({
     
     });

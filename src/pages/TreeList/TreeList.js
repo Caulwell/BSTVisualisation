@@ -24,12 +24,9 @@ export default function TreeList(){
                 if (response.ok) {
                     let data = await response.json();
 
-                    console.log(data);
-
                     let treeArray = [];
 
                     data.trees.forEach(tree => {
-                        console.log(tree);
                         treeArray.push(tree);
                     });
                     setTrees(treeArray);
@@ -60,7 +57,6 @@ export default function TreeList(){
             .then(async response => {
                 if (response.ok) {
                     let data = await response.json();
-                    console.log(data);
                     loadTrees();
                 } else {
                     console.log(response);
@@ -87,7 +83,6 @@ export default function TreeList(){
             history.push("/bst");
 
         } else if (e.target.name === "deleteButton") {
-            console.log(id);
             deleteTree(id);
         }
     }
@@ -120,7 +115,7 @@ export default function TreeList(){
             <Grid container spacing={2}>
             {trees.map((tree, index) => {
                 return (
-                    <Tree tree={tree}>
+                    <Tree tree={tree} key={tree._id}>
                     </Tree>
             )})}
             </Grid>

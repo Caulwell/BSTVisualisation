@@ -18,8 +18,6 @@ export default function Tree(){
   useEffect(() => {
     if(userContext.currentTree){
 
-      console.log(fromJSON(userContext.currentTree.tree));
-
       let insertingNodes = tree.getTreeFromJSON(fromJSON(userContext.currentTree.tree));
       const timer = ms => new Promise(res => setTimeout(res, ms));
 
@@ -27,7 +25,7 @@ export default function Tree(){
 
         for(let i = 0; i < insertingNodes.length; i++){
           addNode(insertingNodes[i].value);
-          await timer(1000);
+          await timer(500);
         }
       }
 
@@ -40,7 +38,6 @@ export default function Tree(){
     if(value !== ""){
       tree.insert(parseInt(value));
       setNodes(tree.values(tree.getRoot()));
-      console.log(nodes);
     }
     return;
   };
