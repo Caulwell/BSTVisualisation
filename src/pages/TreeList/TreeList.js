@@ -77,7 +77,7 @@ export default function TreeList(){
             });
 
             setUserContext(oldValues => {
-                return {...oldValues, currentTree: selectedTree}
+                return {...oldValues, currentTree: fromJSON(selectedTree.tree)}
             });
 
             history.push("/bst");

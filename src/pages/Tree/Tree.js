@@ -17,7 +17,8 @@ export default function Tree(){
 
   useEffect(() => {
     if(userContext.currentTree){
-      let insertingNodes = tree.getTreeFromJSON(fromJSON(userContext.currentTree.tree));
+      console.log(userContext.currentTree);
+      let insertingNodes = tree.getTreeFromJSON(userContext.currentTree);
 
       insertingNodes.forEach((node, index) => {
         insertingNodes[index] = node.value;
@@ -36,12 +37,16 @@ export default function Tree(){
       addNode(insertingNodes[i]);
       await timer(500);
     }
+
   }
 
   const addNode = (value) => {
     if(value !== ""){
       tree.insert(parseInt(value));
       setNodes(tree.values(tree.getRoot()));
+      setUserContext(oldValues => {
+        return {...oldValues, currentTree: tree}
+      });
     }
     return;
   };
@@ -55,6 +60,9 @@ export default function Tree(){
   const deleteNode = (node) => {
     tree.delete(node);
     setNodes(tree.values(tree.getRoot()));
+    setUserContext(oldValues => {
+      return {...oldValues, currentTree: tree}
+    });
   };
 
   const traverseTree = (order) => {
@@ -64,7 +72,6 @@ export default function Tree(){
   const saveTree = () => {
     let treeJSON = stringify(tree);
     treeJSON = toJSON(treeJSON);
-    console.log(treeJSON);
     
     fetch("http://localhost:4000/saveTree", {
                 method: "POST",
