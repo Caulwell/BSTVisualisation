@@ -1,18 +1,20 @@
 import {useState, useRef, useContext} from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {TextField, Button, Popper, Grow, Paper, Divider, ButtonGroup} from "@mui/material";
+import {TextField, Button, Popper, Grow, Paper, Divider, ButtonGroup, Input, Stack} from "@mui/material";
 import BuildOutlinedIcon from '@mui/icons-material/BuildOutlined';
 import "./Controls.css";
 import { UserContext } from "../../context/UserContext";
 
 
-export default function Controls({addNode, searchForNode, traverseTree, saveTree}){
+export default function Controls({addNode, searchForNode, traverseTree, saveTree, treeFromCSV}){
 
     const [addInput, setAddInput] = useState("");
     const [searchInput, setSearchInput] = useState("");
     const anchorRef = useRef(null);
     const [open, setOpen] = useState(false);
     const [userContext, setUserContext] = useContext(UserContext);
+    const [selectedFile, setSelectedFile] = useState();
+    const [isFilePicked, setIsFilePicked] = useState(false);
     
 
     const handleKeypress = e => {
@@ -33,6 +35,7 @@ export default function Controls({addNode, searchForNode, traverseTree, saveTree
       };
 
       const handleButtonPress = e => {
+          console.log(e.target.name);
           switch(e.target.name){
             case "addButton":
                 addNode(addInput);
@@ -54,13 +57,23 @@ export default function Controls({addNode, searchForNode, traverseTree, saveTree
             case "saveButton":
                 saveTree();
                 break;
+            case "generateButton":
+                treeFromCSV(selectedFile);
+                break;
+
           }
         
       };
 
       const handleToggle = () => {
           setOpen(prevOpen => !prevOpen);
-      }
+      };
+
+      const handleFileInput = e => {
+          console.log(e.target.files);
+          setSelectedFile(e.target.files[0]);
+          setIsFilePicked(true);
+      };
 
     return (
 
@@ -119,6 +132,26 @@ export default function Controls({addNode, searchForNode, traverseTree, saveTree
                                 <Button onClick={handleButtonPress} variant="contained" name="saveButton">Save</Button>
                             </>
                             }
+
+                            <Divider>CSV</Divider>
+                            
+                            <Stack direction="row" alignItems="center" spacing={2}>
+                                <label htmlFor="contained-button-file">
+                                    <Input style={{display: "none"}} accept="*.csv" id="contained-button-file" type="file" onChange={handleFileInput}/>
+                                    <Button variant="contained" component="span">
+                                    Upload
+                                    </Button>
+                                </label>
+                                <Button variant="contained"  onClick={handleButtonPress} name="generateButton">
+                                    Generate
+                                </Button>
+                            </Stack>
+
+                            {isFilePicked ? (
+                                <p>Filename: {selectedFile.name}</p>
+                            ) : (
+                                <p>Select a file</p>
+                            )}
 
                         </div>
                 </Paper>

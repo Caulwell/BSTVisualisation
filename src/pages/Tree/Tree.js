@@ -17,22 +17,26 @@ export default function Tree(){
 
   useEffect(() => {
     if(userContext.currentTree){
-
       let insertingNodes = tree.getTreeFromJSON(fromJSON(userContext.currentTree.tree));
-      const timer = ms => new Promise(res => setTimeout(res, ms));
 
-      async function insertAll(){
+      insertingNodes.forEach((node, index) => {
+        insertingNodes[index] = node.value;
+      });
 
-        for(let i = 0; i < insertingNodes.length; i++){
-          addNode(insertingNodes[i].value);
-          await timer(500);
-        }
-      }
-
-      insertAll();
+      insertAll(insertingNodes);
 
     }
   },[]);
+
+  const timer = ms => new Promise(res => setTimeout(res, ms));
+
+  async function insertAll(insertingNodes){
+
+    for(let i = 0; i < insertingNodes.length; i++){
+      addNode(insertingNodes[i]);
+      await timer(500);
+    }
+  }
 
   const addNode = (value) => {
     if(value !== ""){
@@ -79,13 +83,33 @@ export default function Tree(){
               }
               
             });
-  }
-;
+  };
+
+  const treeFromCSV = file => {
+    let reader = new FileReader();
+
+    reader.onload = e => {
+      const text = e.target.result;
+      const data = text.split(",");
+
+      data.forEach((number, index) => {
+        data[index] = parseInt(number);
+      });
+
+      console.log(data);
+      insertAll(data);
+    };
+
+    reader.readAsText(file);
+
+  };
+
+
     return (
       <>
       {alert ? <Alert severity={alert.severity}>{alert.text}</Alert>: null}
     <div className="Tree flex">
-    <Controls addNode={addNode} searchForNode={searchForNode} traverseTree={traverseTree} saveTree={saveTree} />
+    <Controls addNode={addNode} searchForNode={searchForNode} traverseTree={traverseTree} saveTree={saveTree} treeFromCSV={treeFromCSV}/>
         <svg width={window.innerWidth - 200} height={window.innerHeight - 300} viewBox={`0 0 ${window.innerWidth-200} ${window.innerHeight-300}`} name="viewBox">
               {nodes.map(node => {
                   return <Node key={node.id} node={node} deleteNode={deleteNode} />
