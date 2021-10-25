@@ -1,15 +1,18 @@
 export default class BSTNode{
 
-    constructor(value, id){
-        this.value = value;
-        this.parent = null;
-        this.left = null;
-        this.right = null;
-        this.depth = null;
-        this.x = null;
-        this.y = null;
-        this.lr = null;
+    constructor(value, id, parent=null, left = null, right=null, depth = null, x = null, y = null, lr = null){
         this.id = id;
+        this.value = value;
+        this.parent = parent;
+        this.left = left;
+        this.right = right;
+        this.depth = depth;
+        this.x = x;
+        this.y = y;
+        this.lr = lr;
+
+        console.log(value);
+        
     }
 
 

@@ -1,7 +1,7 @@
 import {useEffect, useState, useContext} from "react";
 import { UserContext } from "../../context/UserContext";
 import {Box, Grid, Typography, Card, CardContent, CardActions, Button} from "@mui/material";
-import {fromJSON} from "flatted";
+import {parse, fromJSON} from "flatted";
 import { useHistory } from "react-router-dom";
 import AccountTreeRoundedIcon from '@mui/icons-material/AccountTreeRounded';
 
@@ -24,12 +24,15 @@ export default function TreeList(){
                 if (response.ok) {
                     let data = await response.json();
 
-                    data.trees.forEach((element, index) => {
-                        data.trees[index] = fromJSON(element.tree);
-                        data.trees[index].push(element._id);
-                    });
+                    console.log(data);
 
-                    setTrees(data.trees);
+                    let treeArray = [];
+
+                    data.trees.forEach(tree => {
+                        console.log(tree);
+                        treeArray.push(tree);
+                    });
+                    setTrees(treeArray);
 
                 } else {
                     console.log(response);
@@ -62,12 +65,26 @@ export default function TreeList(){
                 } else {
                     console.log(response);
                 }
-            })
+            });
 
     }
 
     const handleClick = (e, id) => {
         if (e.target.name === "treeButton") {
+
+            let selectedTree = null;
+
+            trees.forEach(tree => {
+                if(tree._id === id){
+                    selectedTree = tree;
+                }
+            });
+
+            setUserContext(oldValues => {
+                return {...oldValues, currentTree: selectedTree}
+            });
+
+            history.push("/bst");
 
         } else if (e.target.name === "deleteButton") {
             console.log(id);
@@ -84,13 +101,13 @@ export default function TreeList(){
       
         <Typography variant="h5" component="div">
         
-          Tree {tree.at(-1)}
+          Tree {tree._id}
         </Typography>
         <Typography sx={{ mb: 1.5 }} color="text.secondary">
-          Number of nodes: {tree.length}
+          Number of nodes: {tree.tree.length-1}
         </Typography>
-        <Button name="treeButton" size="small" onClick={(e) => handleClick(e, tree.at(-1))}>Go to tree</Button>
-        <Button name="deleteButton" size="small" color="error" variant="outlined" onClick={(e) => handleClick(e, tree.at(-1))}>Delete tree</Button>
+        <Button name="treeButton" size="small" onClick={(e) => handleClick(e, tree._id)}>Go to tree</Button>
+        <Button name="deleteButton" size="small" color="error" variant="outlined" onClick={(e) => handleClick(e, tree._id)}>Delete tree</Button>
       </CardContent>
       
     </Card>

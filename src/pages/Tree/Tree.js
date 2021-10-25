@@ -10,15 +10,37 @@ import {Alert} from "@mui/material";
 
 export default function Tree(){
 
-  const [nodes, setNodes] = useState([]);
-  const [tree, setTree] = useState(new BST());
   const [userContext, setUserContext] = useContext(UserContext);
   const [alert, setAlert] = useState({});
+  const [tree, setTree] = useState(new BST());
+  const [nodes, setNodes] = useState([]);
+
+  useEffect(() => {
+    if(userContext.currentTree){
+
+      console.log(fromJSON(userContext.currentTree.tree));
+
+      let insertingNodes = tree.getTreeFromJSON(fromJSON(userContext.currentTree.tree));
+      const timer = ms => new Promise(res => setTimeout(res, ms));
+
+      async function insertAll(){
+
+        for(let i = 0; i < insertingNodes.length; i++){
+          addNode(insertingNodes[i].value);
+          await timer(1000);
+        }
+      }
+
+      insertAll();
+
+    }
+  },[]);
 
   const addNode = (value) => {
     if(value !== ""){
       tree.insert(parseInt(value));
       setNodes(tree.values(tree.getRoot()));
+      console.log(nodes);
     }
     return;
   };
@@ -39,8 +61,9 @@ export default function Tree(){
   };
 
   const saveTree = () => {
-    let treeJSON = stringify(nodes);
+    let treeJSON = stringify(tree);
     treeJSON = toJSON(treeJSON);
+    console.log(treeJSON);
     
     fetch("http://localhost:4000/saveTree", {
                 method: "POST",

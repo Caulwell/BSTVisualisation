@@ -456,5 +456,38 @@ export default class BST {
             }
         }
     }
+
+    getTreeFromJSON(tree){
+
+        let nodes = [];
+
+        console.log(tree);
+
+        nodes = this.getNodesFromJSON(tree.root, nodes, tree.numNodes);
+
+        nodes.sort( (first, second) => {
+            if(first.id < second.id) return -1;
+            if(second.id < first.id) return 1;
+        });
+
+        return nodes;
+        
+    }
+
+    getNodesFromJSON(curr, nodes, length){
+        if(curr !== null){
+            this.getNodesFromJSON(curr.left, nodes, length);
+            if(!nodes.includes(curr)) nodes.push(curr);
+            this.getNodesFromJSON(curr.right, nodes, length);
+        }
+
+        if(nodes.length === length){
+            return nodes;
+        }
+    }
     
 }
+
+
+
+    
