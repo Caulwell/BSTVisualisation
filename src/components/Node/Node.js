@@ -6,7 +6,6 @@ import "./Node.css";
 export default function Node({node, deleteNode}){
 
     const [inserted, setInserted] = useState(false);
-    const [anchorEl, setAnchorEl] = useState(null);
 
     useEffect(() => {
         insertAnimation(node);
@@ -14,20 +13,29 @@ export default function Node({node, deleteNode}){
     },[]);
 
     const handleClick = e => {
-        setAnchorEl(anchorEl ? null : e.currentTarget);
         if(e.target.name === "deleteButton") deleteNode(node);
          
     }
 
-    let popperOpen = Boolean(anchorEl);
-    const id = popperOpen ? "popper" : undefined;
+    const getTooltip = () => {
+        return (
+            <>
+            <div>{"Depth: " + node.depth}</div>
+            <div>{node.parent ? "Parent: " + node.parent.value  : "Parent: null"}</div>
+            <div>{node.left ? "Left: " + node.left.value  : "Left: null"}</div>
+            <div>{node.right ? "Right: " + node.right.value  : "Right: null"}</div>
+            <div><Button onClick={handleClick} name="deleteButton" size="small" color="error" variant="contained" >Delete</Button></div>
+            </>
+        )
 
-    const tooltipText = "Depth: " + node.depth + "\n";
+    }
+
+    const tooltipText = getTooltip();
 
     return (
         <svg name="viewBox">
         <Tooltip title={tooltipText} arrow>
-            <g name="node" className={!inserted ? "insertNode node" : "node"} id={node.id}  aria-describedby={id} onClick={handleClick}>
+            <g name="node" className={!inserted ? "insertNode node" : "node"} id={node.id}>
             <circle 
                 cx="20" 
                 cy="20" 
@@ -39,7 +47,7 @@ export default function Node({node, deleteNode}){
                 name={"node"+node.id}
                
             />
-            <text x="20" y="20"
+            <text className="svg-text" x="20" y="20"
                 textAnchor="middle"
                 stroke="red"
                 strokeWidth="1px"
@@ -50,12 +58,6 @@ export default function Node({node, deleteNode}){
             </text>
         </g>
         </Tooltip>
-            
-        <Popper id={id} open={popperOpen} anchorEl={anchorEl} placement="top">
-            <Paper>
-            <Button onClick={handleClick} name="deleteButton" size="small" color="error" variant="outlined">Delete</Button>
-            </Paper>
-        </Popper>
        
         
         <g id={`arrow${node.id}`}>
