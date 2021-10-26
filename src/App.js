@@ -124,13 +124,13 @@ export default function App() {
           <Welcome/>
         </Route>
         <Route exact path="/bst">
-          <Tree/>
+          <Tree type="bst"/>
         </Route>
         <Route exact path="/avl">
-          <Tree/>
+          <Tree type="avl"/>
         </Route>
         <Route exact path="/red-black">
-          <Tree/>
+          <Tree type="red-black"/>
         </Route>
         
         <Route exact path="/savedTrees">

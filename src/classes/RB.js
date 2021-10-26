@@ -2,7 +2,7 @@ import BSTNode from "./BSTNode";
 import BT from "./BT";
 import {moveNodes, searchAnimation, traversalAnimation} from "../util/animations";
 
-export default class BST extends BT { 
+export default class RB extends BT { 
 
     constructor(){
         super();

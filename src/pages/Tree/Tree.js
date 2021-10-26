@@ -6,9 +6,11 @@ import "./Tree.css";
 import {stringify, parse, toJSON, fromJSON} from "flatted";
 import { UserContext } from "../../context/UserContext";
 import {Alert} from "@mui/material";
+import AVL from "../../classes/AVL";
+import RB from "../../classes/RB";
 
 
-export default function Tree(){
+export default function Tree({type}){
 
   const [userContext, setUserContext] = useContext(UserContext);
   const [alert, setAlert] = useState({});
@@ -16,8 +18,9 @@ export default function Tree(){
   const [nodes, setNodes] = useState([]);
 
   useEffect(() => {
+  
     if(userContext.currentTree){
-      console.log(userContext.currentTree);
+      
       let insertingNodes = tree.getTreeFromJSON(userContext.currentTree);
 
       insertingNodes.forEach((node, index) => {
@@ -28,6 +31,7 @@ export default function Tree(){
 
     }
   },[]);
+
 
   const timer = ms => new Promise(res => setTimeout(res, ms));
 
