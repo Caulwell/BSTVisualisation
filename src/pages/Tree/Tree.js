@@ -51,7 +51,10 @@ export default function Tree({type}){
       tree.checkLayout(tree.getRoot());
       setNodes(tree.values(tree.getRoot()));
       await timer(500);
+      console.log(tree.getAffectedNodes());
       moveNodes(tree.getAffectedNodes());
+      await timer(500);
+      console.log(tree.getAffectedNodes());
       setUserContext(oldValues => {
         return {...oldValues, currentTree: tree}
       });

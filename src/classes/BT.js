@@ -256,16 +256,7 @@ export default class BT {
         
     }
 
-    getLeftMostElement(top){
-        let curr = top;
-        while(true){
-            if(curr.left === null){
-                return curr;
-            } else {
-                curr = curr.left;
-            }
-        }
-    }
+    
 
     getTreeFromJSON(tree){
 

@@ -38,6 +38,7 @@ function searchAnimation(nodes, foundNode){
 }
 
 function insertAnimation(node){
+    console.log("inserting")
 
     const differenceX = node.x-20;
     const differenceY = node.y-20;
@@ -67,8 +68,8 @@ function moveNodes(nodes){
 
         tl.add({
             targets: `.moving${node.id}`,
-            translateX: {value: node.x-20, duration: 500},
-            translateY: {value: node.y-20, duration: 500}
+            translateX: {value: node.x-20, duration: 200},
+            translateY: {value: node.y-20, duration: 200}
         });
 
         HTMLnode.classList.remove(`moving${node.id}`);

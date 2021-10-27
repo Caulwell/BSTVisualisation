@@ -1,6 +1,6 @@
 import { insertAnimation } from "../../util/animations";
 import {useEffect, useState} from "react";
-import { Tooltip, Button, Paper, Popper, ClickAwayListener } from "@mui/material";
+import { Tooltip, Button, ClickAwayListener } from "@mui/material";
 import "./Node.css";
 
 export default function Node({node, deleteNode}){

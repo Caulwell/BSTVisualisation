@@ -78,7 +78,7 @@ export default class BST extends BT {
         // HAS TWO CHILDREN
         } else if (node.right !== null && node.left !== null){
 
-            let replacement = this.getLeftMostElement(node.right);
+            let replacement = this.getLeftMostElement(node.right, node.right);
 
             if(replacement.right !== null && replacement.parent !== node) replacement.parent.setLeft(replacement.right);
 
@@ -153,9 +153,12 @@ export default class BST extends BT {
             console.log("shifting: " + root.value + " from: " + root.x );
             if(side === "l") root.setX(root.x - 50);
             if(side === "r") root.setX(root.x + 50);
+            console.log("pushing to affectedNodes: " + root.value);
             this.affectedNodes.push(root);
+            console.log("affected nodes now: " + this.affectedNodes.length);
 
             console.log( " to: " + root.x );
+            console.log(this.affectedNodes);
 
             this.shiftTree(root.left, side);
             this.shiftTree(root.right, side); 
@@ -164,24 +167,73 @@ export default class BST extends BT {
         }
     }
 
-    checkGrandChildren(root){
-        // check if grandchildren are overlapping so left child has right child and right child has left child
-        if(root.left && root.right && root.left.right && root.right.left){
-            if(Math.abs(root.right.left.x - root.left.right.x) <=50){
+    // checkGrandChildren(root){
+    //     // check if grandchildren are overlapping so left child has right child and right child has left child
+    //     if(root.left && root.right && root.left.right && root.right.left){
+    //         if(Math.abs(root.right.left.x - root.left.right.x) <=50){
+    //             this.shiftTree(root.right, "r");
+    //             this.shiftTree(root.left, "l");
+    //         }
+    //     }
+    // }
+
+    checkChildrenTrees(root){
+        // check leftmost and rightmost node of each tree - if they are too close, move each tree away from each other
+        if(root.left && root.right){
+            const leftsRightMost = this.getRightMostElement(root.left, root.left);
+            const rightsLeftMost = this.getLeftMostElement(root.right, root.right);
+
+            console.log("rightmost: " + leftsRightMost.value);
+
+            if(Math.abs(leftsRightMost.x - rightsLeftMost.x) <50 ){
+                console.log("lefts right most: " + leftsRightMost.value + " x : " + leftsRightMost.x);
+                console.log("rights left most: " + rightsLeftMost.value + " x : " + rightsLeftMost.x);
                 this.shiftTree(root.right, "r");
                 this.shiftTree(root.left, "l");
             }
         }
     }
 
+    getLeftMostElement(top, leftMost){
+        if(top===null){
+            return;
+        } 
+
+        if(top.left != null) leftMost = this.getLeftMostElement(top.left, leftMost);
+        if(top.right != null) leftMost = this.getLeftMostElement(top.right, leftMost);
+
+        if(top != null && top.x < leftMost.x) leftMost = top;
+
+        return leftMost;
+    }
+
+    getRightMostElement(top, rightMost){
+        
+        if(top===null){
+            return;
+        } 
+
+        if(top.left != null) rightMost = this.getRightMostElement(top.left, rightMost);
+        if(top.right != null) rightMost = this.getRightMostElement(top.right, rightMost);
+
+        if(top != null && top.x > rightMost.x) rightMost = top;
+
+        return rightMost;
+        
+    }
+
+    
+
     checkLayout(root){
 
-        this.affectedNodes = [];
+        
 
         if(root){
             this.checkLayout(root.left);
             this.checkLayout(root.right);
-            this.checkGrandChildren(root);
+            // this.checkGrandChildren(root);
+            this.checkChildrenTrees(root);
+            
         } else {
             return;
         }
@@ -190,6 +242,10 @@ export default class BST extends BT {
     }
 
     insert(value){
+
+        this.affectedNodes = [];
+        console.log("resetting affectedNodes");
+        
         let curr = this.root;
         const node = new BSTNode(value, this.numInsertedTotal);
 
