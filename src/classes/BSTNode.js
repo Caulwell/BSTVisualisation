@@ -1,3 +1,5 @@
+import {moveNodes, searchAnimation, traversalAnimation} from "../util/animations";
+
 export default class BSTNode{
 
     constructor(value, id, parent=null, left = null, right=null, depth = null, x = null, y = null, lr = null){

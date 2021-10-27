@@ -136,46 +136,7 @@ export default class BT {
         this.numInsertedTotal++;
     }
 
-    addLeftChild(insertSide, curr, node){
-
-        if(insertSide === "r" && this.checkShiftNeeded(insertSide)){
-            // Adding a right child on the left tree - shift left tree to left
-            let node = this.root.right;
-            this.shiftNodes(node, insertSide, []);
-        } 
-
-        curr.setLeft(node);
-        node.setX(node.parent.x -50);
-        node.setY(node.parent.y + 50);
-
-        this.checkForOverlap(node, insertSide === "l" ? this.root.left : this.root.right, insertSide);
-        this.numNodes++;
-        this.numInsertedTotal++;
-
-      
-        
-
-    }
-
-    addRightChild(insertSide, curr, node){
-                
-        if(insertSide === "l" && this.checkShiftNeeded(insertSide)){
-            // Adding a left child on the right tree - shift right tree to right
-            let node = this.root.left;
-            this.shiftNodes(node, insertSide, []);
-        }
-
-        curr.setRight(node);
-        node.setX(node.parent.x + 50);
-        node.setY(node.parent.y + 50);
-
-        this.checkForOverlap(node, insertSide === "l" ? this.root.left : this.root.right, insertSide);
-        this.numNodes++;
-        this.numInsertedTotal++;
-        
-        
-
-    }
+    
 
     shiftNodes(node, side, shiftedNodes){
 

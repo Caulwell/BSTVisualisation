@@ -54,11 +54,14 @@ function moveNodes(nodes){
     const tl = anime.timeline({
     
     });
+
+    console.log(nodes);
     
 
     for(let i = 0; i < nodes.length; i++){
 
         let node = nodes[i];
+        console.log("trying to shift: " + node.value);
         let HTMLnode = document.getElementById(node.id);
         HTMLnode.classList.add(`moving${node.id}`);
 

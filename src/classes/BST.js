@@ -6,6 +6,11 @@ export default class BST extends BT {
 
     constructor(){
         super();
+        this.affectedNodes = [];
+    }
+
+    getAffectedNodes(){
+        return this.affectedNodes;
     }
 
     delete(node){
@@ -117,9 +122,78 @@ export default class BST extends BT {
         moveNodes(shiftNodes);
     }
 
+    addLeftChild(curr, node){
+
+        
+        curr.setLeft(node);
+        node.setX(node.parent.x -50);
+        node.setY(node.parent.y + 50);
+
+        this.numNodes++;
+        this.numInsertedTotal++;
+
+    }
+
+    addRightChild(curr, node){
+
+        curr.setRight(node);
+        node.setX(node.parent.x + 50);
+        node.setY(node.parent.y + 50);
+
+        this.numNodes++;
+        this.numInsertedTotal++;
+        
+        
+
+    }
+
+    shiftTree(root, side){
+
+        if(root){
+            console.log("shifting: " + root.value + " from: " + root.x );
+            if(side === "l") root.setX(root.x - 50);
+            if(side === "r") root.setX(root.x + 50);
+            this.affectedNodes.push(root);
+
+            console.log( " to: " + root.x );
+
+            this.shiftTree(root.left, side);
+            this.shiftTree(root.right, side); 
+        } else {
+            return;
+        }
+    }
+
+    checkGrandChildren(root){
+        // check if grandchildren are overlapping so left child has right child and right child has left child
+        if(root.left && root.right && root.left.right && root.right.left){
+            if(Math.abs(root.right.left.x - root.left.right.x) <=50){
+                this.shiftTree(root.right, "r");
+                this.shiftTree(root.left, "l");
+            }
+        }
+    }
+
+    checkLayout(root){
+
+        this.affectedNodes = [];
+
+        if(root){
+            this.checkLayout(root.left);
+            this.checkLayout(root.right);
+            this.checkGrandChildren(root);
+        } else {
+            return;
+        }
+
+        
+    }
+
     insert(value){
         let curr = this.root;
         const node = new BSTNode(value, this.numInsertedTotal);
+
+        
 
         if(this.root === null){
             this.insertAtTop(value);
@@ -131,25 +205,19 @@ export default class BST extends BT {
 
             for(;;){
                 if(value < curr.value ){
-                    // set which side we are traversing from root
-                    if(curr === this.root){
-                        insertSide = "l";
-                    }
+                    console.log(curr);
 
                     if(curr.left === null){
-                        this.addLeftChild(insertSide, curr, node)
+                        this.addLeftChild(curr, node);
                         return;
                     }
 
                     curr = curr.left; 
 
                 } else if(value > curr.value || value === curr.value) {
-                    // set which side we are traversing from root
-                    if(curr === this.root){
-                        insertSide = "r";
-                    }
+                    console.log(curr);
                     if(curr.right === null){
-                        this.addRightChild(insertSide, curr, node);
+                        this.addRightChild(curr, node);
                         return;
                     }
 

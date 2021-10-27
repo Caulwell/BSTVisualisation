@@ -8,6 +8,7 @@ import { UserContext } from "../../context/UserContext";
 import {Alert} from "@mui/material";
 import AVL from "../../classes/AVL";
 import RB from "../../classes/RB";
+import { moveNodes } from "../../util/animations";
 
 
 export default function Tree({type}){
@@ -44,10 +45,13 @@ export default function Tree({type}){
 
   }
 
-  const addNode = (value) => {
+  async function addNode(value){
     if(value !== ""){
       tree.insert(parseInt(value));
+      tree.checkLayout(tree.getRoot());
       setNodes(tree.values(tree.getRoot()));
+      await timer(500);
+      moveNodes(tree.getAffectedNodes());
       setUserContext(oldValues => {
         return {...oldValues, currentTree: tree}
       });
