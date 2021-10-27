@@ -1,6 +1,6 @@
-import {useState, useRef, useContext} from "react";
+import {useState, useRef, useContext, useEffect} from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {TextField, Button, Popper, Grow, Paper, Divider, ButtonGroup, Input, Stack} from "@mui/material";
+import {TextField, Button, Popper, Grow, Paper, Divider, ButtonGroup, Input, Stack, Slider} from "@mui/material";
 import BuildOutlinedIcon from '@mui/icons-material/BuildOutlined';
 import "./Controls.css";
 import { UserContext } from "../../context/UserContext";
@@ -14,8 +14,15 @@ export default function Controls({addNode, searchForNode, traverseTree, saveTree
     const [open, setOpen] = useState(false);
     const [userContext, setUserContext] = useContext(UserContext);
     const [selectedFile, setSelectedFile] = useState();
+    const [speedInput, setSpeedInput] = useState(0.5);
     const [isFilePicked, setIsFilePicked] = useState(false);
     
+
+    useEffect(() => {
+        setUserContext(oldValues => {
+            return {...oldValues, animationSpeed: speedInput}
+        });
+    }, []);
 
     const handleKeypress = e => {
         if(e.key === "Enter"){
@@ -73,6 +80,22 @@ export default function Controls({addNode, searchForNode, traverseTree, saveTree
           console.log(e.target.files);
           setSelectedFile(e.target.files[0]);
           setIsFilePicked(true);
+      };
+
+      const handleSpeedChange = e => {
+          setSpeedInput(e.target.value);
+      };
+
+      const handleAnimationSpeed = () => {
+
+        let newSpeed = 1 - (speedInput);
+        console.log(newSpeed);
+
+            if(newSpeed !== userContext.animationSpeed){
+                setUserContext(oldValues => {
+                    return {...oldValues, animationSpeed: newSpeed};
+                });
+            }
       };
 
     return (
@@ -152,6 +175,9 @@ export default function Controls({addNode, searchForNode, traverseTree, saveTree
                             ) : (
                                 <p>Select a file</p>
                             )}
+
+                            <Divider>Animation Speed</Divider>
+                            <Slider onChange={handleSpeedChange} onChangeCommitted={handleAnimationSpeed} min={0.1} max={1} step={0.1} value={speedInput} valueLabelDisplay="auto" marks/>
 
                         </div>
                 </Paper>

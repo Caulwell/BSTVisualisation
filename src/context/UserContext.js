@@ -3,7 +3,8 @@ import React,{ useState } from "react";
 
 const UserContext = React.createContext({
     trees: [],
-    currentTree: null
+    currentTree: null,
+    animationSpeed: 0.5
 });
 
 let initialState = {};

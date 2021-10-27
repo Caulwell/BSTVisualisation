@@ -1,5 +1,4 @@
 import BSTNode from "./BSTNode";
-import {moveNodes, searchAnimation, traversalAnimation} from "../util/animations";
 
 export default class BT { 
 

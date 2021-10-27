@@ -47,11 +47,14 @@ export default function Tree({type}){
 
   async function addNode(value){
     if(value !== ""){
+
       tree.insert(parseInt(value));
       tree.checkLayout(tree.getRoot());
       setNodes(tree.values(tree.getRoot()));
+
       await timer(500);
-      moveNodes(tree.getAffectedNodes());
+      moveNodes(tree.getAffectedNodes(), userContext.animationSpeed);
+
       setUserContext(oldValues => {
         return {...oldValues, currentTree: tree}
       });
@@ -62,14 +65,14 @@ export default function Tree({type}){
   const searchForNode = (value) => {
     if(value !== ""){
       tree.search(parseInt(value));
-      searchAnimation(tree.affectedNodes, tree.foundNode);
+      searchAnimation(tree.affectedNodes, tree.foundNode, userContext.animationSpeed);
     }
   };
 
   const deleteNode = (node) => {
     tree.delete(node);
     setNodes(tree.values(tree.getRoot()));
-    moveNodes(tree.getAffectedNodes());
+    moveNodes(tree.getAffectedNodes(), userContext.animationSpeed);
     setUserContext(oldValues => {
       return {...oldValues, currentTree: tree}
     });
@@ -77,7 +80,7 @@ export default function Tree({type}){
 
   const traverseTree = (order) => {
     tree.traversal(order);
-    traversalAnimation(tree.getAffectedNodes());
+    traversalAnimation(tree.getAffectedNodes(), userContext.animationSpeed);
   };
 
   const saveTree = () => {

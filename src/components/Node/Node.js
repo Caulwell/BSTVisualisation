@@ -1,15 +1,17 @@
 import { insertAnimation } from "../../util/animations";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import { Tooltip, Button, ClickAwayListener } from "@mui/material";
 import "./Node.css";
+import { UserContext } from "../../context/UserContext";
 
 export default function Node({node, deleteNode}){
 
     const [inserted, setInserted] = useState(false);
     const [tooltipOpen, setTooltipOpen] = useState(false);
+    const [userContext, setUserContext] = useContext(UserContext);
 
     useEffect(() => {
-        insertAnimation(node);
+        insertAnimation(node, userContext.animationSpeed);
         setInserted(true);
     },[]);
 
