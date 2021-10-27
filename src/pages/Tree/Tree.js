@@ -8,7 +8,7 @@ import { UserContext } from "../../context/UserContext";
 import {Alert} from "@mui/material";
 import AVL from "../../classes/AVL";
 import RB from "../../classes/RB";
-import { moveNodes } from "../../util/animations";
+import { moveNodes, searchAnimation, traversalAnimation } from "../../util/animations";
 
 
 export default function Tree({type}){
@@ -51,10 +51,7 @@ export default function Tree({type}){
       tree.checkLayout(tree.getRoot());
       setNodes(tree.values(tree.getRoot()));
       await timer(500);
-      console.log(tree.getAffectedNodes());
       moveNodes(tree.getAffectedNodes());
-      await timer(500);
-      console.log(tree.getAffectedNodes());
       setUserContext(oldValues => {
         return {...oldValues, currentTree: tree}
       });
@@ -65,12 +62,14 @@ export default function Tree({type}){
   const searchForNode = (value) => {
     if(value !== ""){
       tree.search(parseInt(value));
+      searchAnimation(tree.affectedNodes, tree.foundNode);
     }
   };
 
   const deleteNode = (node) => {
     tree.delete(node);
     setNodes(tree.values(tree.getRoot()));
+    moveNodes(tree.getAffectedNodes());
     setUserContext(oldValues => {
       return {...oldValues, currentTree: tree}
     });
@@ -78,6 +77,7 @@ export default function Tree({type}){
 
   const traverseTree = (order) => {
     tree.traversal(order);
+    traversalAnimation(tree.getAffectedNodes());
   };
 
   const saveTree = () => {
@@ -114,7 +114,6 @@ export default function Tree({type}){
         data[index] = parseInt(number);
       });
 
-      console.log(data);
       insertAll(data);
     };
 

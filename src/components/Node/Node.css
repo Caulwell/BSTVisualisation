@@ -18,3 +18,7 @@
 .tooltip-button{
     margin-top:0.5rem;
 }
+
+.hide{
+    display: none;
+}

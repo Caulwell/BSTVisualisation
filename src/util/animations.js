@@ -2,6 +2,9 @@ import anime from "animejs";
 
 function searchAnimation(nodes, foundNode){
 
+    console.log(nodes);
+    console.log(foundNode);
+
     const tl = anime.timeline({
     
     });
@@ -34,11 +37,12 @@ function searchAnimation(nodes, foundNode){
         targets: ".foundNodeHighlight",
         scale: {value: 1, duration: 500}
     });
+
+    HTMLnode.classList.remove("foundNodeHighlight");
    
 }
 
 function insertAnimation(node){
-    console.log("inserting")
 
     const differenceX = node.x-20;
     const differenceY = node.y-20;
@@ -54,27 +58,23 @@ function moveNodes(nodes){
     
     const tl = anime.timeline({
     
-    });
-
-    console.log(nodes);
-    
+    });  
 
     for(let i = 0; i < nodes.length; i++){
 
         let node = nodes[i];
-        console.log("trying to shift: " + node.value);
         let HTMLnode = document.getElementById(node.id);
         HTMLnode.classList.add(`moving${node.id}`);
 
         tl.add({
             targets: `.moving${node.id}`,
-            translateX: {value: node.x-20, duration: 200},
-            translateY: {value: node.y-20, duration: 200}
+            translateX: {value: node.x-20, duration: 0},
+            translateY: {value: node.y-20, duration: 0}
         });
 
         HTMLnode.classList.remove(`moving${node.id}`);
-    
     }
+
 }
 
 

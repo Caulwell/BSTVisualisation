@@ -7,8 +7,11 @@ export default class BT {
         this.root = null;
         this.numNodes = 0;
         this.numInsertedTotal = 0;
+        this.affectedNodes = [];
+        this.foundNode = null;
     }
 
+    ///// GETTERS AND SETTERS ///////
     getRoot(){
         return this.root;
     }
@@ -20,6 +23,10 @@ export default class BT {
             node.setParent(null);
         }
         
+    }
+
+    getAffectedNodes(){
+        return this.affectedNodes;
     }
 
     values(top) {
@@ -38,17 +45,172 @@ export default class BT {
         return array;
     }
 
+    ///// OPERATIONS ////////
+
+    insert(value){
+
+        this.affectedNodes = [];
+
+        let curr = this.root;
+        const node = new BSTNode(value, this.numInsertedTotal);
+
+        
+
+        if(this.root === null){
+            this.insertAtTop(value);
+            return;
+
+        } else {
+
+            let insertSide = "";
+
+            for(;;){
+                if(value < curr.value ){
+
+                    if(curr.left === null){
+                        this.addLeftChild(curr, node);
+                        return;
+                    }
+
+                    curr = curr.left; 
+
+                } else if(value > curr.value || value === curr.value) {
+                    if(curr.right === null){
+                        this.addRightChild(curr, node);
+                        return;
+                    }
+
+                    curr = curr.right; 
+                }
+            }
+        }
+    }
+
+    insertAtTop(value){
+        const node = new BSTNode(value, this.numNodes);
+        this.setRoot(node);
+        node.setX(window.innerWidth * 0.43);
+        node.setY(window.innerHeight * 0.1);
+        this.numNodes++;
+        this.numInsertedTotal++;
+    }
+
+    delete(node){
+
+        this.affectedNodes = [];
+
+        // IS A LEAF NODE
+        if(node.left === null && node.right === null){
+            
+            if(node === this.root){
+                // is root node
+                this.setRoot(null);
+            } else {
+                // not root node
+                if(node.parent.left === node) node.parent.setLeft(null);
+                if(node.parent.right === node) node.parent.setRight(null);
+            }
+             
+
+        // ONLY HAS A LEFT CHILD
+        } else if (node.left !== null && node.right === null){
+  
+            // is root node
+            if(node === this.root){
+                this.setRoot(node.left);
+            // not root node
+            } else {
+                if(node.parent.left === node) node.parent.setLeft(node.left);
+                if(node.parent.right === node) node.parent.setRight(node.left);
+            }
+            // set x and y of left child to removed node
+            node.left.setX(node.x);
+            node.left.setY(node.y);
+
+            // ready for animation
+            this.affectedNodes = this.values(node.left);
+
+            // set new coordinates for children of left child
+            let portionToChange = this.affectedNodes.slice(1);
+            this.setNewCordsOnMove(portionToChange);
+
+
+        // ONLY HAS A RIGHT CHILD
+        } else if (node.right !== null && node.left === null){
+
+            // is root node
+            if(node === this.root){
+                this.setRoot(node.right);
+            // not root node
+            } else {
+                if(node.parent.left === node) node.parent.setLeft(node.right);
+                if(node.parent.right === node) node.parent.setRight(node.right);
+            }
+           // set x and y of left child to removed node
+            node.right.setX(node.x);
+            node.right.setY(node.y);
+
+            // ready for animation
+            this.affectedNodes = this.values(node.right);
+
+            // set new coordinates for children of right child
+            let portionToChange = this.affectedNodes.slice(1);
+            this.setNewCordsOnMove(portionToChange);
+
+        // HAS TWO CHILDREN
+        } else if (node.right !== null && node.left !== null){
+
+            let replacement = this.getLeftMostElement(node.right, node.right);
+
+            if(replacement.right !== null && replacement.parent !== node) replacement.parent.setLeft(replacement.right);
+
+            if(replacement.parent.left === replacement) replacement.parent.left = null;
+            if(replacement.parent.right === replacement) replacement.parent.right = null;
+
+            // ready for animation - get it so its prior children are grabbed, not its new ones
+            this.affectedNodes = this.values(replacement);
+
+        
+            if(node !== this.root){
+                // set parent child relationship for replacement
+                if(node.parent.left === node) node.parent.setLeft(replacement);
+                if(node.parent.right === node) node.parent.setRight(replacement);
+            } else {
+                this.setRoot(replacement);
+            }
+            
+            // set replacement's new x and y
+            replacement.setX(node.x);
+            
+            replacement.setY(node.y);
+
+
+            // replacement cannot have a left, so set it to node's left
+            replacement.setLeft(node.left);
+
+            // don't want to set right to itself, but if node did have a right, set it for replacement
+            if(node.right !== replacement && node.right !== null){
+                if(node.right.left === null) node.right.setLeft(replacement.right);
+                replacement.setRight(node.right);
+            } 
+
+            // set new coordinates for prior children of replacement
+            let portionToChange = this.affectedNodes.slice(1);
+            this.setNewCordsOnMove(portionToChange);
+
+        }
+
+        this.numNodes --;
+    }
+
     traversal(order){
         let nodes = [];
         if(order === "in"){
-            nodes = this.inOrder(this.root, nodes);
-            traversalAnimation(nodes);
+            this.affectedNodes =  this.inOrder(this.root, nodes);
         } else if(order === "pre"){
-            nodes = this.preOrder(this.root, nodes);
-            traversalAnimation(nodes);
+            this.affectedNodes =  this.preOrder(this.root, nodes);
         } else if(order === "post"){
-            nodes = this.postOrder(this.root, nodes);
-            traversalAnimation(nodes);
+            this.affectedNodes =  this.postOrder(this.root, nodes);
         }
     }
 
@@ -90,29 +252,29 @@ export default class BT {
     }
 
     search(value){
+        this.affectedNodes = [];
         let curr = this.root;
-
-        let nodes = [];
-        let foundNode = null;
 
         while(true){
             if(curr === null){
                 break;
             } 
             if(curr.value === value){
-                foundNode = curr;
+                this.foundNode = curr;
                 break;
             } else if(value < curr.value){
-                nodes.push(curr);
+                this.affectedNodes.push(curr);
                 curr = curr.left;
             } else if(value > curr.value){
-                nodes.push(curr);
+                this.affectedNodes.push(curr);
                 curr = curr.right;
                 
             }
         }
-        searchAnimation(nodes, foundNode);
     }
+
+
+    /////// HELPERS ///////
 
     setNewCordsOnMove(nodes){
 
@@ -127,136 +289,100 @@ export default class BT {
 
     }
 
-    insertAtTop(value){
-        const node = new BSTNode(value, this.numNodes);
-        this.setRoot(node);
-        node.setX(window.innerWidth * 0.43);
-        node.setY(window.innerHeight * 0.1);
+    addLeftChild(curr, node){
+
+        
+        curr.setLeft(node);
+        node.setX(node.parent.x -50);
+        node.setY(node.parent.y + 50);
+
         this.numNodes++;
         this.numInsertedTotal++;
+
     }
 
-    
+    addRightChild(curr, node){
 
-    shiftNodes(node, side, shiftedNodes){
+        curr.setRight(node);
+        node.setX(node.parent.x + 50);
+        node.setY(node.parent.y + 50);
 
-        if(node === null){
+        this.numNodes++;
+        this.numInsertedTotal++;
+        
+        
+
+    }
+
+    shiftTree(root, side){
+
+        if(root){
+            if(side === "l") root.setX(root.x - 50);
+            if(side === "r") root.setX(root.x + 50);
+            this.affectedNodes.push(root);
+            this.shiftTree(root.left, side);
+            this.shiftTree(root.right, side); 
+        } else {
             return;
         }
-
-        this.shiftNodes(node.left, side, shiftedNodes);
-        this.shiftNodes(node.right, side, shiftedNodes);
-
-        if(side === "l"){
-            node.setX(node.x -50);
-            shiftedNodes = [...shiftedNodes, node];
-        } else if(side === "r"){
-            node.setX(node.x +50);
-            shiftedNodes = [...shiftedNodes, node];
-        }
-
-        moveNodes(shiftedNodes);
     }
 
-    getMostCenterNode(curr, side, centerNode){
+    checkChildrenTrees(root){
+        // check leftmost and rightmost node of each tree - if they are too close, move each tree away from each other
+        if(root.left && root.right){
+            const leftsRightMost = this.getRightMostElement(root.left, root.left);
+            const rightsLeftMost = this.getLeftMostElement(root.right, root.right);
 
-        if(curr===null){
+            if(Math.abs(leftsRightMost.x - rightsLeftMost.x) <50 ){
+                this.shiftTree(root.right, "r");
+                this.shiftTree(root.left, "l");
+            }
+        }
+    }
+
+    getLeftMostElement(top, leftMost){
+        if(top===null){
             return;
         } 
 
-        if(curr.left != null) centerNode = this.getMostCenterNode(curr.left, side, centerNode);
-        if(curr.right != null) centerNode = this.getMostCenterNode(curr.right, side, centerNode);
+        if(top.left != null) leftMost = this.getLeftMostElement(top.left, leftMost);
+        if(top.right != null) leftMost = this.getLeftMostElement(top.right, leftMost);
 
-        if(curr != null && side === "l" && curr.x > centerNode.x) centerNode = curr;
-        if(curr != null && side === "r" && curr.x < centerNode.x) centerNode = curr;
+        if(top != null && top.x < leftMost.x) leftMost = top;
 
-        return centerNode;
-
+        return leftMost;
     }
 
-    checkShiftNeeded(insertSide){
-
-        let curr;
-        let mostCenterNode = null;
-
-        if (insertSide === "l"){
-            curr = this.root.left;
-            mostCenterNode = this.getMostCenterNode(curr, "l", curr);
-        } else {
-            curr = this.root.right;
-            mostCenterNode = this.getMostCenterNode(curr, "r", curr);
-        }
-
-        if(mostCenterNode != null && Math.abs(this.root.x - mostCenterNode.x ) <= 50){
-            return true;
-        }  else {
-            return false;
-        }
-    }
-
-    checkForOverlap(node, curr, insertSide){
-        // When two nodes with the same parent - the left one has a right child, the right one has a left child
-        // If so move right node to the right if in right tree/move left node to left if in left tree
-        // if(curr === null || node.parent === null || node.parent.parent === null || node.parent.parent.right === null || node.parent.parent.left === null){
-        if(curr === null || node.parent === null || node.parent.parent === null){
+    getRightMostElement(top, rightMost){
+        
+        if(top===null){
             return;
-        }
-        this.checkForOverlap(node, curr.left, insertSide);
+        } 
 
-        if(curr.x === node.x && curr.y === node.y && curr !== node){
-            if(insertSide === "l"){
-                if(node.lr === "r"){
-                    node.parent.setX(node.parent.x -50);
-                    node.setX(node.x-50);
-                    moveNodes([node.parent]);
-                } else if(node.lr === "l"){
-                    curr.setX(curr.x -50);
-                    curr.parent.setX(curr.parent.x -50);
-                    moveNodes([curr.parent, curr]);
-                }
-            } else if(insertSide === "r"){
-                if(node.lr === "r"){
-                    curr.setX(curr.x +50);
-                    curr.parent.setX(curr.parent.x +50);
-                    moveNodes([curr.parent, curr]);
-                } else if(node.lr === "l"){
-                    node.parent.setX(node.parent.x +50);
-                    node.setX(node.x+50);
-                    moveNodes([node.parent]);
-                }
-            }
-        }
+        if(top.left != null) rightMost = this.getRightMostElement(top.left, rightMost);
+        if(top.right != null) rightMost = this.getRightMostElement(top.right, rightMost);
 
-        if(curr.y === node.y && Math.abs(node.x -curr.x) <=50 && (node.x === curr.parent.x && curr.x === node.parent.x)){
-            console.log(node, curr);
-            if(insertSide === "l"){
-                if(node.lr === "r"){
-                    node.parent.setX(node.parent.x -50);
-                    node.setX(node.x-50);
-                    moveNodes([node.parent]);
-                } else if(node.lr === "l"){
-                    curr.setX(curr.x -50);
-                    curr.parent.setX(curr.parent.x -50);
-                    moveNodes([curr.parent, curr]);
-                }
-            } else if(insertSide === "r"){
-                if(node.lr === "r"){
-                    curr.setX(curr.x +50);
-                    curr.parent.setX(curr.parent.x +50);
-                    moveNodes([curr.parent, curr]);
-                } else if(node.lr === "l"){
-                    node.parent.setX(node.parent.x +50);
-                    node.setX(node.x+50);
-                    moveNodes([node.parent]);
-                }
-            }
-        }
+        if(top != null && top.x > rightMost.x) rightMost = top;
 
-        this.checkForOverlap(node, curr.right, insertSide);
+        return rightMost;
         
     }
+  
 
-    
+    checkLayout(root){
+
+        if(root){
+            this.checkLayout(root.left);
+            this.checkLayout(root.right);
+            // this.checkGrandChildren(root);
+            this.checkChildrenTrees(root);
+            
+        } else {
+            return;
+        }
+
+        
+    }
 
     getTreeFromJSON(tree){
 
