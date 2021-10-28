@@ -53,8 +53,6 @@ export default class BT {
         let curr = this.root;
         const node = new BSTNode(value, this.numInsertedTotal);
 
-        
-
         if(this.root === null){
             this.insertAtTop(value);
             return;
@@ -159,7 +157,7 @@ export default class BT {
         // HAS TWO CHILDREN
         } else if (node.right !== null && node.left !== null){
 
-            let replacement = this.getLeftMostElement(node.right, node.right);
+            let replacement = this.getLeftMostElementReal(node.right);
 
             if(replacement.right !== null && replacement.parent !== node) replacement.parent.setLeft(replacement.right);
 
@@ -350,6 +348,17 @@ export default class BT {
         if(top != null && top.x < leftMost.x) leftMost = top;
 
         return leftMost;
+    }
+
+    getLeftMostElementReal(top){
+        let curr = top;
+        while(true){
+            if(curr.left === null){
+                return curr;
+            } else {
+                curr = curr.left;
+            }
+        }
     }
 
     getRightMostElement(top, rightMost){

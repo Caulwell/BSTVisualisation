@@ -15,24 +15,39 @@ export default function Tree({type}){
 
   const [userContext, setUserContext] = useContext(UserContext);
   const [alert, setAlert] = useState({});
-  const [tree, setTree] = useState(new BST());
+  const [tree, setTree] = useState();
   const [nodes, setNodes] = useState([]);
 
   useEffect(() => {
+
+    console.log("re render");
   
-    if(userContext.currentTree){
+    // if(userContext.currentTree){
       
-      let insertingNodes = tree.getTreeFromJSON(userContext.currentTree);
+    //   let insertingNodes = tree.getTreeFromJSON(userContext.currentTree);
 
-      insertingNodes.forEach((node, index) => {
-        insertingNodes[index] = node.value;
-      });
+    //   insertingNodes.forEach((node, index) => {
+    //     insertingNodes[index] = node.value;
+    //   });
 
-      insertAll(insertingNodes);
+    //   insertAll(insertingNodes);
 
-    }
+    // }
   },[]);
 
+  useEffect(() => {
+    console.log("type change");
+    if(type == "bst"){
+      setTree(new BST());
+      setNodes([]);
+    } else if(type === "avl"){
+      setTree(new AVL());
+      setNodes([]);
+    } else {
+      setTree(new RB());
+      setNodes([]);
+    }
+  }, [type]);
 
   const timer = ms => new Promise(res => setTimeout(res, ms));
 
@@ -50,6 +65,9 @@ export default function Tree({type}){
 
       tree.insert(parseInt(value));
       tree.checkLayout(tree.getRoot());
+
+      if(type == "avl") tree.checkBalanced();
+
       setNodes(tree.values(tree.getRoot()));
 
       await timer(500);
@@ -71,8 +89,15 @@ export default function Tree({type}){
 
   const deleteNode = (node) => {
     tree.delete(node);
+
+    tree.checkLayout();
+
+    if(type === "avl") tree.checkBalanced();
+
     setNodes(tree.values(tree.getRoot()));
+
     moveNodes(tree.getAffectedNodes(), userContext.animationSpeed);
+
     setUserContext(oldValues => {
       return {...oldValues, currentTree: tree}
     });

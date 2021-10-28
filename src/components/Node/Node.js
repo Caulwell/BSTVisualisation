@@ -18,15 +18,16 @@ export default function Node({node, deleteNode}){
     const handleClick = e => {
         if(e.target.name === "deleteButton") deleteNode(node);
          
-    }
+    };
 
     const handleTooltipClose = () => {
         setTooltipOpen(false);
-    }
+    };
 
     const handleTooltipOpen = () => {
         setTooltipOpen(!tooltipOpen);
-    }
+    };
+
     const getTooltipContent = () => {
         return (
             <>
@@ -34,6 +35,8 @@ export default function Node({node, deleteNode}){
             <div>{node.parent ? "Parent: " + node.parent.value  : "Parent: null"}</div>
             <div>{node.left ? "Left: " + node.left.value  : "Left: null"}</div>
             <div>{node.right ? "Right: " + node.right.value  : "Right: null"}</div>
+            <div>{node.height >=0 ? "Height: " + node.height : "Height: null"}</div>
+            <div>{node.balanceFactor >=0 ? "Balance Factor: " + node.balanceFactor : "Balance Factor: null"}</div>
             <div className="tooltip-button"><Button onClick={handleClick} name="deleteButton" size="small" color="error" variant="contained" >Delete</Button></div>
             </>
         )
