@@ -1,9 +1,8 @@
 import {useEffect, useState, useContext} from "react";
 import { UserContext } from "../../context/UserContext";
-import {Box, Grid, Typography, Card, CardContent, CardActions, Button} from "@mui/material";
-import {parse, fromJSON} from "flatted";
+import {Box, Grid, Typography, Card, CardContent,Button} from "@mui/material";
+import {fromJSON} from "flatted";
 import { useHistory } from "react-router-dom";
-import AccountTreeRoundedIcon from '@mui/icons-material/AccountTreeRounded';
 
 export default function TreeList(){
 
@@ -56,7 +55,6 @@ export default function TreeList(){
             })
             .then(async response => {
                 if (response.ok) {
-                    let data = await response.json();
                     loadTrees();
                 } else {
                     console.log(response);

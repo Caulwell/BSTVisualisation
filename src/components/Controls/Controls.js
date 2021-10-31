@@ -67,6 +67,8 @@ export default function Controls({addNode, searchForNode, traverseTree, saveTree
             case "generateButton":
                 treeFromCSV(selectedFile);
                 break;
+            default:
+                break;
 
           }
         

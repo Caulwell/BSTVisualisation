@@ -59,8 +59,6 @@ export default class BT {
 
         } else {
 
-            let insertSide = "";
-
             for(;;){
                 if(value < curr.value ){
 
@@ -401,6 +399,7 @@ export default class BT {
         nodes.sort( (first, second) => {
             if(first.id < second.id) return -1;
             if(second.id < first.id) return 1;
+            return 0;
         });
 
         return nodes;

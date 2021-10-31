@@ -57,6 +57,8 @@ function insertAnimation(node, animationSpeed){
 
 function moveNodes(nodes, animationSpeed){
 
+    console.log(nodes);
+
     const maxDuration = 500;
 
     const tl = anime.timeline({

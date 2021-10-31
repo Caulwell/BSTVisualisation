@@ -1,9 +1,9 @@
-import {useEffect, useRef, useState, useContext } from "react";
+import {useEffect, useState, useContext } from "react";
 import Controls from "../../components/Controls/Controls";
 import Node from "../../components/Node/Node";
 import BST from "../../classes/BST";
 import "./Tree.css";
-import {stringify, parse, toJSON, fromJSON} from "flatted";
+import {stringify, toJSON} from "flatted";
 import { UserContext } from "../../context/UserContext";
 import {Alert} from "@mui/material";
 import AVL from "../../classes/AVL";
@@ -22,22 +22,22 @@ export default function Tree({type}){
 
     console.log("re render");
   
-    // if(userContext.currentTree){
+    if(userContext.currentTree){
       
-    //   let insertingNodes = tree.getTreeFromJSON(userContext.currentTree);
+      let insertingNodes = tree.getTreeFromJSON(userContext.currentTree);
 
-    //   insertingNodes.forEach((node, index) => {
-    //     insertingNodes[index] = node.value;
-    //   });
+      insertingNodes.forEach((node, index) => {
+        insertingNodes[index] = node.value;
+      });
 
-    //   insertAll(insertingNodes);
+      insertAll(insertingNodes);
 
-    // }
+    }
   },[]);
 
   useEffect(() => {
     console.log("type change");
-    if(type == "bst"){
+    if(type === "bst"){
       setTree(new BST());
       setNodes([]);
     } else if(type === "avl"){
@@ -64,9 +64,8 @@ export default function Tree({type}){
     if(value !== ""){
 
       tree.insert(parseInt(value));
-      tree.checkLayout(tree.getRoot());
 
-      if(type == "avl") tree.checkBalanced();
+      tree.checkLayout(tree.getRoot());
 
       setNodes(tree.values(tree.getRoot()));
 
@@ -91,8 +90,6 @@ export default function Tree({type}){
     tree.delete(node);
 
     tree.checkLayout();
-
-    if(type === "avl") tree.checkBalanced();
 
     setNodes(tree.values(tree.getRoot()));
 

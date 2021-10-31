@@ -1,6 +1,5 @@
 import { Alert, Button, Form } from "react-bootstrap";
 import { useState, useContext } from "react";
-import { login } from "../../util/auth";
 import { UserContext } from "../../context/UserContext";
 
 export default function Login(){

@@ -11,7 +11,6 @@ export default function Register(){
     const [password2, setPassword2] = useState("");
     const [validated, setValidated] = useState(false);
     const [messages, setMessages] = useState({});
-    const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState("");
 
     const [userContext, setUserContext] = useContext(UserContext);
@@ -45,7 +44,6 @@ export default function Register(){
     const handleSubmit = e => {
             e.preventDefault();
             checkValidation();
-            setSubmitting(true);
             setError("");
 
             if(validated){
@@ -57,7 +55,6 @@ export default function Register(){
                 body: JSON.stringify({username, password}),
                 })
                 .then(async response => {
-                    setSubmitting(false);
                     if(!response.ok){
                         if(response.status === 400){
                             setError("Please fill all the fields correctly");
@@ -73,7 +70,6 @@ export default function Register(){
                     }
                 })
                 .catch(error => {
-                    setSubmitting(false);
                     setError("Something went wrong. Please try again");
                 });
                 

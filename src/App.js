@@ -10,7 +10,6 @@ import Header from "./components/Navbar/Header";
 
 import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
 import Welcome from "./pages/Welcome/Welcome";
-import { Alert } from "react-bootstrap";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
 import TreeList from "./pages/TreeList/TreeList";
 
