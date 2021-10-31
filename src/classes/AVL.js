@@ -38,6 +38,116 @@ export default class AVL extends BT {
         }
     }
 
+    delete(node){
+
+        this.affectedNodes = [];
+
+        // IS A LEAF NODE
+        if(node.left === null && node.right === null){
+            
+            if(node === this.root){
+                // is root node
+                this.setRoot(null);
+            } else {
+                // not root node
+                if(node.parent.left === node) node.parent.setLeft(null);
+                if(node.parent.right === node) node.parent.setRight(null);
+            }
+             
+
+        // ONLY HAS A LEFT CHILD
+        } else if (node.left !== null && node.right === null){
+  
+            // is root node
+            if(node === this.root){
+                this.setRoot(node.left);
+            // not root node
+            } else {
+                if(node.parent.left === node) node.parent.setLeft(node.left);
+                if(node.parent.right === node) node.parent.setRight(node.left);
+            }
+            // set x and y of left child to removed node
+            node.left.setX(node.x);
+            node.left.setY(node.y);
+
+            // ready for animation
+            this.affectedNodes = this.values(node.left);
+
+            // set new coordinates for children of left child
+            let portionToChange = this.affectedNodes.slice(1);
+            this.setNewCordsOnMove(portionToChange);
+
+
+        // ONLY HAS A RIGHT CHILD
+        } else if (node.right !== null && node.left === null){
+
+            // is root node
+            if(node === this.root){
+                this.setRoot(node.right);
+            // not root node
+            } else {
+                if(node.parent.left === node) node.parent.setLeft(node.right);
+                if(node.parent.right === node) node.parent.setRight(node.right);
+            }
+           // set x and y of left child to removed node
+            node.right.setX(node.x);
+            node.right.setY(node.y);
+
+            // ready for animation
+            this.affectedNodes = this.values(node.right);
+
+            // set new coordinates for children of right child
+            let portionToChange = this.affectedNodes.slice(1);
+            this.setNewCordsOnMove(portionToChange);
+
+        // HAS TWO CHILDREN
+        } else if (node.right !== null && node.left !== null){
+
+            let replacement = this.getLeftMostElementReal(node.right);
+
+            if(replacement.right !== null && replacement.parent !== node) replacement.parent.setLeft(replacement.right);
+
+            if(replacement.parent.left === replacement) replacement.parent.left = null;
+            if(replacement.parent.right === replacement) replacement.parent.right = null;
+
+            // ready for animation - get it so its prior children are grabbed, not its new ones
+            this.affectedNodes = this.values(replacement);
+
+        
+            if(node !== this.root){
+                // set parent child relationship for replacement
+                if(node.parent.left === node) node.parent.setLeft(replacement);
+                if(node.parent.right === node) node.parent.setRight(replacement);
+            } else {
+                this.setRoot(replacement);
+            }
+            
+            // set replacement's new x and y
+            replacement.setX(node.x);
+            
+            replacement.setY(node.y);
+
+
+            // replacement cannot have a left, so set it to node's left
+            replacement.setLeft(node.left);
+
+            // don't want to set right to itself, but if node did have a right, set it for replacement
+            if(node.right !== replacement && node.right !== null){
+                if(node.right.left === null) node.right.setLeft(replacement.right);
+                replacement.setRight(node.right);
+            } 
+
+            // set new coordinates for prior children of replacement
+            let portionToChange = this.affectedNodes.slice(1);
+            this.setNewCordsOnMove(portionToChange);
+
+        }
+        console.log(node.parent);
+        this.checkBalanceAfterOperation(node.parent, false);
+
+        this.numNodes --;
+    }
+
     insertAtTop(value){
         const node = new AVLNode(value, this.numInsertedTotal);
         this.setRoot(node);
@@ -46,7 +156,6 @@ export default class AVL extends BT {
         this.numNodes++;
         this.numInsertedTotal++;
     }
-
     
     addLeftChild(curr, node){
 
@@ -57,8 +166,7 @@ export default class AVL extends BT {
         this.numNodes++;
         this.numInsertedTotal++;
 
-        this.updateAvlValues(node.parent);
-        this.checkBalanceAfterInsertion(node.parent, false);
+        this.checkBalanceAfterOperation(node.parent, false);
         
 
     }
@@ -72,22 +180,21 @@ export default class AVL extends BT {
         this.numNodes++;
         this.numInsertedTotal++;
 
-        this.updateAvlValues(node.parent);
-        this.checkBalanceAfterInsertion(node.parent, false);
+        this.checkBalanceAfterOperation(node.parent, false);
 
     }
 
-    checkBalanceAfterInsertion(node, found){
+    checkBalanceAfterOperation(node, found){
 
         if(found === true) return;
 
         if(node){
-            if(Math.abs(node.balanceFactor) > 1){
+            if(Math.abs(node.getBalanceFactor()) > 1){
                 found = true;
                 this.balance(node);
             }
 
-            this.checkBalanceAfterInsertion(node.parent, found);
+            this.checkBalanceAfterOperation(node.parent, found);
 
         } else {
             return;
@@ -101,26 +208,30 @@ export default class AVL extends BT {
             console.log("unbalancedNode: " + node.value);
             
             // if heavy on the left
-            if (node.balanceFactor > 1) {
+            if (node.getBalanceFactor() > 1) {
                 // and node.left is right heavy do a left-right rotation
-                if(node.left.balanceFactor <= -1){
+                if(node.left.getBalanceFactor() <= -1){
                     this.leftRightRotation(node);
+                    this.affectedNodes = this.values(node.parent);
                     return;
                 } else {
                     // else do a right rotation
                     this.rightRotation(node);
+                    this.affectedNodes = this.values(node.parent);
                     return;
                 }
 
                 // if heavy on the right
             } else {
                 //and node.right is left heavy do a right-left rotation
-                if(node.right.balanceFactor >= 1){
+                if(node.right.getBalanceFactor() >= 1){
                     this.rightLeftRotation(node);
+                    this.affectedNodes = this.values(node.parent);
                     return;
                 } else {
                     // else do a left rotation
                     this.leftRotation(node);
+                    this.affectedNodes = this.values(node.parent);
                     return;
                 }
                 
@@ -159,8 +270,6 @@ export default class AVL extends BT {
 
         node.setX(node.x -50);
         node.setY(node.y +50);
-
-        this.affectedNodes.push(replacement, node);
         
     }
 
@@ -191,7 +300,6 @@ export default class AVL extends BT {
         if(node === this.root){
             this.setRoot(replacement);
         }
-        this.affectedNodes.push(replacement, node);
         // console.log("node : " + node.value + " right : " + (node.right ? node.right.value : " null") + " left : " + (node.left ? node.left.value : " null") + " parent:  " + (node.parent ? node.parent.value : " null"));
         // console.log("replacement : " + replacement.value + " right : " + (replacement.right ? replacement.right.value : " null") + " left : " + (replacement.left ? replacement.left.value : " null") + " parent:  " + (replacement.parent ? replacement.parent.value : " null"));
 
@@ -210,33 +318,6 @@ export default class AVL extends BT {
         this.rightRotation(node.right);
         this.leftRotation(node);
         
-    }
-
-    updateAvlValues(node){
-
-        if(node){
-            node.setHeight(this.updateHeight(node));
-
-            let nodeLeftHeight = node.left ? node.left.getHeight() : -1;
-            let nodeRightHeight = node.right ? node.right.getHeight() : -1;
-
-            node.setBalanceFactor(nodeLeftHeight - nodeRightHeight);
-
-            this.updateAvlValues(node.parent);
-        } else {
-            return;
-        }
-        
-    }
-
-    updateHeight(node){
-        if(!node || (!node.left && !node.right)){
-            return 0;
-        } else {
-            let height = Math.max(this.updateHeight(node.left), this.updateHeight(node.right)) +1;
-            return height;
-        }
-
     }
 
    
