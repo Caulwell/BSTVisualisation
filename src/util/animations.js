@@ -22,6 +22,8 @@ function searchAnimation(nodes, foundNode, animationSpeed){
             targets: `.highlighting${node.id}`,
             scale: {value: 1, duration: maxDuration*animationSpeed+100}
         });
+
+        HTMLnode.classList.remove(`highlighting${node.id}`);
     
     }
 
@@ -41,23 +43,135 @@ function searchAnimation(nodes, foundNode, animationSpeed){
    
 }
 
-function insertAnimation(node, animationSpeed){
+function insertAnimation(testNodes, node, animationSpeed){
 
-    const differenceX = node.x-20;
-    const differenceY = node.y-20;
+    return new Promise((resolve, reject) => {
 
-    const maxDuration = 3000;
+        console.log(testNodes, node);
 
-    anime({
-        targets: ".insertNode",
-        translateX: {value: differenceX, duration: maxDuration*animationSpeed},
-        translateY: {value: differenceY, duration: maxDuration*animationSpeed}
+        const maxDuration = 3000;
+
+        const tl = anime.timeline({
+        
+        });
+
+        // highlight each node on the way
+        
+        testNodes.forEach(element => {
+
+            let node = element;
+
+            let HTMLnode = document.getElementById(node.id);
+            console.log(HTMLnode);
+            HTMLnode.classList.add(`highlighting${node.id}`);
+
+            tl.add({
+                targets: `.highlighting${node.id}`,
+                scale: {value: 1.5, duration: maxDuration*animationSpeed+100},
+            });
+            tl.add({
+                targets: `.highlighting${node.id}`,
+                scale: {value: 1, duration: maxDuration*animationSpeed+100}
+            });
+
+            HTMLnode.classList.remove(`highlighting${node.id}`);
+        });
+
+        // insert node
+
+        const differenceX = node.x-20;
+        const differenceY = node.y-20;
+
+        let HTMLnode = document.getElementById(node.id);
+        HTMLnode.classList.add(`insertNode`);
+
+        tl.add({
+            targets: ".insertNode",
+            translateX: {value: differenceX, duration: maxDuration*animationSpeed},
+            translateY: {value: differenceY, duration: maxDuration*animationSpeed},
+            complete: (anim) => {
+                resolve("done");
+            }
+        });
+
+        HTMLnode.classList.remove("insertNode");
     });
+
+    
+}
+
+function checkBalanceAnimation(testNodes, foundNode, animationSpeed){
+
+    console.log("checkBalance animation registered");
+    console.log(testNodes, foundNode);
+
+    return new Promise((resolve, reject) => {
+
+        const maxDuration = 3000;
+
+        const tl = anime.timeline({
+        
+        });
+
+        
+        // function to resolve promise if !foundNode and loop of animations finished
+        const checkLoopComplete = index => {
+            console.log(index, testNodes.length);
+            if(index == testNodes.length -1){
+                if(!foundNode) resolve("done");
+            }
+        };
+
+        // highlight each node on the way
+        testNodes.forEach((element, index) => {
+
+            let node = element;
+
+            let HTMLnode = document.getElementById(node.id);
+            console.log(HTMLnode);
+            HTMLnode.classList.add(`highlighting${node.id}`);
+
+            tl.add({
+                targets: `.highlighting${node.id}`,
+                scale: {value: 1.5, duration: maxDuration*animationSpeed+100},
+            });
+            tl.add({
+                targets: `.highlighting${node.id}`,
+                scale: {value: 1, duration: maxDuration*animationSpeed+100},
+                complete: anim => {
+                    checkLoopComplete(index);
+                }
+            });
+
+            HTMLnode.classList.remove(`highlighting${node.id}`);
+        });
+
+        // if an unbalanced node is found
+        if(foundNode){
+            let HTMLnode = document.getElementById(foundNode.id);
+            HTMLnode.classList.add("foundNodeHighlight");
+
+            tl.add({
+                targets: ".foundNodeHighlight",
+                scale: {value: 2, duration: maxDuration*animationSpeed+200}
+            });
+            tl.add({
+                targets: ".foundNodeHighlight",
+                scale: {value: 1, duration: maxDuration*animationSpeed+200},
+                complete: (anim) => {
+                    resolve("done");
+                }
+            });
+
+            HTMLnode.classList.remove("foundNodeHighlight");
+        }
+        
+    });
+
+    
 }
 
 function moveNodes(nodes, animationSpeed){
-
-    console.log(nodes);
 
     const maxDuration = 500;
 
@@ -111,4 +225,4 @@ function traversalAnimation(nodes, animationSpeed){
 
 
 
-export {insertAnimation, searchAnimation, moveNodes, traversalAnimation};
+export {insertAnimation, checkBalanceAnimation, searchAnimation, moveNodes, traversalAnimation};

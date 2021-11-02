@@ -8,7 +8,7 @@ import { UserContext } from "../../context/UserContext";
 import {Alert} from "@mui/material";
 import AVL from "../../classes/AVL";
 import RB from "../../classes/RB";
-import { moveNodes, searchAnimation, traversalAnimation } from "../../util/animations";
+import { insertAnimation, moveNodes, searchAnimation, traversalAnimation, checkBalanceAnimation } from "../../util/animations";
 
 
 export default function Tree({type}){
@@ -61,16 +61,39 @@ export default function Tree({type}){
   }
 
   async function addNode(value){
+
     if(value !== ""){
 
-      tree.insert(parseInt(value));
+      // set internal data structure
+      let insertedNode = tree.insert(parseInt(value));
+      // render node in intitial position
+      setNodes(tree.values(tree.getRoot()));
+      // wait for node to render
+      await timer(100);
+      // play insertion animation
+      const insertDone = await insertAnimation(tree.insertionAnimation.highlightNodes, tree.insertionAnimation.node, userContext.animationSpeed);
+
+      console.log("insert animation: " + insertDone);
+
+      // after insert animation done, change internal data structure if node overlaps etc
+      if(type === "avl"){
+  
+        if(insertedNode.parent) {
+          console.log("doing check balance animation");
+          tree.checkBalanceAfterOperation(insertedNode.parent, false);
+          const checkBalanceDone = await checkBalanceAnimation(tree.checkBalanceAnimation.checkingNodes, tree.checkBalanceAnimation.foundNode, userContext.animationSpeed);
+          console.log("check balance animation " + checkBalanceDone);
+        }
+        
+        
+      } 
+
 
       tree.checkLayout(tree.getRoot());
 
-      setNodes(tree.values(tree.getRoot()));
 
       await timer(500);
-      moveNodes(tree.getAffectedNodes(), userContext.animationSpeed);
+      moveNodes([...tree.getAffectedNodes()], userContext.animationSpeed);
 
       setUserContext(oldValues => {
         return {...oldValues, currentTree: tree}
@@ -82,7 +105,7 @@ export default function Tree({type}){
   const searchForNode = (value) => {
     if(value !== ""){
       tree.search(parseInt(value));
-      searchAnimation(tree.affectedNodes, tree.foundNode, userContext.animationSpeed);
+      searchAnimation([...tree.getAffectedNodes()], tree.foundNode, userContext.animationSpeed);
     }
   };
 
@@ -93,16 +116,16 @@ export default function Tree({type}){
 
     setNodes(tree.values(tree.getRoot()));
 
-    moveNodes(tree.getAffectedNodes(), userContext.animationSpeed);
+    moveNodes([...tree.getAffectedNodes()], userContext.animationSpeed);
 
     setUserContext(oldValues => {
-      return {...oldValues, currentTree: tree}
+      return {...oldValues, currentTree: tree};
     });
   };
 
   const traverseTree = (order) => {
     tree.traversal(order);
-    traversalAnimation(tree.getAffectedNodes(), userContext.animationSpeed);
+    traversalAnimation([...tree.getAffectedNodes()], userContext.animationSpeed);
   };
 
   const saveTree = () => {

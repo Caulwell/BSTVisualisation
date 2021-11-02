@@ -3,33 +3,54 @@ import AVLNode from "./AVLNode";
 
 export default class AVL extends BT { 
 
+    constructor(){
+        super();
+        this.checkBalanceAnimation = {checkingNodes: [], foundNode: null};
+    }
+
+    resetAnimationObjects(){
+        super.resetAnimationObjects();
+        this.checkBalanceAnimation = {checkingNodes: [], foundNode: null};
+    }
+
     insert(value){
 
-        this.affectedNodes = [];
+        this.resetAnimationObjects();
 
         let curr = this.root;
         const node = new AVLNode(value, this.numInsertedTotal);
 
         if(this.root === null){
-            this.insertAtTop(value);
-            return;
+            this.insertAtTop(node);
+            this.insertionAnimation.node = node;
+            return node;
 
         } else {
 
             for(;;){
+
+                // add this node to an array, as an object, with {node: curr, status: "</>/=="}
+
                 if(value < curr.value ){
+
+                    this.insertionAnimation.highlightNodes.push(curr);
 
                     if(curr.left === null){
                         this.addLeftChild(curr, node);
-                        return;
+                        this.insertionAnimation.node = node;
+                        return node;
                     }
 
                     curr = curr.left; 
 
                 } else if(value > curr.value || value === curr.value) {
+
+                    this.insertionAnimation.highlightNodes.push(curr);
+
                     if(curr.right === null){
                         this.addRightChild(curr, node);
-                        return;
+                        this.insertionAnimation.node = node;
+                        return node;
                     }
 
                     curr = curr.right; 
@@ -38,9 +59,10 @@ export default class AVL extends BT {
         }
     }
 
+
     delete(node){
 
-        this.affectedNodes = [];
+        this.affectedNodes.clear();
 
         // IS A LEAF NODE
         if(node.left === null && node.right === null){
@@ -71,10 +93,10 @@ export default class AVL extends BT {
             node.left.setY(node.y);
 
             // ready for animation
-            this.affectedNodes = this.values(node.left);
+            this.affectedNodes = new Set(this.values(node.left));
 
             // set new coordinates for children of left child
-            let portionToChange = this.affectedNodes.slice(1);
+            let portionToChange = [...this.affectedNodes].slice(1);
             this.setNewCordsOnMove(portionToChange);
 
 
@@ -94,10 +116,10 @@ export default class AVL extends BT {
             node.right.setY(node.y);
 
             // ready for animation
-            this.affectedNodes = this.values(node.right);
+            this.affectedNodes = new Set(this.values(node.right));
 
             // set new coordinates for children of right child
-            let portionToChange = this.affectedNodes.slice(1);
+            let portionToChange = [...this.affectedNodes].slice(1);
             this.setNewCordsOnMove(portionToChange);
 
         // HAS TWO CHILDREN
@@ -111,7 +133,7 @@ export default class AVL extends BT {
             if(replacement.parent.right === replacement) replacement.parent.right = null;
 
             // ready for animation - get it so its prior children are grabbed, not its new ones
-            this.affectedNodes = this.values(replacement);
+            this.affectedNodes = new Set(this.values(replacement));
 
         
             if(node !== this.root){
@@ -138,7 +160,7 @@ export default class AVL extends BT {
             } 
 
             // set new coordinates for prior children of replacement
-            let portionToChange = this.affectedNodes.slice(1);
+            let portionToChange = [...this.affectedNodes].slice(1);
             this.setNewCordsOnMove(portionToChange);
 
         }
@@ -147,42 +169,7 @@ export default class AVL extends BT {
 
         this.numNodes --;
     }
-
-    insertAtTop(value){
-        const node = new AVLNode(value, this.numInsertedTotal);
-        this.setRoot(node);
-        node.setX(window.innerWidth * 0.43);
-        node.setY(window.innerHeight * 0.1);
-        this.numNodes++;
-        this.numInsertedTotal++;
-    }
     
-    addLeftChild(curr, node){
-
-        curr.setLeft(node);
-        node.setX(node.parent.x -50);
-        node.setY(node.parent.y + 50);
-
-        this.numNodes++;
-        this.numInsertedTotal++;
-
-        this.checkBalanceAfterOperation(node.parent, false);
-        
-
-    }
-
-    addRightChild(curr, node){
-
-        curr.setRight(node);
-        node.setX(node.parent.x + 50);
-        node.setY(node.parent.y + 50);
-
-        this.numNodes++;
-        this.numInsertedTotal++;
-
-        this.checkBalanceAfterOperation(node.parent, false);
-
-    }
 
     checkBalanceAfterOperation(node, found){
 
@@ -192,6 +179,9 @@ export default class AVL extends BT {
             if(Math.abs(node.getBalanceFactor()) > 1){
                 found = true;
                 this.balance(node);
+                this.checkBalanceAnimation.foundNode = node;
+            } else {
+                this.checkBalanceAnimation.checkingNodes.push(node);
             }
 
             this.checkBalanceAfterOperation(node.parent, found);
@@ -212,12 +202,15 @@ export default class AVL extends BT {
                 // and node.left is right heavy do a left-right rotation
                 if(node.left.getBalanceFactor() <= -1){
                     this.leftRightRotation(node);
-                    this.affectedNodes = this.values(node.parent);
+                    this.resetLayout(this.root);
+                    this.affectedNodes = new Set(this.values(node.parent));
+                    
                     return;
                 } else {
                     // else do a right rotation
                     this.rightRotation(node);
-                    this.affectedNodes = this.values(node.parent);
+                    this.resetLayout(this.root);
+                    this.affectedNodes = new Set(this.values(node.parent));
                     return;
                 }
 
@@ -226,12 +219,14 @@ export default class AVL extends BT {
                 //and node.right is left heavy do a right-left rotation
                 if(node.right.getBalanceFactor() >= 1){
                     this.rightLeftRotation(node);
-                    this.affectedNodes = this.values(node.parent);
+                    this.resetLayout(this.root);
+                    this.affectedNodes = new Set(this.values(node.parent));
                     return;
                 } else {
                     // else do a left rotation
                     this.leftRotation(node);
-                    this.affectedNodes = this.values(node.parent);
+                    this.resetLayout(this.root);
+                    this.affectedNodes = new Set(this.values(node.parent));
                     return;
                 }
                 
@@ -270,6 +265,9 @@ export default class AVL extends BT {
 
         node.setX(node.x -50);
         node.setY(node.y +50);
+
+        // set nodes that need adjustment
+        return this.values(replacement);
         
     }
 
@@ -284,15 +282,10 @@ export default class AVL extends BT {
         node.setLeft(replacement.right);
 
         if(node.parent){
-            // console.log("node parent : " + node.parent.value);
             if(node.parent.left === node){
-                // console.log("changing node's parent left from : " + node.parent.left.value);
                 node.parent.setLeft(replacement);
-                // console.log("to: " + node.parent.left.value);
             } else if(node.parent && node.parent.right === node){
-                // console.log("changing node's parent right from : " + node.parent.right.value);
                 node.parent.setRight(replacement);
-                // console.log("to: " +  node.parent.right.value);
             } 
         }
 
@@ -300,13 +293,13 @@ export default class AVL extends BT {
         if(node === this.root){
             this.setRoot(replacement);
         }
-        // console.log("node : " + node.value + " right : " + (node.right ? node.right.value : " null") + " left : " + (node.left ? node.left.value : " null") + " parent:  " + (node.parent ? node.parent.value : " null"));
-        // console.log("replacement : " + replacement.value + " right : " + (replacement.right ? replacement.right.value : " null") + " left : " + (replacement.left ? replacement.left.value : " null") + " parent:  " + (replacement.parent ? replacement.parent.value : " null"));
 
+        return this.values(replacement);
     }
 
     leftRightRotation(node){
-        console.log("leftright rotation on node: " + node.value);
+        let nodes = [];
+
         this.leftRotation(node.left);
         this.rightRotation(node);
         

@@ -6,6 +6,7 @@ export default class AVLNode extends BSTNode{
         super(value, id);
         this.balanceFactor = 0;
         this.height = 0;
+        this.type = "avl";
     }
 
     getHeight(){

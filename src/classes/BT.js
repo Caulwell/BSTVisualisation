@@ -1,3 +1,4 @@
+import { insertAnimation } from "../util/animations";
 import BSTNode from "./BSTNode";
 
 export default class BT { 
@@ -6,9 +7,12 @@ export default class BT {
         this.root = null;
         this.numNodes = 0;
         this.numInsertedTotal = 0;
-        this.affectedNodes = [];
+        this.affectedNodes = new Set();
         this.foundNode = null;
+        this.insertionAnimation = {highlightNodes: [], node: null};
     }
+
+
 
     ///// GETTERS AND SETTERS ///////
     getRoot(){
@@ -44,35 +48,51 @@ export default class BT {
         return array;
     }
 
+    resetAnimationObjects(){
+        this.affectedNodes.clear();
+        this.insertionAnimation = {highlightNodes: [], node: null};
+    }
+
     ///// OPERATIONS ////////
 
     insert(value){
 
-        this.affectedNodes = [];
+        this.resetAnimationObjects();
 
         let curr = this.root;
         const node = new BSTNode(value, this.numInsertedTotal);
 
         if(this.root === null){
-            this.insertAtTop(value);
+            this.insertAtTop(node);
+            this.insertionAnimation.node = node;
             return;
 
         } else {
 
             for(;;){
+
+                // add this node to an array, as an object, with {node: curr, status: "</>/=="}
+
                 if(value < curr.value ){
+
+                    this.insertionAnimation.highlightNodes.push(curr);
 
                     if(curr.left === null){
                         this.addLeftChild(curr, node);
-                        return;
+                        this.insertionAnimation.node = node;
+                        return node;
                     }
 
                     curr = curr.left; 
 
                 } else if(value > curr.value || value === curr.value) {
+
+                    this.insertionAnimation.highlightNodes.push(curr);
+
                     if(curr.right === null){
                         this.addRightChild(curr, node);
-                        return;
+                        this.insertionAnimation.node = node;
+                        return node;
                     }
 
                     curr = curr.right; 
@@ -81,8 +101,7 @@ export default class BT {
         }
     }
 
-    insertAtTop(value){
-        const node = new BSTNode(value, this.numNodes);
+    insertAtTop(node){
         this.setRoot(node);
         node.setX(window.innerWidth * 0.43);
         node.setY(window.innerHeight * 0.1);
@@ -92,7 +111,7 @@ export default class BT {
 
     delete(node){
 
-        this.affectedNodes = [];
+        this.affectedNodes.clear();
 
         // IS A LEAF NODE
         if(node.left === null && node.right === null){
@@ -123,10 +142,10 @@ export default class BT {
             node.left.setY(node.y);
 
             // ready for animation
-            this.affectedNodes = this.values(node.left);
+            this.affectedNodes = new Set(this.values(node.left));
 
             // set new coordinates for children of left child
-            let portionToChange = this.affectedNodes.slice(1);
+            let portionToChange = [...this.affectedNodes].slice(1);
             this.setNewCordsOnMove(portionToChange);
 
 
@@ -146,10 +165,10 @@ export default class BT {
             node.right.setY(node.y);
 
             // ready for animation
-            this.affectedNodes = this.values(node.right);
+            this.affectedNodes = new Set(this.values(node.right));
 
             // set new coordinates for children of right child
-            let portionToChange = this.affectedNodes.slice(1);
+            let portionToChange = [...this.affectedNodes].slice(1);
             this.setNewCordsOnMove(portionToChange);
 
         // HAS TWO CHILDREN
@@ -163,7 +182,7 @@ export default class BT {
             if(replacement.parent.right === replacement) replacement.parent.right = null;
 
             // ready for animation - get it so its prior children are grabbed, not its new ones
-            this.affectedNodes = this.values(replacement);
+            this.affectedNodes = new Set(this.values(replacement));
 
         
             if(node !== this.root){
@@ -190,7 +209,7 @@ export default class BT {
             } 
 
             // set new coordinates for prior children of replacement
-            let portionToChange = this.affectedNodes.slice(1);
+            let portionToChange = [...this.affectedNodes].slice(1);
             this.setNewCordsOnMove(portionToChange);
 
         }
@@ -201,11 +220,11 @@ export default class BT {
     traversal(order){
         let nodes = [];
         if(order === "in"){
-            this.affectedNodes =  this.inOrder(this.root, nodes);
+            this.affectedNodes =  new Set(this.inOrder(this.root, nodes));
         } else if(order === "pre"){
-            this.affectedNodes =  this.preOrder(this.root, nodes);
+            this.affectedNodes =  new Set(this.preOrder(this.root, nodes));
         } else if(order === "post"){
-            this.affectedNodes =  this.postOrder(this.root, nodes);
+            this.affectedNodes =  new Set(this.postOrder(this.root, nodes));
         }
     }
 
@@ -247,7 +266,7 @@ export default class BT {
     }
 
     search(value){
-        this.affectedNodes = [];
+        this.affectedNodes.clear();
         let curr = this.root;
 
         while(true){
@@ -258,10 +277,10 @@ export default class BT {
                 this.foundNode = curr;
                 break;
             } else if(value < curr.value){
-                this.affectedNodes.push(curr);
+                this.affectedNodes.add(curr);
                 curr = curr.left;
             } else if(value > curr.value){
-                this.affectedNodes.push(curr);
+                this.affectedNodes.add(curr);
                 curr = curr.right;
                 
             }
@@ -285,8 +304,6 @@ export default class BT {
     }
 
     addLeftChild(curr, node){
-
-        
         curr.setLeft(node);
         node.setX(node.parent.x -50);
         node.setY(node.parent.y + 50);
@@ -314,7 +331,7 @@ export default class BT {
         if(root){
             if(side === "l") root.setX(root.x - 50);
             if(side === "r") root.setX(root.x + 50);
-            this.affectedNodes.push(root);
+            this.affectedNodes.add(root);
             this.shiftTree(root.left, side);
             this.shiftTree(root.right, side); 
         } else {
@@ -386,8 +403,20 @@ export default class BT {
         } else {
             return;
         }
+    }
 
-        
+    resetLayout(node){
+        if(!node) return;
+
+        if(node.parent){
+            
+            if(node.lr == "l") node.x = node.parent.x -50;
+            if(node.lr == "r") node.x = node.parent.x + 50;
+            node.y = node.parent.y + 50;
+        }
+
+        this.resetLayout(node.left);
+        this.resetLayout(node.right);
     }
 
     getTreeFromJSON(tree){

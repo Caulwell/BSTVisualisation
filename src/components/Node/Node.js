@@ -11,7 +11,7 @@ export default function Node({node, deleteNode}){
     const [userContext] = useContext(UserContext);
 
     useEffect(() => {
-        insertAnimation(node, userContext.animationSpeed);
+        // insertAnimation(node, userContext.animationSpeed);
         setInserted(true);
     },[]);
 
@@ -35,8 +35,12 @@ export default function Node({node, deleteNode}){
             <div>{node.parent ? "Parent: " + node.parent.value  : "Parent: null"}</div>
             <div>{node.left ? "Left: " + node.left.value  : "Left: null"}</div>
             <div>{node.right ? "Right: " + node.right.value  : "Right: null"}</div>
-            {(node.getBalanceFactor() >=0 || node.getBalanceFactor() < 0) && <div>Balance Factor: {node.getBalanceFactor()}</div>}
-            {node.getHeight() >=0 && <div>Height: {node.getHeight()}</div>}
+            
+            {node.type === "avl" && <>
+                {(node.getBalanceFactor() >=0 || node.getBalanceFactor() < 0) && <div>Balance Factor: {node.getBalanceFactor()}</div>}
+                {node.getHeight() >=0 && <div>Height: {node.getHeight()}</div>}
+                </>
+            }
             <div className="tooltip-button"><Button onClick={handleClick} name="deleteButton" size="small" color="error" variant="contained" >Delete</Button></div>
             </>
         )

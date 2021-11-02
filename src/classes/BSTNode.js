@@ -10,7 +10,7 @@ export default class BSTNode{
         this.x = x;
         this.y = y;
         this.lr = lr;
-        
+        this.type = "bst";
     }
 
 
