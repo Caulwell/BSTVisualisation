@@ -47,7 +47,6 @@ function insertAnimation(testNodes, node, animationSpeed){
 
     return new Promise((resolve, reject) => {
 
-        console.log(testNodes, node);
 
         const maxDuration = 3000;
 
@@ -62,7 +61,6 @@ function insertAnimation(testNodes, node, animationSpeed){
             let node = element;
 
             let HTMLnode = document.getElementById(node.id);
-            console.log(HTMLnode);
             HTMLnode.classList.add(`highlighting${node.id}`);
 
             tl.add({
@@ -102,9 +100,6 @@ function insertAnimation(testNodes, node, animationSpeed){
 
 function checkBalanceAnimation(testNodes, foundNode, animationSpeed){
 
-    console.log("checkBalance animation registered");
-    console.log(testNodes, foundNode);
-
     return new Promise((resolve, reject) => {
 
         const maxDuration = 3000;
@@ -116,7 +111,6 @@ function checkBalanceAnimation(testNodes, foundNode, animationSpeed){
         
         // function to resolve promise if !foundNode and loop of animations finished
         const checkLoopComplete = index => {
-            console.log(index, testNodes.length);
             if(index == testNodes.length -1){
                 if(!foundNode) resolve("done");
             }
@@ -128,7 +122,6 @@ function checkBalanceAnimation(testNodes, foundNode, animationSpeed){
             let node = element;
 
             let HTMLnode = document.getElementById(node.id);
-            console.log(HTMLnode);
             HTMLnode.classList.add(`highlighting${node.id}`);
 
             tl.add({
@@ -187,8 +180,8 @@ function moveNodes(nodes, animationSpeed){
 
         tl.add({
             targets: `.moving${node.id}`,
-            translateX: {value: node.x-20, duration: maxDuration*animationSpeed},
-            translateY: {value: node.y-20, duration: maxDuration*animationSpeed}
+            translateX: {value: node.moveToX-20, duration: maxDuration*animationSpeed},
+            translateY: {value: node.moveToY-20, duration: maxDuration*animationSpeed}
         });
 
         HTMLnode.classList.remove(`moving${node.id}`);

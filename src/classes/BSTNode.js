@@ -11,6 +11,8 @@ export default class BSTNode{
         this.y = y;
         this.lr = lr;
         this.type = "bst";
+        this.moveToX = x;
+        this.moveToY = y;
     }
 
 

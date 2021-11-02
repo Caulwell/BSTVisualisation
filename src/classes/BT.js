@@ -10,6 +10,7 @@ export default class BT {
         this.affectedNodes = new Set();
         this.foundNode = null;
         this.insertionAnimation = {highlightNodes: [], node: null};
+        this.shiftNodesAnimation = [];
     }
 
 
@@ -51,6 +52,7 @@ export default class BT {
     resetAnimationObjects(){
         this.affectedNodes.clear();
         this.insertionAnimation = {highlightNodes: [], node: null};
+        this.shiftNodesAnimation = [];
     }
 
     ///// OPERATIONS ////////
@@ -329,8 +331,12 @@ export default class BT {
     shiftTree(root, side){
 
         if(root){
-            if(side === "l") root.setX(root.x - 50);
-            if(side === "r") root.setX(root.x + 50);
+            if(side === "l"){
+                root.moveToX -=50;
+            } 
+            if(side === "r"){
+                root.moveToX +=50;
+            } 
             this.affectedNodes.add(root);
             this.shiftTree(root.left, side);
             this.shiftTree(root.right, side); 
@@ -345,7 +351,7 @@ export default class BT {
             const leftsRightMost = this.getRightMostElement(root.left, root.left);
             const rightsLeftMost = this.getLeftMostElement(root.right, root.right);
 
-            if(Math.abs(leftsRightMost.x - rightsLeftMost.x) <50 ){
+            if(Math.abs(leftsRightMost.moveToX - rightsLeftMost.moveToX) <50 || leftsRightMost.moveToX > rightsLeftMost.moveToX ){
                 this.shiftTree(root.right, "r");
                 this.shiftTree(root.left, "l");
             }
@@ -393,13 +399,12 @@ export default class BT {
   
 
     checkLayout(root){
+        
 
         if(root){
             this.checkLayout(root.left);
             this.checkLayout(root.right);
-            // this.checkGrandChildren(root);
-            this.checkChildrenTrees(root);
-            
+            this.checkChildrenTrees(root);  
         } else {
             return;
         }
@@ -410,13 +415,37 @@ export default class BT {
 
         if(node.parent){
             
-            if(node.lr == "l") node.x = node.parent.x -50;
-            if(node.lr == "r") node.x = node.parent.x + 50;
-            node.y = node.parent.y + 50;
+            if(node.lr == "l") node.moveToX = node.parent.moveToX -50;
+            if(node.lr == "r") node.moveToX = node.parent.moveToX + 50;
+            node.moveToY = node.parent.moveToY + 50;
+        } else {
+            node.moveToX = window.innerWidth * 0.43;
+            node.moveToY = window.innerHeight * 0.1;
         }
 
         this.resetLayout(node.left);
         this.resetLayout(node.right);
+    }
+
+    findAlteredNodes(node){
+        if(!node) return;
+
+        if(node.x !== node.moveToX || node.y !== node.moveToY){
+            this.shiftNodesAnimation.push(node);
+        } 
+
+        this.findAlteredNodes(node.left);
+        this.findAlteredNodes(node.right);
+    }
+
+    resolveCoords(node){
+        if(!node) return;
+
+        node.x = node.moveToX;
+        node.y = node.moveToY;
+
+        this.resolveCoords(node.left);
+        this.resolveCoords(node.right);
     }
 
     getTreeFromJSON(tree){

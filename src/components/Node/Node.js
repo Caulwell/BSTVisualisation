@@ -41,6 +41,11 @@ export default function Node({node, deleteNode}){
                 {node.getHeight() >=0 && <div>Height: {node.getHeight()}</div>}
                 </>
             }
+
+            <div>{"X: " + node.x}</div>
+            <div>{"Y: " + node.y}</div>
+            <div>{"moveToX: " + node.moveToX}</div>
+            <div>{"moveToY: " + node.moveToY}</div>
             <div className="tooltip-button"><Button onClick={handleClick} name="deleteButton" size="small" color="error" variant="contained" >Delete</Button></div>
             </>
         )
@@ -81,7 +86,7 @@ export default function Node({node, deleteNode}){
         
         <g>
 
-        {node.parent && <>
+        {node.parent && inserted && <>
                 
             {node.lr === "l" ? 
             

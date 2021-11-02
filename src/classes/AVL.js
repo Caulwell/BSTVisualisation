@@ -202,15 +202,11 @@ export default class AVL extends BT {
                 // and node.left is right heavy do a left-right rotation
                 if(node.left.getBalanceFactor() <= -1){
                     this.leftRightRotation(node);
-                    this.resetLayout(this.root);
-                    this.affectedNodes = new Set(this.values(node.parent));
                     
                     return;
                 } else {
                     // else do a right rotation
                     this.rightRotation(node);
-                    this.resetLayout(this.root);
-                    this.affectedNodes = new Set(this.values(node.parent));
                     return;
                 }
 
@@ -219,14 +215,10 @@ export default class AVL extends BT {
                 //and node.right is left heavy do a right-left rotation
                 if(node.right.getBalanceFactor() >= 1){
                     this.rightLeftRotation(node);
-                    this.resetLayout(this.root);
-                    this.affectedNodes = new Set(this.values(node.parent));
                     return;
                 } else {
                     // else do a left rotation
                     this.leftRotation(node);
-                    this.resetLayout(this.root);
-                    this.affectedNodes = new Set(this.values(node.parent));
                     return;
                 }
                 
@@ -260,14 +252,13 @@ export default class AVL extends BT {
             this.setRoot(replacement);
         }
 
-        replacement.setX(node.x);
-        replacement.setY(node.y);
+        // replacement.setX(node.x);
+        // replacement.setY(node.y);
 
-        node.setX(node.x -50);
-        node.setY(node.y +50);
+        // node.setX(node.x -50);
+        // node.setY(node.y +50);
 
         // set nodes that need adjustment
-        return this.values(replacement);
         
     }
 
@@ -294,7 +285,6 @@ export default class AVL extends BT {
             this.setRoot(replacement);
         }
 
-        return this.values(replacement);
     }
 
     leftRightRotation(node){

@@ -75,28 +75,33 @@ export default function Tree({type}){
 
       console.log("insert animation: " + insertDone);
 
-      // after insert animation done, change internal data structure if node overlaps etc
+      // if avl tree - check for unbalanced nodes, animate this checking - balance the tree in memory
       if(type === "avl"){
-  
         if(insertedNode.parent) {
-          console.log("doing check balance animation");
           tree.checkBalanceAfterOperation(insertedNode.parent, false);
           const checkBalanceDone = await checkBalanceAnimation(tree.checkBalanceAnimation.checkingNodes, tree.checkBalanceAnimation.foundNode, userContext.animationSpeed);
           console.log("check balance animation " + checkBalanceDone);
         }
-        
-        
       } 
 
+      // reset x and ys to original values - new attribute moveTo
+      tree.resetLayout(tree.getRoot());
 
+      // check for overlaps - change moveTo again
       tree.checkLayout(tree.getRoot());
 
+      // animate only the nodes for which moveTo is different to current x and y
+      tree.findAlteredNodes(tree.getRoot());
 
       await timer(500);
-      moveNodes([...tree.getAffectedNodes()], userContext.animationSpeed);
+      moveNodes(tree.shiftNodesAnimation, userContext.animationSpeed);
 
+      // reset x and ys to moveTo
+      tree.resolveCoords(tree.getRoot());
+      
+      // set current tree for later retrieval
       setUserContext(oldValues => {
-        return {...oldValues, currentTree: tree}
+        return {...oldValues, currentTree: tree};
       });
     }
     return;
