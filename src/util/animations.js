@@ -51,7 +51,7 @@ function insertAnimation(testNodes, node, animationSpeed){
         const maxDuration = 3000;
 
         const tl = anime.timeline({
-        
+            
         });
 
         // highlight each node on the way

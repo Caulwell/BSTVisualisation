@@ -20,10 +20,6 @@ export default class AVLNode extends BSTNode{
         }
     }
 
-    setHeight(value){
-        this.height = value;
-    }
-
     getBalanceFactor(){
         let nodeLeftHeight = this.left ? this.left.getHeight() : -1;
         let nodeRightHeight = this.right ? this.right.getHeight() : -1;
@@ -31,12 +27,4 @@ export default class AVLNode extends BSTNode{
         return nodeLeftHeight - nodeRightHeight;
     }
 
-    setBalanceFactor(value){
-        this.balanceFactor = value;
-
-        if(this.balanceFactor !== 0 && this.balanceFactor !== -1 && this.balanceFactor !== 1){
-            console.error("node: " + this.value + " has a balance factor of: " + this.balanceFactor);
-        }
-
-    }
 }

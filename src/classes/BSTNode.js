@@ -15,6 +15,18 @@ export default class BSTNode{
         this.moveToY = y;
     }
 
+    getParent(){
+        return this.parent;
+    }
+
+    getLeft(){
+        return this.left;
+    }
+
+    getRight(){
+        return this.right;
+    }
+
 
     setLeft(node){
         this.left = node;

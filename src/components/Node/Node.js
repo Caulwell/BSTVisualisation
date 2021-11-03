@@ -28,6 +28,14 @@ export default function Node({node, deleteNode}){
         setTooltipOpen(!tooltipOpen);
     };
 
+    const getColor = () => {
+        if(node.rb){
+            return node.rb;
+        } else {
+            return "green";
+        }
+    }
+
     const getTooltipContent = () => {
         return (
             <>
@@ -63,7 +71,7 @@ export default function Node({node, deleteNode}){
                 cx="20" 
                 cy="20" 
                 r="20" 
-                stroke="green" 
+                stroke={getColor()} 
                 strokeWidth="4" 
                 fill="white" 
                 className={node.id}

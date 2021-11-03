@@ -82,7 +82,17 @@ export default function Tree({type}){
           const checkBalanceDone = await checkBalanceAnimation(tree.checkBalanceAnimation.checkingNodes, tree.checkBalanceAnimation.foundNode, userContext.animationSpeed);
           console.log("check balance animation " + checkBalanceDone);
         }
-      } 
+      }
+      
+      // if rb tree - restore rb tree properties
+      if(type === "rb"){
+        console.log("got here")
+        if(insertedNode.parent){
+          console.log("hello");
+          tree.fixOnInsertion(insertedNode);
+          
+        }
+      }
 
       // reset x and ys to original values - new attribute moveTo
       tree.resetLayout(tree.getRoot());
