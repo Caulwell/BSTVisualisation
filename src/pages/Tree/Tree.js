@@ -111,8 +111,7 @@ export default function Tree({type}){
         return {...oldValues, currentTree: tree};
       });
     }
-    return;
-  };
+  }
 
   const searchForNode = (value) => {
     if(value !== ""){
@@ -133,19 +132,22 @@ export default function Tree({type}){
         if(deletedParent) {
           tree.checkBalanceAfterOperation(deletedParent, false);
           await checkBalanceAnimation(tree.checkBalanceAnimation.checkingNodes, tree.checkBalanceAnimation.foundNode, userContext.animationSpeed); 
+        } else {
+          tree.checkBalanceAfterOperation(tree.getRoot(), false);
+          await checkBalanceAnimation(tree.checkBalanceAnimation.checkingNodes, tree.checkBalanceAnimation.foundNode, userContext.animationSpeed); 
         }
 
       } else if(type === "rb"){
         
       }
 
-      tree.resetLayout(tree.getRoot());
-      tree.checkLayout(tree.getRoot());
-      tree.findAlteredNodes(tree.getRoot());
-      await moveNodes(tree.shiftNodesAnimation, userContext.animationSpeed);
-
       
     }
+
+    tree.resetLayout(tree.getRoot());
+    tree.checkLayout(tree.getRoot());
+    tree.findAlteredNodes(tree.getRoot());
+    await moveNodes(tree.shiftNodesAnimation, userContext.animationSpeed);
 
     
     setNodes(tree.values(tree.getRoot()));
