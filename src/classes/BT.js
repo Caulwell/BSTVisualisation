@@ -62,12 +62,12 @@ export default class BT {
         this.resetAnimationObjects();
 
         let curr = this.root;
-        const node = new BSTNode(value, this.numInsertedTotal);
+        const node = this.createNode(value);
 
         if(this.root === null){
             this.insertAtTop(node);
             this.insertionAnimation.node = node;
-            return;
+            return node;
 
         } else {
 

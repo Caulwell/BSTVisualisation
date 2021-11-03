@@ -13,50 +13,8 @@ export default class AVL extends BT {
         this.checkBalanceAnimation = {checkingNodes: [], foundNode: null};
     }
 
-    insert(value){
-
-        this.resetAnimationObjects();
-
-        let curr = this.root;
-        const node = new AVLNode(value, this.numInsertedTotal);
-
-        if(this.root === null){
-            this.insertAtTop(node);
-            this.insertionAnimation.node = node;
-            return node;
-
-        } else {
-
-            for(;;){
-
-                // add this node to an array, as an object, with {node: curr, status: "</>/=="}
-
-                if(value < curr.value ){
-
-                    this.insertionAnimation.highlightNodes.push(curr);
-
-                    if(curr.left === null){
-                        this.addLeftChild(curr, node);
-                        this.insertionAnimation.node = node;
-                        return node;
-                    }
-
-                    curr = curr.left; 
-
-                } else if(value > curr.value || value === curr.value) {
-
-                    this.insertionAnimation.highlightNodes.push(curr);
-
-                    if(curr.right === null){
-                        this.addRightChild(curr, node);
-                        this.insertionAnimation.node = node;
-                        return node;
-                    }
-
-                    curr = curr.right; 
-                }
-            }
-        }
+    createNode(value){
+        return new AVLNode(value, this.numInsertedTotal);
     }
 
 

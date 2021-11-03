@@ -46,54 +46,15 @@ export default class RB extends BT {
     }
 
 
+    createNode(value){
+        let node = new RBNode(value, this.numInsertedTotal);
+        node.rb = "red";
+        return node;
+    }
 
-    insert(value){
-
-        this.resetAnimationObjects();
-
-        let curr = this.root;
-        const node = new RBNode(value, this.numInsertedTotal);
-
-        if(this.root === null){
-            this.insertAtTop(node);
-            node.rb = "black";
-            this.insertionAnimation.node = node;
-            return node;
-
-        } else {
-
-            node.rb = "red";
-
-            for(;;){
-
-                // add this node to an array, as an object, with {node: curr, status: "</>/=="}
-
-                if(value < curr.value ){
-
-                    this.insertionAnimation.highlightNodes.push(curr);
-
-                    if(curr.left === null){
-                        this.addLeftChild(curr, node);
-                        this.insertionAnimation.node = node;
-                        return node;
-                    }
-
-                    curr = curr.left; 
-
-                } else if(value > curr.value || value === curr.value) {
-
-                    this.insertionAnimation.highlightNodes.push(curr);
-
-                    if(curr.right === null){
-                        this.addRightChild(curr, node);
-                        this.insertionAnimation.node = node;
-                        return node;
-                    }
-
-                    curr = curr.right; 
-                }
-            }
-        }
+    insertAtTop(node){
+        super.insertAtTop(node);
+        node.rb = "black";
     }
 
 
