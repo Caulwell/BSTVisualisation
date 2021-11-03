@@ -8,7 +8,7 @@ import { UserContext } from "../../context/UserContext";
 import {Alert} from "@mui/material";
 import AVL from "../../classes/AVL";
 import RB from "../../classes/RB";
-import { insertAnimation, moveNodes, searchAnimation, traversalAnimation, checkBalanceAnimation } from "../../util/animations";
+import { insertAnimation, deleteAnimation, moveNodes, searchAnimation, traversalAnimation, checkBalanceAnimation } from "../../util/animations";
 
 
 export default function Tree({type}){
@@ -68,19 +68,17 @@ export default function Tree({type}){
       let insertedNode = tree.insert(parseInt(value));
       // render node in intitial position
       setNodes(tree.values(tree.getRoot()));
-      // wait for node to render
+
       await timer(100);
       // play insertion animation
-      const insertDone = await insertAnimation(tree.insertionAnimation.highlightNodes, tree.insertionAnimation.node, userContext.animationSpeed);
+      await insertAnimation(tree.insertionAnimation.highlightNodes, tree.insertionAnimation.node, userContext.animationSpeed);
 
-      console.log("insert animation: " + insertDone);
 
       // if avl tree - check for unbalanced nodes, animate this checking - balance the tree in memory
       if(type === "avl"){
         if(insertedNode.parent) {
           tree.checkBalanceAfterOperation(insertedNode.parent, false);
-          const checkBalanceDone = await checkBalanceAnimation(tree.checkBalanceAnimation.checkingNodes, tree.checkBalanceAnimation.foundNode, userContext.animationSpeed);
-          console.log("check balance animation " + checkBalanceDone);
+          await checkBalanceAnimation(tree.checkBalanceAnimation.checkingNodes, tree.checkBalanceAnimation.foundNode, userContext.animationSpeed);
         }
       }
       
@@ -103,8 +101,7 @@ export default function Tree({type}){
       // animate only the nodes for which moveTo is different to current x and y
       tree.findAlteredNodes(tree.getRoot());
 
-      await timer(500);
-      moveNodes(tree.shiftNodesAnimation, userContext.animationSpeed);
+      await moveNodes(tree.shiftNodesAnimation, userContext.animationSpeed);
 
       // reset x and ys to moveTo
       tree.resolveCoords(tree.getRoot());
@@ -124,14 +121,35 @@ export default function Tree({type}){
     }
   };
 
-  const deleteNode = (node) => {
-    tree.delete(node);
+  async function deleteNode(node){
 
-    tree.checkLayout();
+    let deletedParent = tree.delete(node);
+    await deleteAnimation(tree.deletionAnimation.highlightNodes, tree.deletionAnimation.node, userContext.animationSpeed);
 
+    // if avl tree - check for unbalanced nodes, animate this checking - balance the tree in memory
+    if(type === "avl" || type === "rb"){
+
+      if(type === "avl"){
+        if(deletedParent) {
+          tree.checkBalanceAfterOperation(deletedParent, false);
+          await checkBalanceAnimation(tree.checkBalanceAnimation.checkingNodes, tree.checkBalanceAnimation.foundNode, userContext.animationSpeed); 
+        }
+
+      } else if(type === "rb"){
+        
+      }
+
+      tree.resetLayout(tree.getRoot());
+      tree.checkLayout(tree.getRoot());
+      tree.findAlteredNodes(tree.getRoot());
+      await moveNodes(tree.shiftNodesAnimation, userContext.animationSpeed);
+
+      
+    }
+
+    
     setNodes(tree.values(tree.getRoot()));
-
-    moveNodes([...tree.getAffectedNodes()], userContext.animationSpeed);
+    tree.resolveCoords(tree.getRoot());
 
     setUserContext(oldValues => {
       return {...oldValues, currentTree: tree};

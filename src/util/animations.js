@@ -98,6 +98,65 @@ function insertAnimation(testNodes, node, animationSpeed){
     
 }
 
+function deleteAnimation(testNodes, node, animationSpeed){
+
+    return new Promise((resolve, reject) => {
+
+
+        const maxDuration = 3000;
+
+        const tl = anime.timeline({
+            
+        });
+
+        // highlight each node on the way
+        
+        testNodes.forEach(element => {
+
+            let node = element;
+
+            let HTMLnode = document.getElementById(node.id);
+            HTMLnode.classList.add(`highlighting${node.id}`);
+
+            tl.add({
+                targets: `.highlighting${node.id}`,
+                scale: {value: 1.5, duration: maxDuration*animationSpeed+100},
+            });
+            tl.add({
+                targets: `.highlighting${node.id}`,
+                scale: {value: 1, duration: maxDuration*animationSpeed+100}
+            });
+
+            HTMLnode.classList.remove(`highlighting${node.id}`);
+        });
+
+        // insert node
+        let HTMLnode = document.getElementById(node.id);
+        HTMLnode.classList.add(`deleteNode`);
+
+        tl.add({
+            targets: `.deleteNode`,
+            scale: {value: 2, duration: maxDuration*animationSpeed+100},
+        });
+        tl.add({
+            targets: `.deleteNode`,
+            scale: {value: 1, duration: maxDuration*animationSpeed+100}
+        });
+
+        tl.add({
+            targets: ".deleteNode",
+            translateY: {value: 1000, duration: maxDuration*animationSpeed},
+            complete: (anim) => {
+                resolve("done");
+            }
+        });
+
+        HTMLnode.classList.remove("deleteNode");
+    });
+
+    
+}
+
 function checkBalanceAnimation(testNodes, foundNode, animationSpeed){
 
     return new Promise((resolve, reject) => {
@@ -166,27 +225,44 @@ function checkBalanceAnimation(testNodes, foundNode, animationSpeed){
 
 function moveNodes(nodes, animationSpeed){
 
-    const maxDuration = 500;
+    return new Promise((resolve, reject) => {
 
-    const tl = anime.timeline({
+        const maxDuration = 500;
+
+        const tl = anime.timeline({
+        
+        });  
+
+        // function to resolve promise if loop of animations finished
+        const checkLoopComplete = index => {
+            console.log("checking loop complete: nodes.length = " + nodes.length + " i :" + index );
+            if(index == nodes.length -1){
+                resolve("done");
+            }
+        };
+
+        for(let i = 0; i < nodes.length; i++){
+
+
+            console.log(" i : " + i + "nodes.length " + nodes.length);
+            let node = nodes[i];
+            let HTMLnode = document.getElementById(node.id);
+            HTMLnode.classList.add(`moving${node.id}`);
+
+            tl.add({
+                targets: `.moving${node.id}`,
+                translateX: {value: node.moveToX-20, duration: maxDuration*animationSpeed},
+                translateY: {value: node.moveToY-20, duration: maxDuration*animationSpeed},
+                complete: (anim) => {
+                    checkLoopComplete(i);
+                }
+            });
+
+            HTMLnode.classList.remove(`moving${node.id}`);
+        }
+
+    });
     
-    });  
-
-    for(let i = 0; i < nodes.length; i++){
-
-        let node = nodes[i];
-        let HTMLnode = document.getElementById(node.id);
-        HTMLnode.classList.add(`moving${node.id}`);
-
-        tl.add({
-            targets: `.moving${node.id}`,
-            translateX: {value: node.moveToX-20, duration: maxDuration*animationSpeed},
-            translateY: {value: node.moveToY-20, duration: maxDuration*animationSpeed}
-        });
-
-        HTMLnode.classList.remove(`moving${node.id}`);
-    }
-
 }
 
 
@@ -218,4 +294,4 @@ function traversalAnimation(nodes, animationSpeed){
 
 
 
-export {insertAnimation, checkBalanceAnimation, searchAnimation, moveNodes, traversalAnimation};
+export {insertAnimation, deleteAnimation, checkBalanceAnimation, searchAnimation, moveNodes, traversalAnimation};

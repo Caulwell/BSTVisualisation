@@ -1,4 +1,5 @@
 import BT from "./BT";
+import BSTNode from "./BSTNode";
 
 export default class BST extends BT { 
 
