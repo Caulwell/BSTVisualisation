@@ -1,8 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import Tree from "./pages/Tree/Tree";
-import Login from "./pages/Auth/Login";
-import Register from "./pages/Auth/Register";
+import Auth from "./pages/Auth/Auth";
 import {useContext, useEffect, useCallback, useState} from "react";
 import { UserContext } from "./context/UserContext";
 
@@ -116,7 +115,7 @@ export default function App() {
     <Router>
       <div id="App">
       <ThemeProvider theme={theme}>
-      <Header handleLogout={handleLogout} loggedIn={userContext.token ? true : false} user={userContext.details}/>
+      {/* <Header handleLogout={handleLogout} loggedIn={userContext.token ? true : false} user={userContext.details}/> */}
       <Switch>
         <Route exact path="/">
           <Welcome/>
@@ -135,11 +134,8 @@ export default function App() {
         <Route exact path="/savedTrees">
           <TreeList/>
         </Route>
-        <Route path="/register">
-        {userContext.token ? <Redirect to="/"/> :  <Register/> }
-        </Route>
-        <Route path="/login">
-        {userContext.token ? <Redirect to="/"/> :  <Login/> }
+        <Route path="/auth">
+        {userContext.token ? <Redirect to="/"/> :  <Auth/> }
         </Route>
       </Switch>
       </ThemeProvider>

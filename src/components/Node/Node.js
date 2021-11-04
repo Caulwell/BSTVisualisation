@@ -50,10 +50,10 @@ export default function Node({node, deleteNode}){
                 </>
             }
 
-            <div>{"X: " + node.x}</div>
+            {/* <div>{"X: " + node.x}</div>
             <div>{"Y: " + node.y}</div>
             <div>{"moveToX: " + node.moveToX}</div>
-            <div>{"moveToY: " + node.moveToY}</div>
+            <div>{"moveToY: " + node.moveToY}</div> */}
             <div className="tooltip-button"><Button onClick={handleClick} name="deleteButton" size="small" color="error" variant="contained" >Delete</Button></div>
             </>
         )

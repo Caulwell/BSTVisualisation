@@ -8,11 +8,13 @@ import SpeedIcon from '@mui/icons-material/Speed';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import NatureIcon from '@mui/icons-material/Nature';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { UserContext } from "../../context/UserContext";
 
 export default function Control({type, props}){
 
     const [anchorEl, setAnchorEl] = useState(null);
+    const [userContext, setUserContext] = useContext(UserContext);
 
     let popperTrue = false;
 
@@ -23,56 +25,54 @@ export default function Control({type, props}){
                 popperTrue = true;
                 return ( 
                     <NatureIcon fontSize="large"/>
-                )
+                );
             case "New Node":
                 popperTrue = true;
                 return (
                 <AddCircleOutlineIcon fontSize="large"/>
-                )
+                );
             case "Search":
                 popperTrue = true;
                 return (
                     <SearchIcon fontSize="large"/> 
-                )
+                );
             case "In Order":
                 return (
                     <NordicWalkingIcon fontSize="large"/>
-                )
+                );
             case "Pre Order":
                 return (
                     <NordicWalkingIcon fontSize="large"/> 
-                )
+                );
             case "Post Order":
                 return (
                     <NordicWalkingIcon fontSize="large"/>
- 
-                )
+                );
             case "Animation Speed":
                 popperTrue = true;
                 return (
                     <SpeedIcon fontSize="large"/>
-                )
+                );
             case "Login/Register":
                 return (
                     <AccountCircleIcon fontSize="large"/>
-                )
+                );
             case "Save Tree":
                 popperTrue = true;
                 return (
                     <SaveAltIcon fontSize="large"/>
-                )
+                );
             case "Upload CSV":
                 popperTrue = true;
                 return (
                     <UploadFileIcon fontSize="large"/>
-                )
+                );
         }
     };
 
     const handleClick = (e) => {
         setAnchorEl(anchorEl ? null : e.currentTarget);
         if(type === "In Order" || type === "Pre Order" || type === "Post Order"){
-            console.log(e.currentTarget.getAttribute("name"));
             props.handleButtonPress(e);
         }
     }
@@ -143,14 +143,37 @@ export default function Control({type, props}){
 
     return (
         <>
-        {type === "Login/Register" && <Divider/>}
+        {type === "Login/Register" && !userContext.details ? 
+            <>
+            <Divider/>
+            <ListItem button component={Link} to={"/auth"} aria-describedby={id} name={type} onClick={handleClick}>
+                <ListItemIcon>
+                    {getContent()}
+                </ListItemIcon>
+                <ListItemText primary={type}/>
+            </ListItem>
+            </>
+            : 
+            type === "Login/Register" && userContext.details ?
+            <>
+            <Divider/>
+            <ListItem button component={Link} to={"/savedTrees"} aria-describedby={id} name={type} onClick={handleClick}>
+                <ListItemIcon>
+                    {getContent()}
+                </ListItemIcon>
+                <ListItemText primary={userContext.details.username}/>
+            </ListItem>
+            </>
+        :
         <ListItem button aria-describedby={id} name={type} onClick={handleClick}>
             <ListItemIcon>
                 {getContent()}
             </ListItemIcon>
             <ListItemText primary={type}/>
         </ListItem>
-        
+        }   
+
+
         {popperTrue && 
                 <Popper id={id} open={open} anchorEl={anchorEl} placement="right">
                     <Paper>

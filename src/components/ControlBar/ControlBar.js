@@ -1,6 +1,7 @@
 import {useState, useRef, useContext, useEffect} from "react";
+import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Divider, Drawer, Toolbar, List} from "@mui/material";
+import { Divider, Drawer, Toolbar, List, Typography} from "@mui/material";
 import "./ControlBar.css";
 import Control from "../Control/Control";
 import { UserContext } from "../../context/UserContext";
@@ -105,7 +106,11 @@ export default function Controls({addNode, searchForNode, traverseTree, saveTree
                 variant="permanent"
                 anchor="left"
         >
-        <Toolbar/>
+        <Toolbar>
+        <Typography variant="h6" component={Link} to={"/"}>
+                TreeVis
+              </Typography>
+        </Toolbar>
         <Divider/>
         <List>
             {controls.map((control, index) => {
