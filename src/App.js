@@ -115,7 +115,7 @@ export default function App() {
     <Router>
       <div id="App">
       <ThemeProvider theme={theme}>
-      {/* <Header handleLogout={handleLogout} loggedIn={userContext.token ? true : false} user={userContext.details}/> */}
+      <Header handleLogout={handleLogout} loggedIn={userContext.token ? true : false} user={userContext.details}/>
       <Switch>
         <Route exact path="/">
           <Welcome/>

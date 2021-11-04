@@ -211,10 +211,10 @@ export default function Tree({type}){
 
     return (
       <>
-      {alert ? <Alert severity={alert.severity}>{alert.text}</Alert>: null}
+      {/* {alert ? <Alert severity={alert.severity}>{alert.text}</Alert>: null} */}
     <div className="Tree flex">
-    <Controls addNode={addNode} searchForNode={searchForNode} traverseTree={traverseTree} saveTree={saveTree} treeFromCSV={treeFromCSV}/>
-        <svg width={window.innerWidth - 200} height={window.innerHeight - 300} viewBox={`0 0 ${window.innerWidth-200} ${window.innerHeight-300}`} name="viewBox">
+    <Controls addNode={addNode} searchForNode={searchForNode} traverseTree={traverseTree} saveTree={saveTree} treeFromCSV={treeFromCSV} renderedBy={"tree"}/>
+        <svg width={window.innerWidth - 200} height={window.innerHeight-110} viewBox={`0 0 ${window.innerWidth-200} ${window.innerHeight-110}`} name="viewBox">
               {nodes.map(node => {
                   return <Node key={node.id} node={node} deleteNode={deleteNode} />
               })}
