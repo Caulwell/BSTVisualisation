@@ -16,7 +16,7 @@ export default function Controls({addNode, searchForNode, traverseTree, saveTree
     const [speedInput, setSpeedInput] = useState(0.5);
     const [isFilePicked, setIsFilePicked] = useState(false);
 
-    const controls = ["Tree Type", "New Node", "Search", "In Order", "Pre Order", "Post Order", "Upload CSV", "Animation Speed", "Login/Register", "Save Tree"];
+    const controls = ["Tree Type", "New Node", "Search", "In Order", "Pre Order", "Post Order", "Upload CSV", "Animation Speed", "Save Tree"];
 
     const drawerWidth = 240;
     
