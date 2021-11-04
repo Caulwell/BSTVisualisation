@@ -30,6 +30,10 @@ export default class BT {
         
     }
 
+    getAffectedNodes(){
+        return this.affectedNodes;
+    }
+
     values(top) {
         if (!top) return [];
         var array = [];

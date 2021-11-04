@@ -1,5 +1,5 @@
 import {useEffect, useState, useContext } from "react";
-import Controls from "../../components/Controls/Controls";
+import Controls from "../../components/ControlBar/ControlBar";
 import Node from "../../components/Node/Node";
 import BST from "../../classes/BST";
 import "./Tree.css";
@@ -103,6 +103,8 @@ export default function Tree({type}){
 
       // reset x and ys to moveTo
       tree.resolveCoords(tree.getRoot());
+
+      setNodes(tree.values(tree.getRoot()));
       
       // set current tree for later retrieval
       setUserContext(oldValues => {
@@ -165,6 +167,7 @@ export default function Tree({type}){
   };
 
   const saveTree = () => {
+    console.log("saving...")
     let treeJSON = stringify(tree);
     treeJSON = toJSON(treeJSON);
     

@@ -106,7 +106,7 @@ export default function App() {
 
   useEffect(() => {
     if(!userContext.details){
-      getUserData()
+      getUserData();
     }
   }, [userContext.details, getUserData]);
 
@@ -117,7 +117,6 @@ export default function App() {
       <div id="App">
       <ThemeProvider theme={theme}>
       <Header handleLogout={handleLogout} loggedIn={userContext.token ? true : false} user={userContext.details}/>
-      </ThemeProvider>
       <Switch>
         <Route exact path="/">
           <Welcome/>
@@ -132,10 +131,9 @@ export default function App() {
           <Tree type="rb"/>
         </Route>
         
+        
         <Route exact path="/savedTrees">
-        <ThemeProvider theme={theme}>
           <TreeList/>
-        </ThemeProvider>
         </Route>
         <Route path="/register">
         {userContext.token ? <Redirect to="/"/> :  <Register/> }
@@ -144,6 +142,7 @@ export default function App() {
         {userContext.token ? <Redirect to="/"/> :  <Login/> }
         </Route>
       </Switch>
+      </ThemeProvider>
       </div>
     </Router>
     
