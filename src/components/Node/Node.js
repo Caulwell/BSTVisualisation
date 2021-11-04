@@ -29,8 +29,8 @@ export default function Node({node, deleteNode}){
     };
 
     const getColor = () => {
-        if(node.rb){
-            return node.rb;
+        if(node.colour){
+            return node.colour;
         } else {
             return "green";
         }

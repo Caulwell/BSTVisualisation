@@ -84,9 +84,7 @@ export default function Tree({type}){
       
       // if rb tree - restore rb tree properties
       if(type === "rb"){
-        console.log("got here")
         if(insertedNode.parent){
-          console.log("hello");
           tree.fixOnInsertion(insertedNode);
           
         }
@@ -138,9 +136,12 @@ export default function Tree({type}){
         }
 
       } else if(type === "rb"){
-        
+        console.log(tree.deleteFixNode);
+        if(tree.deleteFixNode){
+          console.log("we are fixing rb here");
+          tree.fixOnDelete(tree.deleteFixNode);
+        }
       }
-
       
     }
 

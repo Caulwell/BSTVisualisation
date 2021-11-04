@@ -5,23 +5,28 @@ export default class RB extends BT {
 
     constructor(){
         super();
+        this.colours = {
+            r: "red",
+            b: "black"
+        };
     }
 
     resetAnimationObjects(){
         super.resetAnimationObjects();
+        this.deleteFixNode = null;
 
     }
 
     getColour(node){
-        return node === null ? "black" : node.rb;
+        return node === null ? this.colours.b : node.colour;
     }
 
     isRed(node){
-        return node !== null && this.getColour(node) === "red";
+        return node !== null && this.getColour(node) === this.colours.r;
     }
 
     isBlack(node){
-        return node === null || this.getColour(node) === "black";
+        return node === null || this.getColour(node) === this.colours.b;
     }
 
     parentOf(node){
@@ -48,30 +53,93 @@ export default class RB extends BT {
 
     createNode(value){
         let node = new RBNode(value, this.numInsertedTotal);
-        node.rb = "red";
+        node.colour = this.colours.r;
         return node;
     }
 
     insertAtTop(node){
         super.insertAtTop(node);
-        node.rb = "black";
+        node.colour = this.colours.b;
     }
 
+    transplant(node1, node2){
+        if(!node1.parent){
+            this.setRoot(node2);
+        } else if(node1 == this.leftOf(this.parentOf(node1))){
+            this.parentOf(node1).setLeft(node2);
+        } else {
+            this.parentOf(node1).setRight(node2);
+        }
+    }
+
+    delete(node){
+        console.log("deleting in RB class");
+
+        this.resetAnimationObjects();
+
+        // get nodes to animate
+
+        const getNodes = (node) => {
+            if(!node) return;
+            getNodes(node.parent);
+            this.deletionAnimation.highlightNodes.push(node);
+        };
+
+        getNodes(node.parent);
+        this.deletionAnimation.node = node;
+
+        let deletingNode = node; //z
+        let replacement = deletingNode; //y
+        let x;
+
+        let originalColour = deletingNode.colour;
+
+        if(!deletingNode.left){
+            x = this.rightOf(deletingNode);
+            this.transplant(deletingNode, this.rightOf(deletingNode));
+        } else if(!deletingNode.right){
+            x = this.leftOf(deletingNode);
+            this.transplant(deletingNode, this.leftOf(deletingNode));
+        } else {
+            replacement = this.getLeftMostElementReal(this.rightOf(deletingNode));
+            
+            originalColour = replacement.colour;
+            x = this.rightOf(replacement);
+            if(this.parentOf(replacement) == deletingNode){
+                if(x) x.parent = replacement;
+            } else {
+                this.transplant(replacement, this.rightOf(replacement));
+                replacement.setRight(deletingNode.right);
+                this.rightOf(replacement).parent = replacement;
+            }
+
+            this.transplant(deletingNode, replacement);
+            replacement.setLeft(deletingNode.left);
+            replacement.colour = deletingNode.colour;
+        }
+        if(originalColour === this.colours.b){
+            this.deleteFixNode = x;
+        } else {
+            this.deleteFixNode = null;
+        }
+        this.numNodes--;
+        return deletingNode.parent;
+    }
 
     fixOnInsertion(node){
         
-        while(this.parentOf(node) !== null && this.parentOf(node).rb === "red"){
+        while(this.parentOf(node) !== null && this.parentOf(node).colour === this.colours.r){
 
             let uncle = null;
 
             if(this.parentOf(node) === this.leftOf(this.gParentOf(node))){
                 uncle = this.rightOf(this.gParentOf(node));
 
-                if(uncle !== null && uncle.rb === "red"){
+                if(uncle !== null && uncle.colour === this.colours.r){
 
-                    this.parentOf(node).rb = "black";
-                    uncle.rb = "black";
-                    this.gParentOf(node).rb = "red";
+                    this.parentOf(node).colour = this.colours.b;
+                    uncle.colour = this.colours.b;
+                    this.gParentOf(node).colour = this.colours.r;
                     node = this.gParentOf(node);
                     continue;
                 }
@@ -81,18 +149,18 @@ export default class RB extends BT {
                     this.leftRotation(node);
                 }
 
-                this.parentOf(node).rb = "black";
-                this.gParentOf(node).rb = "red";
+                this.parentOf(node).colour = this.colours.b;
+                this.gParentOf(node).colour = this.colours.r;
 
                 this.rightRotation(this.gParentOf(node));
             } else {
 
                 uncle = this.leftOf(this.gParentOf(node));
 
-                if(uncle !== null && uncle.rb === "red"){
-                    this.parentOf(node).rb = "black";
-                    uncle.rb = "black";
-                    this.gParentOf(node).rb = "red";
+                if(uncle !== null && uncle.colour === this.colours.r){
+                    this.parentOf(node).colour = this.colours.b;
+                    uncle.colour = this.colours.b;
+                    this.gParentOf(node).colour = this.colours.r;
                     node = this.gParentOf(node);
                     continue;
                 }
@@ -102,14 +170,62 @@ export default class RB extends BT {
                     this.rightRotation(node);
                 }
 
-                this.parentOf(node).rb = "black";
-                this.gParentOf(node).rb = "red";
+                this.parentOf(node).colour = this.colours.b;
+                this.gParentOf(node).colour = this.colours.r;
                 this.leftRotation(this.gParentOf(node));
             }
         }
 
-        this.root.rb = "black";
+        this.root.colour = this.colours.b;
 
+    }
+
+    fixOnDelete(node){
+
+        console.log("fixing on delete - " + node.value);
+        let u;
+
+        while(this.parentOf(node).colour == this.colours.r){
+
+            if(this.parentOf(node) === this.rightOf(this.gParentOf(node))){
+                u = this.leftOf(this.gParentOf(node));
+
+                if(u && u.colour === this.colours.r){
+                    u.colour = this.colours.b;
+                    this.parentOf(node).colour = this.colours.b;
+                    this.parentOf(this.parentOf(node)).colour = this.colours.r;
+                    node = this.gParentOf(node);
+                } else {
+                    if(node == this.leftOf(this.parentOf(node))){
+                        node = this.parentOf(node);
+                        this.rightRotation(node);
+                    }
+                    this.parentOf(node).colour = this.colours.b;
+                    this.gParentOf(node).colour = this.colours.r;
+                    this.leftRotation(this.gParentOf(node));
+                }
+            } else {
+                u = this.rightOf(this.gParentOf(node));
+
+                if( u && u.colour == this.colours.r){
+                    u.colour = this.colours.b;
+                    this.parentOf(node).colour = this.colours.b;
+                    this.gParentOf(node).colour = this.colours.r;
+                    node = this.gParentOf(node);
+                } else {
+                    if(node === this.rightOf(this.parentOf(node))){
+                        node = this.parentOf(node);
+                        this.leftRotation(node);
+                    }
+                    this.parentOf(node).colour = this.colours.b;
+                    this.gParentOf(node).colour = this.colours.r;
+                    this.rightRotation(this.gParentOf(node));
+                }
+            }
+            if(node == this.root) break;
+        }
+
+        this.root.colour = this.colours.b;
     }
 
     leftRotation(node){

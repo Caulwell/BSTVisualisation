@@ -348,6 +348,17 @@ export default class BT {
         }
     }
 
+    getRightMostElementReal(top){
+        let curr = top;
+        while(true){
+            if(curr.right === null){
+                return curr;
+            } else {
+                curr = curr.right;
+            }
+        }
+    }
+
     getRightMostElement(top, rightMost){
         
         if(top===null){

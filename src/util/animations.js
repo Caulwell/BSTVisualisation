@@ -235,16 +235,13 @@ function moveNodes(nodes, animationSpeed){
 
         // function to resolve promise if loop of animations finished
         const checkLoopComplete = index => {
-            console.log("checking loop complete: nodes.length = " + nodes.length + " i :" + index );
             if(index == nodes.length -1){
                 resolve("done");
             }
         };
 
         for(let i = 0; i < nodes.length; i++){
-
-
-            console.log(" i : " + i + "nodes.length " + nodes.length);
+            
             let node = nodes[i];
             let HTMLnode = document.getElementById(node.id);
             HTMLnode.classList.add(`moving${node.id}`);
