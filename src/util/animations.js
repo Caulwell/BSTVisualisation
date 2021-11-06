@@ -227,6 +227,8 @@ function moveNodes(nodes, animationSpeed){
 
     return new Promise((resolve, reject) => {
 
+        if(nodes.length === 0) resolve("done");
+
         const maxDuration = 500;
 
         const tl = anime.timeline({

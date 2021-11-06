@@ -9,6 +9,7 @@ import {Alert} from "@mui/material";
 import AVL from "../../classes/AVL";
 import RB from "../../classes/RB";
 import { insertAnimation, deleteAnimation, moveNodes, searchAnimation, traversalAnimation, checkBalanceAnimation } from "../../util/animations";
+import MessageBar from "../../components/MessageBar/MessageBar";
 
 
 export default function Tree({type}){
@@ -17,6 +18,7 @@ export default function Tree({type}){
   const [alert, setAlert] = useState({});
   const [tree, setTree] = useState();
   const [nodes, setNodes] = useState([]);
+  const [operationMessages, setOperationMessages] = useState([]);
 
   useEffect(() => {
 
@@ -64,6 +66,8 @@ export default function Tree({type}){
 
     if(value !== ""){
 
+      console.log("hey got here");
+
       // set internal data structure
       let insertedNode = tree.insert(parseInt(value));
       // render node in intitial position
@@ -105,6 +109,13 @@ export default function Tree({type}){
       tree.resolveCoords(tree.getRoot());
 
       setNodes(tree.values(tree.getRoot()));
+
+      console.log("hey got here");
+      console.log(tree.insertionMessage);
+      // add a new operationMessage to display to user
+      let operationsCopy = operationMessages;
+      operationsCopy.push(tree.insertionMessage);
+      setOperationMessages(operationsCopy);
       
       // set current tree for later retrieval
       setUserContext(oldValues => {
@@ -219,6 +230,7 @@ export default function Tree({type}){
                   return <Node key={node.id} node={node} deleteNode={deleteNode} />
               })}
         </svg>
+      <MessageBar messages={operationMessages}/>
     </div>
     
     </>

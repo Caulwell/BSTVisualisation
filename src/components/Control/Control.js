@@ -1,4 +1,4 @@
-import {ListItem, ListItemIcon, ListItemText, Popper, Paper, Button, TextField, Slider, Typography, Divider, Input} from "@mui/material";
+import {ListItem, ListItemIcon, ListItemText, Popper, Paper, Button, TextField, Slider, Typography, Divider, Input, ClickAwayListener} from "@mui/material";
 import { Link } from "react-router-dom";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import SearchIcon from '@mui/icons-material/Search';
@@ -133,13 +133,14 @@ export default function Control({type, props}){
     const open = Boolean(anchorEl);
     const id = open ? type : undefined;
 
+
     return (
         <>
         {type === "Save Tree" && !userContext.details ? 
             <>
             </>
         :
-        <ListItem button aria-describedby={id} name={type} onClick={handleClick} sx={{height: "70px"}}>
+        <ListItem button aria-describedby={id} name={type} onClick={handleClick} sx={{height: "65px"}}>
             <ListItemIcon>
                 {getContent()}
             </ListItemIcon>
@@ -149,13 +150,13 @@ export default function Control({type, props}){
 
 
         {popperTrue && 
-
-        <Popper id={id} open={open} anchorEl={anchorEl} placement="right">
-                    <Paper sx={{width: "350px", height: "70px", display: "flex", justifyContent: "space-evenly", alignItems: "center", paddingLeft: "10px", paddingRight: "10px"}}>
+            <Popper id={id} open={open} anchorEl={anchorEl} placement="right">
+                    <Paper sx={{width: "350px", height: "65px", display: "flex", justifyContent: "space-evenly", alignItems: "center", paddingLeft: "10px", paddingRight: "10px"}}>
                         {getPopperContent()}
                     </Paper>
             </Popper>
-            }
+           
+        }
         
         </>
 
