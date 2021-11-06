@@ -25,6 +25,7 @@ export default class AVL extends BT {
         if(node){
             if(Math.abs(node.getBalanceFactor()) > 1){
                 found = true;
+                this.operationMessage.decisions.push(node.value + "has a BF of " + node.getBalanceFactor());
                 this.balance(node);
                 this.checkBalanceAnimation.foundNode = node;
             } else {
@@ -42,18 +43,20 @@ export default class AVL extends BT {
         // if node not null
         if(node){
 
-            console.log("unbalancedNode: " + node.value);
+            this.operationMessage.decisions.push("balancing " + node.value);
             
             // if heavy on the left
             if (node.getBalanceFactor() > 1) {
                 // and node.left is right heavy do a left-right rotation
                 if(node.left.getBalanceFactor() <= -1){
+                    this.operationMessage.decisions.push("LR Rotation on " + node.value);
                     this.leftRightRotation(node);
                     
                     return;
                 } else {
                     // else do a right rotation
                     this.rightRotation(node);
+                    this.operationMessage.decisions.push("R Rotation on " + node.value);
                     return;
                 }
 
@@ -61,11 +64,13 @@ export default class AVL extends BT {
             } else {
                 //and node.right is left heavy do a right-left rotation
                 if(node.right.getBalanceFactor() >= 1){
+                    this.operationMessage.decisions.push("RL Rotation on " + node.value);
                     this.rightLeftRotation(node);
                     return;
                 } else {
                     // else do a left rotation
                     this.leftRotation(node);
+                    this.operationMessage.decisions.push("L Rotation on " + node.value);
                     return;
                 }
                 

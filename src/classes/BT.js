@@ -10,7 +10,7 @@ export default class BT {
         this.foundNode = null;
         this.affectedNodes = new Set();
         this.insertionAnimation = {highlightNodes: [], node: null};
-        this.insertionMessage = {name: "", operations: []};
+        this.operationMessage = {name: "", decisions: []};
         this.deletionAnimation = {highlightNodes: [], node: null};
         this.shiftNodesAnimation = [];
     }
@@ -63,7 +63,7 @@ export default class BT {
     insert(value){
 
         this.resetAnimationObjects();
-        this.insertionMessage = {name: "Inserting " + value, operations: []};
+        this.operationMessage = {name: "Inserting " + value, decisions: []};
 
         let curr = this.root;
         const node = this.createNode(value);
@@ -71,7 +71,7 @@ export default class BT {
         if(this.root === null){
             this.insertAtTop(node);
             this.insertionAnimation.node = node;
-            this.insertionMessage.operations.push("No root node found, " + value + "is now root");
+            this.operationMessage.decisions.push("No root node found, " + value + "is now root");
             return node;
 
         } else {
@@ -82,14 +82,14 @@ export default class BT {
 
                 if(value < curr.value ){
 
-                    this.insertionMessage.operations.push(value + " < " + curr.value + ": checking " + curr.value + ".left");
+                    this.operationMessage.decisions.push(value + " < " + curr.value + ": checking " + curr.value + ".left");
 
                     this.insertionAnimation.highlightNodes.push(curr);
 
                     if(curr.left === null){
                         this.addLeftChild(curr, node);
                         this.insertionAnimation.node = node;
-                        this.insertionMessage.operations.push(curr.value + ".left is null, inserting " + value + " in place");
+                        this.operationMessage.decisions.push(curr.value + ".left is null, inserting " + value + " in place");
                         return node;
                     }
 
@@ -97,15 +97,15 @@ export default class BT {
 
                 } else if(value > curr.value || value === curr.value) {
 
-                    if(value === curr.value) this.insertionMessage.operations.push(value + " == " + curr.value + ": checking " + curr.value + ".right");
-                    if(value > curr.value) this.insertionMessage.operations.push(value + " > " + curr.value + ": checking " + curr.value + ".right");
+                    if(value === curr.value) this.operationMessage.decisions.push(value + " == " + curr.value + ": checking " + curr.value + ".right");
+                    if(value > curr.value) this.operationMessage.decisions.push(value + " > " + curr.value + ": checking " + curr.value + ".right");
 
                     this.insertionAnimation.highlightNodes.push(curr);
 
                     if(curr.right === null){
                         this.addRightChild(curr, node);
                         this.insertionAnimation.node = node;
-                        this.insertionMessage.operations.push(curr.value + ".right is null, inserting " + value + " in place");
+                        this.operationMessage.decisions.push(curr.value + ".right is null, inserting " + value + " in place");
                         return node;
                     }
 

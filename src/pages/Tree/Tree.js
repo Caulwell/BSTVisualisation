@@ -49,6 +49,7 @@ export default function Tree({type}){
       setTree(new RB());
       setNodes([]);
     }
+    setOperationMessages([]);
   }, [type]);
 
   const timer = ms => new Promise(res => setTimeout(res, ms));
@@ -65,8 +66,6 @@ export default function Tree({type}){
   async function addNode(value){
 
     if(value !== ""){
-
-      console.log("hey got here");
 
       // set internal data structure
       let insertedNode = tree.insert(parseInt(value));
@@ -110,11 +109,9 @@ export default function Tree({type}){
 
       setNodes(tree.values(tree.getRoot()));
 
-      console.log("hey got here");
-      console.log(tree.insertionMessage);
       // add a new operationMessage to display to user
       let operationsCopy = operationMessages;
-      operationsCopy.push(tree.insertionMessage);
+      operationsCopy.push(tree.operationMessage);
       setOperationMessages(operationsCopy);
       
       // set current tree for later retrieval

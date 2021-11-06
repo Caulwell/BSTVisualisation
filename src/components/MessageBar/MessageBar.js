@@ -38,9 +38,9 @@ export default function MessageBar({messages}){
                         <Typography>{message.name}</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
-                            {message.operations.map((operation, index) => {
+                            {message.decisions.map((decision, index) => {
                                 return (
-                                    <Typography key={index}>{operation}</Typography>
+                                    <Typography key={index}>{decision}</Typography>
                                 )
                             })}
                         </AccordionDetails>

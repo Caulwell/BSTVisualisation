@@ -130,6 +130,8 @@ export default class RB extends BT {
         
         while(this.parentOf(node) !== null && this.parentOf(node).colour === this.colours.r){
 
+            this.operationMessage.decisions.push(node.value + "'s parent is a red node - fixing RB properties");
+
             let uncle = null;
 
             if(this.parentOf(node) === this.leftOf(this.gParentOf(node))){
@@ -146,12 +148,13 @@ export default class RB extends BT {
 
                 if(node === this.rightOf(this.parentOf(node))){
                     node = this.parentOf(node);
+                    this.operationMessage.decisions.push(node.value + "L Rotation on " + node.value);
                     this.leftRotation(node);
                 }
 
                 this.parentOf(node).colour = this.colours.b;
                 this.gParentOf(node).colour = this.colours.r;
-
+                this.operationMessage.decisions.push("R Rotation on " + this.gParentOf(node).value);
                 this.rightRotation(this.gParentOf(node));
             } else {
 
@@ -167,11 +170,13 @@ export default class RB extends BT {
 
                 if(node === this.leftOf(this.parentOf(node))){
                     node = this.parentOf(node);
+                    this.operationMessage.decisions.push(node.value + "R Rotation on " + node.value);
                     this.rightRotation(node);
                 }
 
                 this.parentOf(node).colour = this.colours.b;
                 this.gParentOf(node).colour = this.colours.r;
+                this.operationMessage.decisions.push("L Rotation on " + this.gParentOf(node).value);
                 this.leftRotation(this.gParentOf(node));
             }
         }
