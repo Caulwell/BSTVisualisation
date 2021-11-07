@@ -111,7 +111,7 @@ export default function Tree({type}){
 
       // add a new operationMessage to display to user
       let operationsCopy = operationMessages;
-      operationsCopy.push(tree.operationMessage);
+      operationsCopy.unshift(tree.operationMessage);
       setOperationMessages(operationsCopy);
       
       // set current tree for later retrieval
@@ -163,6 +163,12 @@ export default function Tree({type}){
     
     setNodes(tree.values(tree.getRoot()));
     tree.resolveCoords(tree.getRoot());
+
+    // add a new operationMessage to display to user
+    console.log("got here");
+    let operationsCopy = operationMessages;
+    operationsCopy.unshift(tree.operationMessage);
+    setOperationMessages(operationsCopy);
 
     setUserContext(oldValues => {
       return {...oldValues, currentTree: tree};

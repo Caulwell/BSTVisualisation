@@ -125,22 +125,38 @@ export default class BT {
 
     delete(node){
 
+        // reset animation and message attributes as new operation
         this.resetAnimationObjects();
+        this.operationMessage = {name: "Deleting " + node.value, decisions: ["Searching for " + node.value]};
 
         // get nodes to animate
-
         const getNodes = (node) => {
             if(!node) return;
             getNodes(node.parent);
             this.deletionAnimation.highlightNodes.push(node);
         };
 
+        // setting tree attributes for animating deletion
         getNodes(node.parent);
         this.deletionAnimation.node = node;
 
+        // setting tree attributes for deletion messages
+        this.deletionAnimation.highlightNodes.forEach(element => {
+            if(node.value < element.value){
+                this.operationMessage.decisions.push(node.value + " < " + element.value + ": checking " + element.value + ".left" );
+                if(element.left === node) this.operationMessage.decisions.push(element.value + ".left === " + node.value + ": deleting " + node.value);
+            } 
+            if(node.value > element.value){
+                this.operationMessage.decisions.push(node.value + " > " + element.value + ": checking " + element.value + ".right" );
+                if(element.right === node) this.operationMessage.decisions.push(element.value + ".right === " + node.value + ": deleting " + node.value);
+            }
+        });
+
         // IS A LEAF NODE
         if(node.left === null && node.right === null){
-            
+
+            this.operationMessage.decisions.push(node.value + " is a leaf node");
+
             if(node === this.root){
                 // is root node
                 this.setRoot(null);
@@ -150,25 +166,33 @@ export default class BT {
                 if(node.parent.right === node) node.parent.setRight(null);
             }
 
-            
-             
-
         // ONLY HAS A LEFT CHILD
         } else if (node.left !== null && node.right === null){
+
+            this.operationMessage.decisions.push(node.value + " only has a left child");
+            this.operationMessage.decisions.push(node.left.value + " replaces " + node.value);
   
             // is root node
             if(node === this.root){
                 this.setRoot(node.left);
             // not root node
             } else {
-                if(node.parent.left === node) node.parent.setLeft(node.left);
-                if(node.parent.right === node) node.parent.setRight(node.left);
+                if(node.parent.left === node){
+                    node.parent.setLeft(node.left);
+                } 
+                if(node.parent.right === node){
+                    node.parent.setRight(node.left);
+                }   
             }
+
 
             
 
         // ONLY HAS A RIGHT CHILD
         } else if (node.right !== null && node.left === null){
+
+            this.operationMessage.decisions.push(node.value + " only has a right child");
+            this.operationMessage.decisions.push(node.right.value + " replaces " + node.value);
 
             // is root node
             if(node === this.root){
@@ -184,6 +208,10 @@ export default class BT {
         } else if (node.right !== null && node.left !== null){
 
             let replacement = this.getLeftMostElementReal(node.right);
+
+            this.operationMessage.decisions.push(node.value + "  has two children");
+            this.operationMessage.decisions.push(replacement.value + " is leftmost node in right subtree of " + node.value);
+            this.operationMessage.decisions.push(replacement.value + " replaces " + node.value);
 
             if(replacement.right !== null && replacement.parent !== node) replacement.parent.setLeft(replacement.right);
 
