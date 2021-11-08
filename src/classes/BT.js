@@ -300,7 +300,10 @@ export default class BT {
 
     search(value){
         this.affectedNodes.clear();
+        this.foundNode = null;
         let curr = this.root;
+
+        this.operationMessage = {name: "Searching for " + value, decisions:[]};
 
         while(true){
             if(curr === null){
@@ -308,15 +311,22 @@ export default class BT {
             } 
             if(curr.value === value){
                 this.foundNode = curr;
+                this.operationMessage.decisions.push("Found " + curr.value);
                 break;
             } else if(value < curr.value){
                 this.affectedNodes.add(curr);
+                this.operationMessage.decisions.push(value + " < " + curr.value + ": Checking " + curr.value + ".left");
                 curr = curr.left;
             } else if(value > curr.value){
                 this.affectedNodes.add(curr);
+                this.operationMessage.decisions.push(value + " > " + curr.value + ": Checking " + curr.value + ".right");
                 curr = curr.right;
                 
             }
+        }
+
+        if(this.foundNode === null){
+            this.operationMessage.decisions.push(value + " is not present in this tree");
         }
     }
 

@@ -27,19 +27,23 @@ function searchAnimation(nodes, foundNode, animationSpeed){
     
     }
 
-    let HTMLnode = document.getElementById(foundNode.id);
-    HTMLnode.classList.add("foundNodeHighlight");
+    if(foundNode){
+        let HTMLnode = document.getElementById(foundNode.id);
+        HTMLnode.classList.add("foundNodeHighlight");
 
-    tl.add({
-        targets: ".foundNodeHighlight",
-        scale: {value: 2, duration: maxDuration*animationSpeed+200}
-    });
-    tl.add({
-        targets: ".foundNodeHighlight",
-        scale: {value: 1, duration: maxDuration*animationSpeed+200}
-    });
+        tl.add({
+            targets: ".foundNodeHighlight",
+            scale: {value: 2, duration: maxDuration*animationSpeed+200}
+        });
+        tl.add({
+            targets: ".foundNodeHighlight",
+            scale: {value: 1, duration: maxDuration*animationSpeed+200}
+        });
 
-    HTMLnode.classList.remove("foundNodeHighlight");
+        HTMLnode.classList.remove("foundNodeHighlight");
+    }
+
+    
    
 }
 

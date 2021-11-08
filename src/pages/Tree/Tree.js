@@ -60,7 +60,6 @@ export default function Tree({type}){
 
     for(let i = 0; i < insertingNodes.length; i++){
       addNode(insertingNodes[i]);
-      await timer(500);
     }
 
   }
@@ -124,6 +123,7 @@ export default function Tree({type}){
     if(value !== ""){
       tree.search(parseInt(value));
       searchAnimation([...tree.getAffectedNodes()], tree.foundNode, userContext.animationSpeed);
+      getAndSetOperationMessages();
     }
   };
 
