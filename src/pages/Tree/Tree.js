@@ -5,7 +5,6 @@ import BST from "../../classes/BST";
 import "./Tree.css";
 import {stringify, toJSON} from "flatted";
 import { UserContext } from "../../context/UserContext";
-import {Alert} from "@mui/material";
 import AVL from "../../classes/AVL";
 import RB from "../../classes/RB";
 import { insertAnimation, deleteAnimation, moveNodes, searchAnimation, traversalAnimation, checkBalanceAnimation } from "../../util/animations";
@@ -20,9 +19,13 @@ export default function Tree({type}){
   const [nodes, setNodes] = useState([]);
   const [operationMessages, setOperationMessages] = useState([]);
 
+  const getAndSetOperationMessages = () => {
+    setOperationMessages([tree.operationMessage, ...operationMessages]);
+  };
+
   useEffect(() => {
 
-    console.log("re render");
+    setNodes([]);
   
     if(userContext.currentTree){
       
@@ -38,7 +41,6 @@ export default function Tree({type}){
   },[]);
 
   useEffect(() => {
-    console.log("type change");
     if(type === "bst"){
       setTree(new BST());
       setNodes([]);
@@ -101,7 +103,6 @@ export default function Tree({type}){
 
       // animate only the nodes for which moveTo is different to current x and y
       tree.findAlteredNodes(tree.getRoot());
-
       await moveNodes(tree.shiftNodesAnimation, userContext.animationSpeed);
 
       // reset x and ys to moveTo
@@ -110,9 +111,7 @@ export default function Tree({type}){
       setNodes(tree.values(tree.getRoot()));
 
       // add a new operationMessage to display to user
-      let operationsCopy = operationMessages;
-      operationsCopy.unshift(tree.operationMessage);
-      setOperationMessages(operationsCopy);
+      getAndSetOperationMessages();
       
       // set current tree for later retrieval
       setUserContext(oldValues => {
@@ -146,9 +145,7 @@ export default function Tree({type}){
         }
 
       } else if(type === "rb"){
-        console.log(tree.deleteFixNode);
         if(tree.deleteFixNode){
-          console.log("we are fixing rb here");
           tree.fixOnDelete(tree.deleteFixNode);
         }
       }
@@ -165,10 +162,7 @@ export default function Tree({type}){
     tree.resolveCoords(tree.getRoot());
 
     // add a new operationMessage to display to user
-    console.log("got here");
-    let operationsCopy = operationMessages;
-    operationsCopy.unshift(tree.operationMessage);
-    setOperationMessages(operationsCopy);
+    getAndSetOperationMessages();
 
     setUserContext(oldValues => {
       return {...oldValues, currentTree: tree};
@@ -178,6 +172,8 @@ export default function Tree({type}){
   const traverseTree = (order) => {
     tree.traversal(order);
     traversalAnimation([...tree.getAffectedNodes()], userContext.animationSpeed);
+    getAndSetOperationMessages();
+
   };
 
   const saveTree = () => {

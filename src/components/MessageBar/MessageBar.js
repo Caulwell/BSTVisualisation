@@ -1,19 +1,13 @@
 import { useEffect, useState } from "react";
+import shortid from "shortid";
 import {Accordion, AccordionSummary, AccordionDetails, Typography} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 export default function MessageBar({messages}){
 
-    // useEffect(() => {
-    //     setMessages(
-    //         [
-    //             {name: "Insert 10", decisions: ["10 < 18, check 18.left", "10 < 16, check 16.left", "10 > 8, check 8.right", "8.right is null, 8.right = 10"]},
-    //             {name: "Insert 6", decisions: ["6 < 18, check 18.left", "6 < 16, check 16.left", "6 < 8, check 8.LEFT", "8.left is null, 8.right = 10"]},
-    //             {name: "Insert 6", decisions: ["6 < 18, check 18.left", "6 < 16, check 16.left", "6 < 8, check 8.LEFT", "8.left is null, 8.right = 10"]},
-    //             {name: "Insert 6", decisions: ["6 < 18, check 18.left", "6 < 16, check 16.left", "6 < 8, check 8.LEFT", "8.left is null, 8.right = 10"]},
-    //         ]
-    //     );
-    // },[]);
+    useEffect(() => {
+        console.log("re rendering whole bar");
+    },[]);
 
     return (
         <div>
@@ -29,7 +23,7 @@ export default function MessageBar({messages}){
             {messages.map((message, index) => {
 
                 return (
-                    <Accordion key={index}> 
+                    <Accordion key={shortid.generate()}> 
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon/>}
                             aria-controls={`operation${index}-content`}
@@ -40,7 +34,7 @@ export default function MessageBar({messages}){
                         <AccordionDetails>
                             {message.decisions.map((decision, index) => {
                                 return (
-                                    <Typography key={index}>{decision}</Typography>
+                                    <Typography key={shortid.generate()}>{decision}</Typography>
                                 )
                             })}
                         </AccordionDetails>
