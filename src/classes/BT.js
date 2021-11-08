@@ -247,16 +247,28 @@ export default class BT {
             this.operationMessage.decisions.push("The node itself");
             this.operationMessage.decisions.push("Then the right subtree of the node");
             this.affectedNodes =  new Set(this.inOrder(this.root, nodes));
+            this.operationMessage.decisions.push("Values: ");
+            this.operationMessage.decisions.push([...this.affectedNodes]
+                .map(node => node.value)
+                .join(","));
         } else if(order === "pre"){
             this.operationMessage = {name: "Pre-Order Traversal", decisions: ["Traversing a node"]};
             this.operationMessage.decisions.push("The left subtree of the node");
             this.operationMessage.decisions.push("Then the right subtree of the node");
             this.affectedNodes =  new Set(this.preOrder(this.root, nodes));
+            this.operationMessage.decisions.push("Values: ");
+            this.operationMessage.decisions.push([...this.affectedNodes]
+                .map(node => node.value)
+                .join(","));
         } else if(order === "post"){
             this.operationMessage = {name: "Post-Order Traversal", decisions: ["Traversing the left subtree of a node"]};
             this.operationMessage.decisions.push("The right subtree of the node");
             this.operationMessage.decisions.push("Then the node itself");
             this.affectedNodes =  new Set(this.postOrder(this.root, nodes));
+            this.operationMessage.decisions.push("Values: ");
+            this.operationMessage.decisions.push([...this.affectedNodes]
+                .map(node => node.value)
+                .join(","));
         }
     }
 
