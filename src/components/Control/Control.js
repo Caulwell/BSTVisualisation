@@ -133,9 +133,14 @@ export default function Control({type, props}){
     const open = Boolean(anchorEl);
     const id = open ? type : undefined;
 
+    const handleClickAway = () => {
+        setAnchorEl(null);
+    }
+
 
     return (
         <>
+        <ClickAwayListener onClickAway={handleClickAway}>
         {type === "Save Tree" && !userContext.details ? 
             <>
             </>
@@ -147,18 +152,23 @@ export default function Control({type, props}){
             <ListItemText primary={type}/>
         </ListItem>
         }   
+        </ClickAwayListener>
 
 
         {popperTrue && 
-            <Popper id={id} open={open} anchorEl={anchorEl} placement="right">
+        
+        <Popper id={id} open={open} anchorEl={anchorEl} placement="right">
                     <Paper sx={{width: "350px", height: "65px", display: "flex", justifyContent: "space-evenly", alignItems: "center", paddingLeft: "10px", paddingRight: "10px"}}>
                         {getPopperContent()}
                     </Paper>
             </Popper>
+       
+            
            
         }
         
         </>
+        
 
         
     )
