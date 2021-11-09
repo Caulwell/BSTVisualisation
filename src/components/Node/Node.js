@@ -39,7 +39,7 @@ export default function Node({node, deleteNode}){
     const getTooltipContent = () => {
         return (
             <>
-            <div>{"Depth: " + node.depth}</div>
+            <div>{"Depth: " + node.getDepth()}</div>
             <div>{node.parent ? "Parent: " + node.parent.value  : "Parent: null"}</div>
             <div>{node.left ? "Left: " + node.left.value  : "Left: null"}</div>
             <div>{node.right ? "Right: " + node.right.value  : "Right: null"}</div>

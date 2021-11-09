@@ -33,7 +33,6 @@ export default class BSTNode{
         if(node !== null){
             node.setParent(this);
             node.setLR("l");
-            node.setDepth(this.depth + 1);
         }
     }
 
@@ -42,7 +41,6 @@ export default class BSTNode{
         if(node !== null){
             node.setParent(this);
             node.setLR("r");
-            node.setDepth(this.depth + 1);
         } 
         
     }
@@ -59,8 +57,9 @@ export default class BSTNode{
         this.y = value;
     }
 
-    setDepth(value){
-        this.depth = value;
+    getDepth(){
+        if(!this.parent) return 0;
+        return this.parent.getDepth() + 1;
     }
 
     setLR(value){

@@ -22,13 +22,40 @@ export default class BT {
         return this.root;
     }
 
+    getDepth(root){
+        if(! root) return 0;
+        return 1 + Math.max(this.getDepth(root.left), this.getDepth(root.right));
+    }
+
     setRoot(node){
         this.root = node;
         if(node !== null){
-            node.setDepth(0);
             node.setParent(null);
         }
-        
+    }
+
+    getMinNode(){
+        let curr = this.root;
+
+        if(!curr) return "null";
+
+        while(curr.left){
+            curr = curr.left;
+        }
+
+        return curr.value;
+    }
+
+    getMaxNode(){
+        let curr = this.root;
+
+        if(!curr) return "null";
+
+        while(curr.right){
+            curr = curr.right;
+        }
+
+        return curr.value || "null";
     }
 
     getAffectedNodes(){

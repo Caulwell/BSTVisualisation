@@ -230,6 +230,9 @@ export default function Tree({type}){
         <div className="info-panel flex">
           <Typography color="white">{type.toUpperCase()} Tree</Typography>
           <Typography color="white">Number of Nodes: {tree && tree.numNodes}</Typography>
+          <Typography color="white">Tree Depth: {tree && tree.getDepth(tree.getRoot())}</Typography>
+          <Typography color="white">Min Node: {tree && tree.getMinNode()}</Typography>
+          <Typography color="white">Max Node: {tree && tree.getMaxNode()}</Typography>
         </div>
         </Paper>
         <div className="flex">
