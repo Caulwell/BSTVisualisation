@@ -32,7 +32,7 @@ export default function Node({node, deleteNode}){
         if(node.colour){
             return node.colour;
         } else {
-            return "green";
+            return "#42a5f5";
         }
     }
 
@@ -73,14 +73,14 @@ export default function Node({node, deleteNode}){
                 r="20" 
                 stroke={getColor()} 
                 strokeWidth="4" 
-                fill="white" 
+                fill={getColor()} 
                 className={node.id}
                 name={"node"+node.id}
                
             />
             <text className="svg-text" x="20" y="20"
                 textAnchor="middle"
-                stroke="red"
+                stroke="white"
                 strokeWidth="1px"
                 alignmentBaseline="middle"
                 className={node.id}
@@ -98,9 +98,9 @@ export default function Node({node, deleteNode}){
                 
             {node.lr === "l" ? 
             
-               <path id={`arrow${node.id}`} d={`M ${node.parent.x-13},${node.parent.y+13} L ${node.x+13},${node.y-13}`} style={{stroke: "green", strokeWidth: 2}}/>
+               <path id={`arrow${node.id}`} d={`M ${node.parent.x-13},${node.parent.y+13} L ${node.x+13},${node.y-13}`} style={{stroke: "#42a5f5", strokeWidth: 2}}/>
             
-            : <path id={`arrow${node.id}`} d={`M ${node.parent.x+13},${node.parent.y+13} L ${node.x-13},${node.y-13}`} style={{stroke: "green", strokeWidth: 2}}/>
+            : <path id={`arrow${node.id}`} d={`M ${node.parent.x+13},${node.parent.y+13} L ${node.x-13},${node.y-13}`} style={{stroke: "#42a5f5", strokeWidth: 2}}/>
             }
 
         </> 

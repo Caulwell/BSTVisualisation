@@ -1,10 +1,11 @@
-import {useEffect, useState, useContext } from "react";
+import {useEffect, useState, useContext, useRef } from "react";
 import Controls from "../../components/ControlBar/ControlBar";
 import Node from "../../components/Node/Node";
 import BST from "../../classes/BST";
 import "./Tree.css";
 import {stringify, toJSON} from "flatted";
 import { UserContext } from "../../context/UserContext";
+import { Card, Paper, Typography } from "@mui/material";
 import AVL from "../../classes/AVL";
 import RB from "../../classes/RB";
 import { insertAnimation, deleteAnimation, moveNodes, searchAnimation, traversalAnimation, checkBalanceAnimation } from "../../util/animations";
@@ -18,26 +19,99 @@ export default function Tree({type}){
   const [tree, setTree] = useState();
   const [nodes, setNodes] = useState([]);
   const [operationMessages, setOperationMessages] = useState([]);
+  const svgEl = useRef(null);
+  const svgContainerEl = useRef(null);
 
   const getAndSetOperationMessages = () => {
     setOperationMessages([tree.operationMessage, ...operationMessages]);
   };
 
+  const configureZoom = () =>{
+    let svg = svgEl.current;
+    let svgContainer = svgContainerEl.current;
+
+
+    let viewBox = {x:0, y:0, w:svg.clientWidth, h: svg.clientHeight};
+    svg.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}`);
+    const svgSize = {w:svg.clientWidth,h:svg.clientHeight};
+    let isPanning = false;
+    let startPoint = {x:0,y:0};
+    let endPoint = {x:0,y:0};
+    let scale = 1;
+
+    svgContainer.onmousewheel = function(e) {
+      e.preventDefault();
+      
+      
+      var w = viewBox.w;
+      var h = viewBox.h;
+      var mx = e.offsetX;//mouse x  
+      var my = e.offsetY;    
+      var dw = w*Math.sign(e.deltaY)*0.05;
+      var dh = h*Math.sign(e.deltaY)*0.05;
+      var dx = dw*mx/svgSize.w;
+      var dy = dh*my/svgSize.h;
+      if(svgSize.w/(viewBox.w-dw) > 1.3 || svgSize.w/(viewBox.w-dw) < 0.5 )  return;
+      viewBox = {x:viewBox.x+dx,y:viewBox.y+dy,w:viewBox.w-dw,h:viewBox.h-dh};
+      
+      scale = svgSize.w/viewBox.w;
+      console.log(scale);
+      
+      svg.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}`);
+   };
+
+   svgContainer.onmousedown = function(e){
+    isPanning = true;
+    startPoint = {x:e.x,y:e.y};   
+ };
+ 
+ svgContainer.onmousemove = function(e){
+    if (isPanning){
+   endPoint = {x:e.x,y:e.y};
+   var dx = (startPoint.x - endPoint.x)/scale;
+   var dy = (startPoint.y - endPoint.y)/scale;
+   var movedViewBox = {x:viewBox.x+dx,y:viewBox.y+dy,w:viewBox.w,h:viewBox.h};
+   svg.setAttribute('viewBox', `${movedViewBox.x} ${movedViewBox.y} ${movedViewBox.w} ${movedViewBox.h}`);
+    }
+ };
+ 
+ svgContainer.onmouseup = function(e){
+    if (isPanning){ 
+   endPoint = {x:e.x,y:e.y};
+   var dx = (startPoint.x - endPoint.x)/scale;
+   var dy = (startPoint.y - endPoint.y)/scale;
+   viewBox = {x:viewBox.x+dx,y:viewBox.y+dy,w:viewBox.w,h:viewBox.h};
+   svg.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}`);
+   isPanning = false;
+    }
+ };
+ 
+ svgContainer.onmouseleave = function(e){
+  isPanning = false;
+ };
+  
+  };
+
   useEffect(() => {
 
     setNodes([]);
+    configureZoom();
+
+    
+
+
   
-    if(userContext.currentTree){
+    // if(userContext.currentTree){
       
-      let insertingNodes = tree.getTreeFromJSON(userContext.currentTree);
+    //   let insertingNodes = tree.getTreeFromJSON(userContext.currentTree);
 
-      insertingNodes.forEach((node, index) => {
-        insertingNodes[index] = node.value;
-      });
+    //   insertingNodes.forEach((node, index) => {
+    //     insertingNodes[index] = node.value;
+    //   });
 
-      insertAll(insertingNodes);
+    //   insertAll(insertingNodes);
 
-    }
+    // }
   },[]);
 
   useEffect(() => {
@@ -223,13 +297,20 @@ export default function Tree({type}){
       <>
       {/* {alert ? <Alert severity={alert.severity}>{alert.text}</Alert>: null} */}
     <div className="Tree flex">
+   <Typography color="white">{type}</Typography>
     <Controls addNode={addNode} searchForNode={searchForNode} traverseTree={traverseTree} saveTree={saveTree} treeFromCSV={treeFromCSV} renderedBy={"tree"}/>
-        <svg width={window.innerWidth - 200} height={window.innerHeight-110} viewBox={`0 0 ${window.innerWidth-200} ${window.innerHeight-110}`} name="viewBox">
+    <div id="svgContainer" ref={svgContainerEl}>
+    <svg id="canvas" width={window.innerWidth - 600} height={window.innerHeight-110} ref={svgEl}>
               {nodes.map(node => {
                   return <Node key={node.id} node={node} deleteNode={deleteNode} />
               })}
         </svg>
+        
+      </div>
       <MessageBar messages={operationMessages}/>
+    
+       
+      
     </div>
     
     </>

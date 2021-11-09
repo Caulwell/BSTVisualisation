@@ -1,3 +1,8 @@
 .Tree{
     padding: 20px;
+    background-color: #121212;
+}
+
+#canvas{
+    background-color: rgba(255, 255, 255, 0.167);
 }
