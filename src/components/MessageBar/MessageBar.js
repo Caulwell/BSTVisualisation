@@ -11,7 +11,7 @@ export default function MessageBar({messages}){
 
     return (
         <div >
-        <Accordion className="message-bar" anchor="right" sx={{maxHeight: window.innerHeight-120, overflow: "auto", width: "300px"}}>  
+        <Accordion className="message-bar" anchor="right" sx={{maxHeight: window.innerHeight-200, overflow: "auto", width: "300px"}}>  
         <AccordionSummary
             expandIcon={<ExpandMoreIcon/>}
             aria-controls="messages-content"
