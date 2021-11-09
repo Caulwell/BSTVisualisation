@@ -54,9 +54,7 @@ export default function Tree({type}){
       if(svgSize.w/(viewBox.w-dw) > 1.3 || svgSize.w/(viewBox.w-dw) < 0.5 )  return;
       viewBox = {x:viewBox.x+dx,y:viewBox.y+dy,w:viewBox.w-dw,h:viewBox.h-dh};
       
-      scale = svgSize.w/viewBox.w;
-      console.log(scale);
-      
+      scale = svgSize.w/viewBox.w; 
       svg.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}`);
    };
 
@@ -297,19 +295,29 @@ export default function Tree({type}){
       <>
       {/* {alert ? <Alert severity={alert.severity}>{alert.text}</Alert>: null} */}
     <div className="Tree flex">
-   <Typography color="white">{type}</Typography>
-    <Controls addNode={addNode} searchForNode={searchForNode} traverseTree={traverseTree} saveTree={saveTree} treeFromCSV={treeFromCSV} renderedBy={"tree"}/>
-    <div id="svgContainer" ref={svgContainerEl}>
-    <svg id="canvas" width={window.innerWidth - 600} height={window.innerHeight-110} ref={svgEl}>
+      <Controls addNode={addNode} searchForNode={searchForNode} traverseTree={traverseTree} saveTree={saveTree} treeFromCSV={treeFromCSV}/>
+      <main>
+
+      <div  >
+      <Paper>
+        <div className="info-panel flex">
+          <Typography color="white">{type.toUpperCase()} Tree</Typography>
+          <Typography color="white">Number of Nodes: {tree && tree.numNodes}</Typography>
+        </div>
+        </Paper>
+        <div className="flex">
+        <div id="svgContainer" ref={svgContainerEl}>
+        <svg id="canvas" width={window.innerWidth - 600} height={window.innerHeight-210} ref={svgEl}>
               {nodes.map(node => {
                   return <Node key={node.id} node={node} deleteNode={deleteNode} />
               })}
         </svg>
-        
+        </div>
+        <MessageBar messages={operationMessages}/>
+        </div>
       </div>
-      <MessageBar messages={operationMessages}/>
-    
-       
+      
+      </main>
       
     </div>
     

@@ -78,8 +78,6 @@ export default class BT {
 
             for(;;){
 
-                // add this node to an array, as an object, with {node: curr, status: "</>/=="}
-
                 if(value < curr.value ){
 
                     this.operationMessage.decisions.push(value + " < " + curr.value + ": checking " + curr.value + ".left");
@@ -117,8 +115,11 @@ export default class BT {
 
     insertAtTop(node){
         this.setRoot(node);
-        node.setX(window.innerWidth * 0.43);
-        node.setY(window.innerHeight * 0.1);
+        const svg = document.getElementById("canvas");
+        console.log(svg.clientWidth * 0.5);
+        console.log(svg.clientHeight * 0.3);
+        node.setX(svg.clientWidth * 0.5);
+        node.setY(svg.clientHeight * 0.3);
         this.numNodes++;
         this.numInsertedTotal++;
     }
@@ -470,8 +471,9 @@ export default class BT {
             if(node.lr == "r") node.moveToX = node.parent.moveToX + 50;
             node.moveToY = node.parent.moveToY + 50;
         } else {
-            node.moveToX = window.innerWidth * 0.43;
-            node.moveToY = window.innerHeight * 0.1;
+            const svg = document.getElementById("canvas");
+            node.moveToX = svg.clientWidth * 0.5;
+            node.moveToY = svg.clientHeight * 0.3;
         }
 
         this.resetLayout(node.left);

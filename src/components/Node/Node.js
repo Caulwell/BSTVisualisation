@@ -82,6 +82,7 @@ export default function Node({node, deleteNode}){
                 textAnchor="middle"
                 stroke="white"
                 strokeWidth="1px"
+                fill="white"
                 alignmentBaseline="middle"
                 className={node.id}
             >
