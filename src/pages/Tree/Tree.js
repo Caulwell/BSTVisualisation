@@ -21,13 +21,16 @@ export default function Tree({type}){
   const [nodes, setNodes] = useState([]);
   const [operationMessages, setOperationMessages] = useState([]);
   const [loadingTree, setLoadingTree] = useState(false);
+  const [addingMessage, setAddingMessage] = useState(false);
   const svgEl = useRef(null);
   const svgContainerEl = useRef(null);
 
   const timer = ms => new Promise(res => setTimeout(res, ms));
 
   const getAndSetOperationMessages = () => {
+    setAddingMessage(true);
     setOperationMessages([tree.operationMessage, ...operationMessages]);
+    setAddingMessage(false);
   };
 
   useEffect(() => {
@@ -42,6 +45,10 @@ export default function Tree({type}){
     });
     setLoadingTree(false);
   },[nodes]);
+
+  useEffect(() => {
+    addingMessage && saveMessages();
+  },[operationMessages]);
 
   const saveCurrentTree = () => {
 
@@ -61,8 +68,26 @@ export default function Tree({type}){
     
   };
 
+  const saveMessages = () => {
 
-  const renderCurrentTree = (tree) => {
+    if(type === "bst"){
+      setUserContext(oldValues => {
+        return {...oldValues, currentBSTMessages: operationMessages};
+      });
+    } else if(type === "avl"){
+      setUserContext(oldValues => {
+        return {...oldValues, currentAVLMessages: operationMessages};
+      });
+    } else {
+      setUserContext(oldValues => {
+        return {...oldValues, currentRBMessages: operationMessages};
+      });
+    }
+
+  };
+
+
+  const renderCurrentTree = (tree, messages) => {
 
     const renderTree = type === "bst" ? new BST() : type === "avl" ? new AVL() : new RB();
     let newRoot = renderTree.getTreeFromJSON(tree)[0];
@@ -70,12 +95,16 @@ export default function Tree({type}){
 
     setLoadingTree(true);
 
-    setNodes(renderTree.values(renderTree.getRoot()));
+    let nodesToRender = renderTree.values(renderTree.getRoot());
+    setOperationMessages(messages);
+    setNodes(nodesToRender);
 
-    renderTree.numNodes = nodes.length;
-    renderTree.numInsertedTotal = nodes.length;
+    renderTree.numNodes = nodesToRender.length;
+    renderTree.numInsertedTotal = nodesToRender.length;
 
     setTree(renderTree);
+    console.log(messages);
+    
 
   };
 
@@ -83,18 +112,20 @@ export default function Tree({type}){
     if(type === "bst"){
       setTree(new BST());
       setNodes([]);
-      if(userContext.currentBST) renderCurrentTree(userContext.currentBST);
+      setOperationMessages([]);
+      if(userContext.currentBST) renderCurrentTree(userContext.currentBST, userContext.currentBSTMessages);
     } else if(type === "avl"){
       setTree(new AVL());
       setNodes([]);
-      console.log(userContext.currentTree);
-      if(userContext.currentAVL) renderCurrentTree(userContext.currentAVL);
+      setOperationMessages([]);
+      if(userContext.currentAVL) renderCurrentTree(userContext.currentAVL, userContext.currentAVLMessages);
     } else {
       setTree(new RB());
       setNodes([]);
-      if(userContext.currentRB) renderCurrentTree(userContext.currentRB);
+      setOperationMessages([]);
+      if(userContext.currentRB) renderCurrentTree(userContext.currentRB, userContext.currentRBMessages);  
     }
-    setOperationMessages([]);
+    
   }, [type]);
 
   
@@ -129,6 +160,9 @@ export default function Tree({type}){
         }
       }
 
+      // add a new operationMessage to display to user
+      getAndSetOperationMessages();
+
       // reset x and ys to original values - new attribute moveTo
       tree.resetLayout(tree.getRoot());
 
@@ -143,11 +177,6 @@ export default function Tree({type}){
       tree.resolveCoords(tree.getRoot());
 
       setNodes(tree.values(tree.getRoot()));
-
-      // add a new operationMessage to display to user
-      getAndSetOperationMessages();
-      
-      // set current tree for later retrieval
       saveCurrentTree();
     }
   }
@@ -184,6 +213,8 @@ export default function Tree({type}){
       }
       
     }
+    // add a new operationMessage to display to user - useEffect will also trigger saving tree to context on state change
+    getAndSetOperationMessages();
 
     tree.resetLayout(tree.getRoot());
     tree.checkLayout(tree.getRoot());
@@ -194,10 +225,9 @@ export default function Tree({type}){
     setNodes(tree.values(tree.getRoot()));
     tree.resolveCoords(tree.getRoot());
 
-    // add a new operationMessage to display to user
-    getAndSetOperationMessages();
-
+    
     saveCurrentTree();
+
   };
 
   const traverseTree = (order) => {
