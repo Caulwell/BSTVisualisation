@@ -528,22 +528,6 @@ export default class BT {
         this.resolveCoords(node.right);
     }
 
-    // getTreeFromJSON(tree){
-
-    //     let nodes = [];
-
-    //     nodes = this.getNodesFromJSON(tree.root, nodes, tree.numNodes);
-
-    //     nodes.sort((first, second) => {
-    //         if(first.id < second.id) return -1;
-    //         if(second.id < first.id) return 1;
-    //         return 0;
-    //     });
-
-    //     return nodes;
-        
-    // }
-
     getTreeFromJSON(tree){
 
         let arrayNodes = this.getArrayOfJsonNodes(tree.root, []);
@@ -588,18 +572,6 @@ export default class BT {
 
         return nodesCopy;
     }
-
-    // getNodesFromJSON(curr, nodes, length){
-    //     if(curr !== null){
-    //         this.getNodesFromJSON(curr.left, nodes, length);
-    //         if(!nodes.includes(curr)) nodes.push(curr);
-    //         this.getNodesFromJSON(curr.right, nodes, length);
-    //     }
-
-    //     if(nodes.length === length){
-    //         return nodes;
-    //     }
-    // }
     
 }
 

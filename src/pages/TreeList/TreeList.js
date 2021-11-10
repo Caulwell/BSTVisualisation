@@ -80,17 +80,17 @@ export default function TreeList(){
 
             if(selectedTree.type === "bst"){
                 setUserContext(oldValues => {
-                  return {...oldValues, currentBST: selectedTree};
+                  return {...oldValues, currentBST: selectedTree, currentBSTMessages: []};
                 });
                 history.push("/bst");
               } else if(selectedTree.type === "avl"){
                 setUserContext(oldValues => {
-                  return {...oldValues, currentAVL: selectedTree};
+                  return {...oldValues, currentAVL: selectedTree, currentAVLMessages: []};
                 });
                 history.push("/avl");
               } else {
                 setUserContext(oldValues => {
-                  return {...oldValues, currentRB: selectedTree};
+                  return {...oldValues, currentRB: selectedTree, currentRBMessages: []};
                 });
                 history.push("/red-black");
               }

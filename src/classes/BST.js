@@ -12,6 +12,12 @@ export default class BST extends BT {
         return new BSTNode(node.value, node.id, node.parent, node.left, node.right, node.depth, node.x, node.y, node.lr)
     }
 
+    getTreeFromValues(values){
+        values.forEach(value => {
+            this.insert(value);
+        });
+    }
+
    
 }
 

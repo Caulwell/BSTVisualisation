@@ -22,6 +22,7 @@ export default function Tree({type}){
   const [operationMessages, setOperationMessages] = useState([]);
   const [loadingTree, setLoadingTree] = useState(false);
   const [addingMessage, setAddingMessage] = useState(false);
+  const [generatingTree, setGeneratingTree] = useState(false);
   const svgEl = useRef(null);
   const svgContainerEl = useRef(null);
 
@@ -49,6 +50,12 @@ export default function Tree({type}){
   useEffect(() => {
     addingMessage && saveMessages();
   },[operationMessages]);
+
+  useEffect(() => {
+    console.log("tree altered - saving current tree")
+    generatingTree && saveCurrentTree();
+    setGeneratingTree(false);
+  },[tree]);
 
   const saveCurrentTree = () => {
 
@@ -113,17 +120,17 @@ export default function Tree({type}){
       setTree(new BST());
       setNodes([]);
       setOperationMessages([]);
-      if(userContext.currentBST) renderCurrentTree(userContext.currentBST, userContext.currentBSTMessages);
+      if(userContext.currentBST) renderCurrentTree(userContext.currentBST, userContext.currentBSTMessages || []);
     } else if(type === "avl"){
       setTree(new AVL());
       setNodes([]);
       setOperationMessages([]);
-      if(userContext.currentAVL) renderCurrentTree(userContext.currentAVL, userContext.currentAVLMessages);
+      if(userContext.currentAVL) renderCurrentTree(userContext.currentAVL, userContext.currentAVLMessages || []);
     } else {
       setTree(new RB());
       setNodes([]);
       setOperationMessages([]);
-      if(userContext.currentRB) renderCurrentTree(userContext.currentRB, userContext.currentRBMessages);  
+      if(userContext.currentRB) renderCurrentTree(userContext.currentRB, userContext.currentRBMessages || []);  
     }
     
   }, [type]);
@@ -266,7 +273,13 @@ export default function Tree({type}){
   };
 
   const treeFromCSV = file => {
+    
     let reader = new FileReader();
+
+    const renderTree = type === "bst" ? new BST() : type === "avl" ? new AVL() : new RB();
+    setNodes([]);
+
+    
 
     reader.onload = e => {
       const text = e.target.result;
@@ -276,7 +289,19 @@ export default function Tree({type}){
         data[index] = parseInt(number);
       });
 
-      tree.treeFromNodes(data);
+      setLoadingTree(true);
+      setGeneratingTree(true);
+
+      renderTree.getTreeFromValues(data);
+      renderTree.resetLayout(renderTree.getRoot());
+      renderTree.checkLayout(renderTree.getRoot());
+      renderTree.resolveCoords(renderTree.getRoot());
+
+      setNodes(renderTree.values(renderTree.getRoot()));
+
+      // getAndSetOperationMessages();
+
+      setTree(renderTree);
     };
 
     reader.readAsText(file);

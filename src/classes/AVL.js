@@ -21,6 +21,14 @@ export default class AVL extends BT {
         return new AVLNode(node.value, node.id, node.parent, node.left, node.right, node.depth, node.x, node.y, node.lr);
     }
 
+    getTreeFromValues(values){
+        values.forEach(value => {
+            let insertedNode = this.insert(value);
+            if(insertedNode.parent) this.checkBalanceAfterOperation(insertedNode.parent, false);
+        });
+    }
+
+
     checkBalanceAfterOperation(node, found){
 
         if(found === true) return;

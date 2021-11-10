@@ -63,6 +63,13 @@ export default class RB extends BT {
         return newNode;
     }
 
+    getTreeFromValues(values){
+        values.forEach(value => {
+            let insertedNode = this.insert(value);
+            if(insertedNode.parent) this.fixOnInsertion(insertedNode);
+        });
+    }
+
     insertAtTop(node){
         super.insertAtTop(node);
         node.colour = this.colours.b;
