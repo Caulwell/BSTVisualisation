@@ -23,11 +23,16 @@ export default function TreeList(){
                 if (response.ok) {
                     let data = await response.json();
 
+                    console.log(data);
                     let treeArray = [];
 
                     data.trees.forEach(tree => {
-                        treeArray.push(tree);
+                        let treeObject = fromJSON(tree.tree);
+                        treeObject._id = tree._id;
+                        treeArray.push(treeObject);
                     });
+
+                    console.log(treeArray);
                     setTrees(treeArray);
 
                 } else {
@@ -60,8 +65,7 @@ export default function TreeList(){
                     console.log(response);
                 }
             });
-
-    }
+    };
 
     const handleClick = (e, id) => {
         if (e.target.name === "treeButton") {
@@ -74,16 +78,27 @@ export default function TreeList(){
                 }
             });
 
-            setUserContext(oldValues => {
-                return {...oldValues, currentTree: fromJSON(selectedTree.tree)}
-            });
-
-            history.push("/bst");
+            if(selectedTree.type === "bst"){
+                setUserContext(oldValues => {
+                  return {...oldValues, currentBST: selectedTree};
+                });
+                history.push("/bst");
+              } else if(selectedTree.type === "avl"){
+                setUserContext(oldValues => {
+                  return {...oldValues, currentAVL: selectedTree};
+                });
+                history.push("/avl");
+              } else {
+                setUserContext(oldValues => {
+                  return {...oldValues, currentRB: selectedTree};
+                });
+                history.push("/red-black");
+              }
 
         } else if (e.target.name === "deleteButton") {
             deleteTree(id);
         }
-    }
+    };
 
 
     const Tree = ({tree}) => (
@@ -94,10 +109,10 @@ export default function TreeList(){
       
         <Typography variant="h5" component="div">
         
-          Tree {tree._id}
+          {tree.name}
         </Typography>
         <Typography sx={{ mb: 1.5 }} color="text.secondary">
-          Number of nodes: {tree.tree.length-1}
+          Type: {tree.type}
         </Typography>
         <Button name="treeButton" size="small" onClick={(e) => handleClick(e, tree._id)}>Go to tree</Button>
         <Button name="deleteButton" size="small" color="error" variant="outlined" onClick={(e) => handleClick(e, tree._id)}>Delete tree</Button>

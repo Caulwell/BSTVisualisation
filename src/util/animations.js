@@ -295,6 +295,26 @@ function traversalAnimation(nodes, animationSpeed){
     }
 }
 
+function quickInsert(node){
+    
+    const differenceX = node.x -20;
+    const differenceY = node.y -20;
+    
+
+    let HTMLnode = document.getElementById(node.id);
+    HTMLnode.classList.add(`inserting`);
+    
+
+    anime({
+        targets: ".inserting",
+        translateX: {value: differenceX, duration: 20},
+        translateY: {value: differenceY, duration: 20}
+    });
+
+    HTMLnode.classList.remove("inserting");
+   
+}
 
 
-export {insertAnimation, deleteAnimation, checkBalanceAnimation, searchAnimation, moveNodes, traversalAnimation};
+
+export {insertAnimation, deleteAnimation, checkBalanceAnimation, searchAnimation, moveNodes, traversalAnimation, quickInsert};

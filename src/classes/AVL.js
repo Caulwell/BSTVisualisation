@@ -16,7 +16,10 @@ export default class AVL extends BT {
     createNode(value){
         return new AVLNode(value, this.numInsertedTotal);
     }
-   
+
+    createNodeFromJSON(node){
+        return new AVLNode(node.value, node.id, node.parent, node.left, node.right, node.depth, node.x, node.y, node.lr);
+    }
 
     checkBalanceAfterOperation(node, found){
 

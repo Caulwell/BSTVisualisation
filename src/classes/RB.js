@@ -57,6 +57,12 @@ export default class RB extends BT {
         return node;
     }
 
+    createNodeFromJSON(node){
+        let newNode = new  RBNode(node.value, node.id, node.parent, node.left, node.right, node.depth, node.x, node.y, node.lr);
+        newNode.colour = node.colour;
+        return newNode;
+    }
+
     insertAtTop(node){
         super.insertAtTop(node);
         node.colour = this.colours.b;

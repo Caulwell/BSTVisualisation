@@ -107,7 +107,7 @@ export default function Control({type, props}){
             case "Save Tree":
                 return (
                     <>
-                    <TextField className="popper-menu-item-input" data-close={false} size="small" type="text" label="TreeName" autoComplete="off" variant="filled" name="treeNameInput" inputProps={{"data-close":false}}/>
+                    <TextField value={props.saveInput} onChange={e => props.setSaveInput(e.target.value)} className="popper-menu-item-input" data-close={false} size="small" type="text" label="TreeName" autoComplete="off" variant="filled" name="treeNameInput" inputProps={{"data-close":false}}/>
                     <Button sx={{height: "30px"}} data-close={false} onClick={props.handleButtonPress} variant="contained" name="saveButton" size="small">Save</Button>
                     </>
                 )

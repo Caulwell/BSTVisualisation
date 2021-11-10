@@ -34,7 +34,7 @@ export default function Node({node, deleteNode}){
         } else {
             return "#42a5f5";
         }
-    }
+    };
 
     const getTooltipContent = () => {
         return (

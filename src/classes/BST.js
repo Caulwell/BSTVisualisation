@@ -8,6 +8,10 @@ export default class BST extends BT {
         return new BSTNode(value, this.numInsertedTotal);
     }
 
+    createNodeFromJSON(node){
+        return new BSTNode(node.value, node.id, node.parent, node.left, node.right, node.depth, node.x, node.y, node.lr)
+    }
+
    
 }
 

@@ -14,6 +14,7 @@ export default function Controls({addNode, searchForNode, traverseTree, saveTree
     const [userContext, setUserContext] = useContext(UserContext);
     const [selectedFile, setSelectedFile] = useState();
     const [speedInput, setSpeedInput] = useState(0.5);
+    const [saveInput, setSaveInput] = useState("");
     const [isFilePicked, setIsFilePicked] = useState(false);
 
     const controls = ["Tree Type", "New Node", "Search", "In Order", "Pre Order", "Post Order", "Upload CSV", "Animation Speed", "Save Tree"];
@@ -64,7 +65,7 @@ export default function Controls({addNode, searchForNode, traverseTree, saveTree
                 traverseTree("post");
                 break;
             case "saveButton":
-                saveTree();
+                saveTree(saveInput);
                 break;
             case "generateButton":
                 treeFromCSV(selectedFile);
@@ -118,7 +119,7 @@ export default function Controls({addNode, searchForNode, traverseTree, saveTree
                     props={control === "New Node" ? {addInput, setAddInput, handleKeypress, handleButtonPress} :
                             control === "Search" ? {searchInput, setSearchInput, handleKeypress, handleButtonPress} :
                             control === "Animation Speed" ? {speedInput, handleSpeedChange, handleAnimationSpeed} :
-                            control === "Save Tree" ? {handleButtonPress} :
+                            control === "Save Tree" ? {handleButtonPress, saveInput, setSaveInput} :
                             (control === "In Order" || control === "Pre Order" || control === "Post Order") ? {handleButtonPress} :
                             control === "Upload CSV" ? {handleButtonPress, handleFileInput} :
                             null

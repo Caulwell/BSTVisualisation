@@ -8,7 +8,7 @@ import { UserContext } from "../../context/UserContext";
 import { Card, Paper, Typography } from "@mui/material";
 import AVL from "../../classes/AVL";
 import RB from "../../classes/RB";
-import { insertAnimation, deleteAnimation, moveNodes, searchAnimation, traversalAnimation, checkBalanceAnimation } from "../../util/animations";
+import { insertAnimation, deleteAnimation, moveNodes, searchAnimation, traversalAnimation, checkBalanceAnimation, quickInsert } from "../../util/animations";
 import configureZoom from "../../util/zoomPan";
 import MessageBar from "../../components/MessageBar/MessageBar";
 
@@ -20,48 +20,84 @@ export default function Tree({type}){
   const [tree, setTree] = useState();
   const [nodes, setNodes] = useState([]);
   const [operationMessages, setOperationMessages] = useState([]);
+  const [loadingTree, setLoadingTree] = useState(false);
   const svgEl = useRef(null);
   const svgContainerEl = useRef(null);
+
+  const timer = ms => new Promise(res => setTimeout(res, ms));
 
   const getAndSetOperationMessages = () => {
     setOperationMessages([tree.operationMessage, ...operationMessages]);
   };
 
-
-
   useEffect(() => {
-
-    setNodes([]);
     configureZoom(svgEl, svgContainerEl);
 
-     if(userContext.currentTree){
-
-       renderCurrentTree();
-
-     }
   },[]);
 
+  useEffect(() => {
+    // when loading a whole tree from memory, on setting nodes, perform animations
+    loadingTree && nodes.forEach(async node => {
+      quickInsert(node);
+    });
+    setLoadingTree(false);
+  },[nodes]);
 
-  const renderCurrentTree = () => {
+  const saveCurrentTree = () => {
 
-    console.log(type);
-  }
+    if(type === "bst"){
+      setUserContext(oldValues => {
+        return {...oldValues, currentBST: tree};
+      });
+    } else if(type === "avl"){
+      setUserContext(oldValues => {
+        return {...oldValues, currentAVL: tree};
+      });
+    } else {
+      setUserContext(oldValues => {
+        return {...oldValues, currentRB: tree};
+      });
+    }
+    
+  };
+
+
+  const renderCurrentTree = (tree) => {
+
+    const renderTree = type === "bst" ? new BST() : type === "avl" ? new AVL() : new RB();
+    let newRoot = renderTree.getTreeFromJSON(tree)[0];
+    renderTree.setRoot(newRoot);
+
+    setLoadingTree(true);
+
+    setNodes(renderTree.values(renderTree.getRoot()));
+
+    renderTree.numNodes = nodes.length;
+    renderTree.numInsertedTotal = nodes.length;
+
+    setTree(renderTree);
+
+  };
 
   useEffect(() => {
     if(type === "bst"){
       setTree(new BST());
       setNodes([]);
+      if(userContext.currentBST) renderCurrentTree(userContext.currentBST);
     } else if(type === "avl"){
       setTree(new AVL());
       setNodes([]);
+      console.log(userContext.currentTree);
+      if(userContext.currentAVL) renderCurrentTree(userContext.currentAVL);
     } else {
       setTree(new RB());
       setNodes([]);
+      if(userContext.currentRB) renderCurrentTree(userContext.currentRB);
     }
     setOperationMessages([]);
   }, [type]);
 
-  const timer = ms => new Promise(res => setTimeout(res, ms));
+  
 
   async function addNode(value){
 
@@ -112,9 +148,7 @@ export default function Tree({type}){
       getAndSetOperationMessages();
       
       // set current tree for later retrieval
-      setUserContext(oldValues => {
-        return {...oldValues, currentTree: tree};
-      });
+      saveCurrentTree();
     }
   }
 
@@ -163,9 +197,7 @@ export default function Tree({type}){
     // add a new operationMessage to display to user
     getAndSetOperationMessages();
 
-    setUserContext(oldValues => {
-      return {...oldValues, currentTree: tree};
-    });
+    saveCurrentTree();
   };
 
   const traverseTree = (order) => {
@@ -175,9 +207,13 @@ export default function Tree({type}){
 
   };
 
-  const saveTree = () => {
-    console.log("saving...")
-    let treeJSON = stringify(tree);
+  const saveTree = (name) => {
+    console.log("saving...");
+    let savingTree = {};
+    savingTree.root = tree.root;
+    savingTree.type = type;
+    savingTree.name = name;
+    let treeJSON = stringify(savingTree);
     treeJSON = toJSON(treeJSON);
     
     fetch("http://localhost:4000/saveTree", {
@@ -191,9 +227,9 @@ export default function Tree({type}){
             })
             .then(async response => {
               if(response.ok){
-                setAlert({text: "Tree saved successfully", severity: "success"});
+                console.log(response);
               } else {
-                setAlert({text: "Something went wrong - could not save tree", severity: "error"});
+                console.log(response);
               }
               
             });

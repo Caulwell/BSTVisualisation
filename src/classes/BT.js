@@ -528,33 +528,78 @@ export default class BT {
         this.resolveCoords(node.right);
     }
 
+    // getTreeFromJSON(tree){
+
+    //     let nodes = [];
+
+    //     nodes = this.getNodesFromJSON(tree.root, nodes, tree.numNodes);
+
+    //     nodes.sort((first, second) => {
+    //         if(first.id < second.id) return -1;
+    //         if(second.id < first.id) return 1;
+    //         return 0;
+    //     });
+
+    //     return nodes;
+        
+    // }
+
     getTreeFromJSON(tree){
 
-        let nodes = [];
+        let arrayNodes = this.getArrayOfJsonNodes(tree.root, []);
 
-        nodes = this.getNodesFromJSON(tree.root, nodes, tree.numNodes);
-
-        nodes.sort( (first, second) => {
-            if(first.id < second.id) return -1;
-            if(second.id < first.id) return 1;
-            return 0;
+        arrayNodes.forEach((node, index) => {
+            arrayNodes[index] = this.createNodeFromJSON(node);
         });
 
-        return nodes;
-        
+        let linkedNodes = this.addLinksToNodeArray(arrayNodes);
+
+        return linkedNodes.filter(node => {
+            return node.parent === null;
+        });
+
     }
 
-    getNodesFromJSON(curr, nodes, length){
-        if(curr !== null){
-            this.getNodesFromJSON(curr.left, nodes, length);
-            if(!nodes.includes(curr)) nodes.push(curr);
-            this.getNodesFromJSON(curr.right, nodes, length);
-        }
+    getArrayOfJsonNodes(root, array){
+        if(!root) return;
+        array.push(root);
+        this.getArrayOfJsonNodes(root.left, array);
+        this.getArrayOfJsonNodes(root.right, array);
 
-        if(nodes.length === length){
-            return nodes;
-        }
+        return array;
     }
+
+    addLinksToNodeArray(nodes){
+        let nodesCopy = [];
+
+        // sort so id corresponds to index
+        nodes.forEach((node) => {
+            nodesCopy[node.id] = node;
+        });
+
+        // add links to parent, left, right
+        nodesCopy.forEach((node,index) => {
+
+            if(node.parent) nodesCopy[index].parent = nodesCopy[node.parent.id];
+            if(node.left) nodesCopy[index].left = nodesCopy[node.left.id];
+            if(node.right) nodesCopy[index].right = nodesCopy[node.right.id];
+
+        });
+
+        return nodesCopy;
+    }
+
+    // getNodesFromJSON(curr, nodes, length){
+    //     if(curr !== null){
+    //         this.getNodesFromJSON(curr.left, nodes, length);
+    //         if(!nodes.includes(curr)) nodes.push(curr);
+    //         this.getNodesFromJSON(curr.right, nodes, length);
+    //     }
+
+    //     if(nodes.length === length){
+    //         return nodes;
+    //     }
+    // }
     
 }
 
