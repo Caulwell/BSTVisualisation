@@ -11,6 +11,7 @@ import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom
 import Welcome from "./pages/Welcome/Welcome";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
 import TreeList from "./pages/TreeList/TreeList";
+import { Alert } from "@mui/material";
 
 const theme = createTheme({
   palette: {
@@ -18,11 +19,26 @@ const theme = createTheme({
   },
 });
 
+// when a user:
+///// saves tree x 
+///// logs out x
+///// logs in x
+///// registers 
+///// inputs an invalid CSV x
+// show an alert at the top of the screen
+// make it closable
+// when it is closed, the same one should not come back
+// it should be rendered by: App.js
+// the alert state should therefore be stored in App.js - pass setting functions to appropriate components/pages
+// when saving a tree - the save tree function should: 
+// when logging out, the logout function should:
+// when registering, the register function should:
+// when inputting invalid CSV, the read CSV function should:
 
 export default function App() {
 
   const [userContext, setUserContext] = useContext(UserContext);
-  const [message, setMessage] = useState({});
+  const [alert, setAlert] = useState(null);
 
   const verifyUser = useCallback(() => {
     if(userContext.token){
@@ -63,11 +79,7 @@ export default function App() {
       });
       window.localStorage.setItem("logout", Date.now());
 
-      setMessage({text: "You have successfully logged out", variant: "success"});
-
-      setTimeout(() => {
-        setMessage({});
-      },3000);
+      setAlert({text: "You have successfully logged out", severity: "success"});
     });
   };
 
@@ -84,7 +96,7 @@ export default function App() {
       if(response.ok){
         const data = await response.json();
         setUserContext(oldValues => {
-          return {...oldValues, details:data}
+          return {...oldValues, details:data};
         });
       } else {
         if(response.status === 401){
@@ -116,26 +128,27 @@ export default function App() {
       <div id="App">
       <ThemeProvider theme={theme}>
       <Header handleLogout={handleLogout} loggedIn={userContext.token ? true : false} user={userContext.details}/>
+      {alert && <Alert onClose={() => setAlert(null)} severity={alert.severity}>{alert.text}</Alert>}
       <Switch>
         <Route exact path="/">
           <Welcome/>
         </Route>
         <Route exact path="/bst">
-          <Tree type="bst"/>
+          <Tree type="bst" setAlert={setAlert}/>
         </Route>
         <Route exact path="/avl">
-          <Tree type="avl"/>
+          <Tree type="avl" setAlert={setAlert}/>
         </Route>
         <Route exact path="/red-black">
-          <Tree type="rb"/>
+          <Tree type="rb" setAlert={setAlert}/>
         </Route>
         
         
         <Route exact path="/savedTrees">
           <TreeList/>
         </Route>
-        <Route path="/auth">
-        {userContext.token ? <Redirect to="/"/> :  <Auth/> }
+        <Route path="/auth" >
+        {userContext.token ? <Redirect to="/"/> :  <Auth setAlert={setAlert}/> }
         </Route>
       </Switch>
       </ThemeProvider>

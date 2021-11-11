@@ -13,10 +13,9 @@ import configureZoom from "../../util/zoomPan";
 import MessageBar from "../../components/MessageBar/MessageBar";
 
 
-export default function Tree({type}){
+export default function Tree({type, setAlert}){
 
   const [userContext, setUserContext] = useContext(UserContext);
-  const [alert, setAlert] = useState({});
   const [tree, setTree] = useState();
   const [nodes, setNodes] = useState([]);
   const [operationMessages, setOperationMessages] = useState([]);
@@ -28,37 +27,59 @@ export default function Tree({type}){
 
   const timer = ms => new Promise(res => setTimeout(res, ms));
 
-  const getAndSetOperationMessages = () => {
-    setAddingMessage(true);
-    setOperationMessages([tree.operationMessage, ...operationMessages]);
-    setAddingMessage(false);
-  };
+  
+  /// USE EFFECTS //////
 
+  // On first render - configure zoom and panning on svg element
   useEffect(() => {
     configureZoom(svgEl, svgContainerEl);
-
   },[]);
 
+  // On changing type of tree - reset state and if a tree already in memory, load it
   useEffect(() => {
-    // when loading a whole tree from memory, on setting nodes, perform animations
+    if(type === "bst"){
+      setTree(new BST());
+      setNodes([]);
+      setOperationMessages([]);
+      if(userContext.currentBST) renderCurrentTree(userContext.currentBST, userContext.currentBSTMessages || []);
+    } else if(type === "avl"){
+      setTree(new AVL());
+      setNodes([]);
+      setOperationMessages([]);
+      if(userContext.currentAVL) renderCurrentTree(userContext.currentAVL, userContext.currentAVLMessages || []);
+    } else {
+      setTree(new RB());
+      setNodes([]);
+      setOperationMessages([]);
+      if(userContext.currentRB) renderCurrentTree(userContext.currentRB, userContext.currentRBMessages || []);  
+    }
+    
+  }, [type]);
+
+  // when loading a whole tree from memory, on setting nodes, perform animations
+  useEffect(() => {
     loadingTree && nodes.forEach(async node => {
       quickInsert(node);
     });
     setLoadingTree(false);
   },[nodes]);
 
+  // when operationMessages change, save them in memory to be loaded back when same tree rendered again
   useEffect(() => {
     addingMessage && saveMessages();
   },[operationMessages]);
 
+  // only when tree state changes on uploading csv - save generated tree to memory
   useEffect(() => {
-    console.log("tree altered - saving current tree")
     generatingTree && saveCurrentTree();
     setGeneratingTree(false);
   },[tree]);
 
-  const saveCurrentTree = () => {
 
+  /// HELPER METHODS ////
+
+  // method to save tree in memory based on type of tree to facilitate more than 1 current tree
+  const saveCurrentTree = () => {
     if(type === "bst"){
       setUserContext(oldValues => {
         return {...oldValues, currentBST: tree};
@@ -75,6 +96,7 @@ export default function Tree({type}){
     
   };
 
+  // method to save operation messages in memory based on type of tree to facilitate more than 1 current tree
   const saveMessages = () => {
 
     if(type === "bst"){
@@ -93,7 +115,14 @@ export default function Tree({type}){
 
   };
 
+  // method to set operation messages state, to initiate use effect only when new ones added, not when resetting to empty array
+  const getAndSetOperationMessages = () => {
+    setAddingMessage(true);
+    setOperationMessages([tree.operationMessage, ...operationMessages]);
+    setAddingMessage(false);
+  };
 
+  // method to render the tree saved in memory, based on type of tree currently selected
   const renderCurrentTree = (tree, messages) => {
 
     const renderTree = type === "bst" ? new BST() : type === "avl" ? new AVL() : new RB();
@@ -115,28 +144,9 @@ export default function Tree({type}){
 
   };
 
-  useEffect(() => {
-    if(type === "bst"){
-      setTree(new BST());
-      setNodes([]);
-      setOperationMessages([]);
-      if(userContext.currentBST) renderCurrentTree(userContext.currentBST, userContext.currentBSTMessages || []);
-    } else if(type === "avl"){
-      setTree(new AVL());
-      setNodes([]);
-      setOperationMessages([]);
-      if(userContext.currentAVL) renderCurrentTree(userContext.currentAVL, userContext.currentAVLMessages || []);
-    } else {
-      setTree(new RB());
-      setNodes([]);
-      setOperationMessages([]);
-      if(userContext.currentRB) renderCurrentTree(userContext.currentRB, userContext.currentRBMessages || []);  
-    }
-    
-  }, [type]);
+  /////// OPERATIONS /////
 
-  
-
+  // insertion method
   async function addNode(value){
 
     if(value !== ""){
@@ -188,6 +198,7 @@ export default function Tree({type}){
     }
   }
 
+  // search for node method
   const searchForNode = (value) => {
     if(value !== ""){
       tree.search(parseInt(value));
@@ -196,6 +207,7 @@ export default function Tree({type}){
     }
   };
 
+  // deletion method
   async function deleteNode(node){
 
     let deletedParent = tree.delete(node);
@@ -237,6 +249,7 @@ export default function Tree({type}){
 
   };
 
+  // traversal method
   const traverseTree = (order) => {
     tree.traversal(order);
     traversalAnimation([...tree.getAffectedNodes()], userContext.animationSpeed);
@@ -244,15 +257,20 @@ export default function Tree({type}){
 
   };
 
+  // method to save tree
   const saveTree = (name) => {
-    console.log("saving...");
+
+    // create a new object, removing uncessessary attributes
     let savingTree = {};
     savingTree.root = tree.root;
     savingTree.type = type;
     savingTree.name = name;
+
+    // stringify circular structure - third party library allows this
     let treeJSON = stringify(savingTree);
     treeJSON = toJSON(treeJSON);
     
+    // post to route - if good response, set positive alert, else, negative alert
     fetch("http://localhost:4000/saveTree", {
                 method: "POST",
                 credentials: "include",
@@ -264,14 +282,17 @@ export default function Tree({type}){
             })
             .then(async response => {
               if(response.ok){
-                console.log(response);
+                // setAlert - positive
+                setAlert({severity: "success", text: "You have successfully saved this tree!"});
               } else {
-                console.log(response);
+                // setAlert - negative
+                setAlert({severity: "error", text: "Something went wrong, we could not save this tree for you. Please try again"});
               }
               
             });
   };
 
+  // method to generate tree from CSV input
   const treeFromCSV = file => {
     
     let reader = new FileReader();
@@ -279,15 +300,21 @@ export default function Tree({type}){
     const renderTree = type === "bst" ? new BST() : type === "avl" ? new AVL() : new RB();
     setNodes([]);
 
-    
-
     reader.onload = e => {
       const text = e.target.result;
       const data = text.split(",");
 
+      let error = false;
+
       data.forEach((number, index) => {
+        if(isNaN(parseInt(number))) error = true;
         data[index] = parseInt(number);
       });
+
+      if(error){
+        setAlert({severity: "error", text: "There was a problem with your file - please make sure it is made of comma seperated numbers"});
+        return;
+      }
 
       setLoadingTree(true);
       setGeneratingTree(true);
@@ -298,8 +325,6 @@ export default function Tree({type}){
       renderTree.resolveCoords(renderTree.getRoot());
 
       setNodes(renderTree.values(renderTree.getRoot()));
-
-      // getAndSetOperationMessages();
 
       setTree(renderTree);
     };

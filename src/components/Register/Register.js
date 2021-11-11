@@ -3,7 +3,7 @@ import { useState, useContext } from "react";
 import validator from "validator";
 import { UserContext } from "../../context/UserContext";
 
-export default function Register(){
+export default function Register({setAlert}){
 
 
     const [username, setUsername] = useState("");
@@ -14,6 +14,13 @@ export default function Register(){
     const [error, setError] = useState("");
 
     const [userContext, setUserContext] = useContext(UserContext);
+
+
+    const resetInputs = () => {
+        setUsername("");
+        setPassword("");
+        setPassword2("");
+    };
     
 
 
@@ -66,7 +73,11 @@ export default function Register(){
                             setUserContext(oldValues => {
                                 return {...oldValues, token:data.token};
                             });
+                            
                         }
+                    } else {
+                        resetInputs();
+                        setAlert({severity: "success", text: "You have successfully registered!"});
                     }
                 })
                 .catch(error => {

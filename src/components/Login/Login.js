@@ -2,7 +2,7 @@ import { Alert, Button, Form } from "react-bootstrap";
 import { useState, useContext } from "react";
 import { UserContext } from "../../context/UserContext";
 
-export default function Login(){
+export default function Login({setAlert}){
 
 
     const [username, setUsername] = useState("");
@@ -39,6 +39,7 @@ export default function Login(){
                     setUserContext(oldValues => {
                         return {...oldValues, token: data.token}
                     });
+                    setAlert({severity: "success", text: "You have successfully logged in!"});
                 }
             })
             .catch(err => {
