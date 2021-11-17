@@ -1,10 +1,34 @@
 .operations-drop-down{
-    background-color: white;
-    cursor: pointer;
+    background-color: #081C15;
     position: absolute;
     width: 20%;
+    color: white;
+    margin-left: 2px;
+    margin-top: 2px;
 }
 
 .dropdown-control{
-    background-color: red;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.3rem;
+    font-size: 0.8rem;
+    
+}
+
+.dropdown-content{
+    opacity: 0.9;
+    color: white;
+    padding: 0.5rem 1rem;
+}
+
+.dropdown-menu-item{
+    padding: 0.5rem 0;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.3rem;
+    border-bottom: 1px solid #2D6A4F;
 }

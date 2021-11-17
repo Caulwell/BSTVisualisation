@@ -1,4 +1,3 @@
-
 import "./TreeMetaPanel.css";
 import { Link } from "react-router-dom";
 import { useState } from "react";
@@ -29,30 +28,27 @@ export default function TreeMetaPanel({treeFromCSV}){
     return (
         <div className="tree-meta-panel">
             <div className="tree-meta-item tree-type-item">
-                Tree type
-                <Link
-                    to={"/bst"}
-                >
-                <button>
+                <div className="btn-group">
+                <Link to={"/bst"}>
+                <button class="first-child">
                     BST
                 </button>
                 </Link>
 
-                <Link
-                    to={"/avl"}
-                >
-                <button>
+                <Link to={"/avl"}>
+                <button className="middle-child">
                     AVL
                 </button>
                 </Link>
 
-                <Link
-                    to={"/red-black"}
-                >
-                <button>
+                <Link to={"/red-black"}>
+                <button className="last-child">
                     Red-Black
                 </button>
                 </Link>
+
+                </div>
+               
             </div>
 
             <div className="tree-meta-item random-tree-item">

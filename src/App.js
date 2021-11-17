@@ -5,35 +5,12 @@ import Auth from "./pages/Auth/Auth";
 import {useContext, useEffect, useCallback, useState} from "react";
 import { UserContext } from "./context/UserContext";
 
-import Header from "./components/Navbar/Header";
+import Header from "./components/Header/Header";
 
 import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
 import Welcome from "./pages/Welcome/Welcome";
-import {createTheme, ThemeProvider} from "@mui/material/styles";
 import TreeList from "./pages/TreeList/TreeList";
 import { Alert } from "@mui/material";
-
-const theme = createTheme({
-  palette: {
-    mode: "dark",
-  },
-});
-
-// when a user:
-///// saves tree x 
-///// logs out x
-///// logs in x
-///// registers 
-///// inputs an invalid CSV x
-// show an alert at the top of the screen
-// make it closable
-// when it is closed, the same one should not come back
-// it should be rendered by: App.js
-// the alert state should therefore be stored in App.js - pass setting functions to appropriate components/pages
-// when saving a tree - the save tree function should: 
-// when logging out, the logout function should:
-// when registering, the register function should:
-// when inputting invalid CSV, the read CSV function should:
 
 export default function App() {
 
@@ -126,7 +103,7 @@ export default function App() {
 
     <Router>
       <div id="App">
-      <ThemeProvider theme={theme}>
+      
       <Header handleLogout={handleLogout} loggedIn={userContext.token ? true : false} user={userContext.details}/>
       {alert && <Alert onClose={() => setAlert(null)} severity={alert.severity}>{alert.text}</Alert>}
       <Switch>
@@ -142,8 +119,6 @@ export default function App() {
         <Route exact path="/red-black">
           <Tree type="rb" setAlert={setAlert}/>
         </Route>
-        
-        
         <Route exact path="/savedTrees">
           <TreeList/>
         </Route>
@@ -151,7 +126,6 @@ export default function App() {
         {userContext.token ? <Redirect to="/"/> :  <Auth setAlert={setAlert}/> }
         </Route>
       </Switch>
-      </ThemeProvider>
       </div>
     </Router>
     

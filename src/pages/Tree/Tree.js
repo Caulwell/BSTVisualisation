@@ -337,7 +337,7 @@ export default function Tree({type, setAlert}){
 
 
     return (
-      <>
+  
     <div className="tree-page">
 
       <TreeMetaPanel treeFromCSV={treeFromCSV}/>
@@ -346,7 +346,7 @@ export default function Tree({type, setAlert}){
       <MessageBar messages={operationMessages}/>
 
         <div id="svgContainer" ref={svgContainerEl}>
-        <svg id="canvas" width={window.innerWidth} height={window.innerHeight * 0.73} ref={svgEl}>
+        <svg id="canvas" viewBox={`0 0 ${window.innerWidth} ${window.innerHeight * 0.81}`}  ref={svgEl}>
               {nodes.map(node => {
                   return <Node key={node.id} node={node} deleteNode={deleteNode} />
               })}
@@ -355,7 +355,5 @@ export default function Tree({type, setAlert}){
       <AnimationPanel/>
       
     </div>
-    
-    </>
     )
 }

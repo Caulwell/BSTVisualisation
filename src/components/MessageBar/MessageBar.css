@@ -1,31 +1,63 @@
 .message-bar{
     position:absolute;
     right:0;
-    width: 20%;
-}
-
-.message-bar-title{
-    background-color: red;
-    cursor: pointer;
+    width: 15%;
+    background-color: #081C15;
+    color: white;
+    margin-right: 2px;
+    margin-top: 2px;
+    max-height: 80vh;
+    scrollbar-gutter: stable;
 }
 
 .message-bar-content{
-
+    opacity: 0.9;
+    color: white;
+    padding: 0.5rem 1rem;
+    
 }
 
 .message-bar-item{
-    background-color: green;
+    border-bottom: 1px solid #2D6A4F;
+    max-height: 2rem;
+    
+}
+
+.message-bar-item-title{
+    padding: 0.5rem 0;
+    font-size: 0.8rem;
+    padding-left: 1rem;
+    margin-bottom: 0.3rem;
+    width: inherit;
+    height: inherit;
     cursor: pointer;
-    height: 2rem;
+}
+
+.message-bar-item-title:hover{
+    background-color: #74C69D;
+    opacity: 0.9;
 }
 
 .message-bar-operation-content{
     position:relative;
-    right: 100%;
-    background-color: burlywood;
+    right: 108%;
+    background-color: #081C15;
     bottom: 2.5rem;
+    padding: 0.5rem 0;
+    font-size: 0.8rem;
+    padding-left: 1rem;
+    margin-bottom: 0.3rem;
+    
+}
+
+.message-bar-operation-content:hover{
+    background-color: #081C15;
+    
 }
 
 .message-bar-decision{
     height: 2rem;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #2D6A4F;
 }

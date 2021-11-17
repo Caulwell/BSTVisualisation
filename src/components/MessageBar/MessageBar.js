@@ -31,13 +31,16 @@ export default function MessageBar({messages}){
         };
 
         return (
-            <div className="message-bar-item" onClick={handleClick} >
-                    <p>{message.name}</p>
+            <div className="message-bar-item"  >
+                <div className="message-bar-item-title" onClick={handleClick}>
+                {message.name}
+                </div>
+                   
                     {open && 
                         <div className="message-bar-operation-content">
                             {message.decisions.map((decision, index) => {
                                 return (
-                                    <div className="message-bar-decision">
+                                    <div key={shortid.generate()} className="message-bar-decision">
                                         {decision}
                                     </div>
                                 )
@@ -50,7 +53,7 @@ export default function MessageBar({messages}){
 
     return (
         <div className="message-bar" >
-            <div className="message-bar-title" onClick={handleClick}>
+            <div className="dropdown-control" onClick={handleClick}>
                 Operations History
             </div>
         {open && 
@@ -59,6 +62,7 @@ export default function MessageBar({messages}){
                 return (
                     <Operation 
                         message={message} 
+                        key={shortid.generate()}
                         open={messageOpen === message.name ? true : false} 
                         messageOpen={messageOpen}
                         setMessageOpen={setMessageOpen}

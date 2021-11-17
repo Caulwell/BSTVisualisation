@@ -70,7 +70,7 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
     return (
         <div className="operations-drop-down">
             <div className="dropdown-control" onClick={handleDropDownClick}>
-                Tree Operations
+                Operations
             </div>
             {open && 
                 <div className="dropdown-content">
@@ -132,21 +132,27 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
                     {/* traverse tree */}
                     <div className="dropdown-menu-item traverse-tree-menu">
                         Traverse
+                        <div className="btn-group">
                         <button  
                             name="inOrder" 
+                            className="first-child"
                             onClick={handleButtonPress}>
                         In-Order
                         </button>
                         <button  
                             name="preOrder" 
+                            className="middle-child"
                             onClick={handleButtonPress}>
                         Pre-Order
                         </button>
                         <button  
                             name="postOrder" 
+                            className="last-child"
                             onClick={handleButtonPress}>
                         Post-Order
                         </button>
+                        </div>
+                        
                     </div>
 
                     {/* get min */}

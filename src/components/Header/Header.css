@@ -1,0 +1,25 @@
+.header{
+    height: 6vh;
+    background-color: #1B4332;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4rem;
+}
+
+.title{
+    display: flex; 
+    align-items: center;
+}
+
+.title h3{
+    margin-right: 2rem;
+    font-size: 1rem;
+    margin-bottom: 0;
+}
+
+.title h4{
+    font-size: 0.8rem;
+    margin-bottom: 0;
+}

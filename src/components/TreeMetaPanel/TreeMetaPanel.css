@@ -1,9 +1,56 @@
 .tree-meta-panel{
     display: flex;
-    background-color: yellow;
-    height: 8vh;
+    background-color: #081C15;
+    color: white;
+    height: 7vh;
     align-items: center;
     justify-content: space-between;
-    padding-left: 10%;
-    padding-right: 10%;
+    padding-left: 15%;
+    padding-right: 15%;
 }
+
+.tree-type-item{
+   display: flex;
+   align-items: center;
+   justify-content: space-evenly;
+   flex-grow: 0.2 
+}
+
+/* SELECT A NEW TREE TYPE */
+.btn-group button{ /* Green background */
+    background-color: transparent;
+    border: 1px solid #74C69D; /* Green border */
+    color: white; /* White text */
+    padding: 5px 12px; /* Some padding */
+    cursor: pointer; /* Pointer/hand icon */
+    float: left; /* Float the buttons side by side */
+    font-size: 0.8rem;
+}
+
+.btn-group button:not(:last-child) {
+    border-right: none; /* Prevent double borders */
+}
+
+.btn-group:after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.btn-group .first-child{
+    border-radius: 6px 0 0 6px;
+}
+
+.btn-group .middle-child{
+    border-radius: 0;
+}
+
+.btn-group .last-child{
+    border-radius: 0 6px 6px 0;
+}
+
+.btn-group button:hover {
+ background-color: #1B4332
+}
+
+/* GENERATE A NEW TREE */
