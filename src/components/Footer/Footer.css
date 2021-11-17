@@ -1,0 +1,14 @@
+.footer{
+    background-color: #2d6a4f;
+    color: white;
+    height: 6vh;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 3rem;
+}
+
+.footer p{
+    margin:0;
+    margin-left: 3rem;
+}

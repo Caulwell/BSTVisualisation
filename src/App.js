@@ -11,6 +11,7 @@ import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom
 import Welcome from "./pages/Welcome/Welcome";
 import TreeList from "./pages/TreeList/TreeList";
 import { Alert } from "@mui/material";
+import Footer from "./components/Footer/Footer";
 
 export default function App() {
 
@@ -126,8 +127,10 @@ export default function App() {
         {userContext.token ? <Redirect to="/"/> :  <Auth setAlert={setAlert}/> }
         </Route>
       </Switch>
+      <Footer/>
       </div>
     </Router>
+
     
   );
 }

@@ -11,7 +11,6 @@ export default function Node({node, deleteNode}){
     const [userContext] = useContext(UserContext);
 
     useEffect(() => {
-        // insertAnimation(node, userContext.animationSpeed);
         setInserted(true);
     },[]);
 
@@ -32,7 +31,7 @@ export default function Node({node, deleteNode}){
         if(node.colour){
             return node.colour;
         } else {
-            return "#42a5f5";
+            return "#2d6a4f";
         }
     };
 
@@ -49,11 +48,6 @@ export default function Node({node, deleteNode}){
                 {node.getHeight() >=0 && <div>Height: {node.getHeight()}</div>}
                 </>
             }
-
-            {/* <div>{"X: " + node.x}</div>
-            <div>{"Y: " + node.y}</div>
-            <div>{"moveToX: " + node.moveToX}</div>
-            <div>{"moveToY: " + node.moveToY}</div> */}
             <div className="tooltip-button"><Button onClick={handleClick} name="deleteButton" size="small" color="error" variant="contained" >Delete</Button></div>
             </>
         )
@@ -73,16 +67,16 @@ export default function Node({node, deleteNode}){
                 r="20" 
                 stroke={getColor()} 
                 strokeWidth="4" 
-                fill={getColor()} 
+                fill="white"
                 className={node.id}
                 name={"node"+node.id}
                
             />
             <text className="svg-text" x="20" y="20"
                 textAnchor="middle"
-                stroke="white"
+                stroke={getColor()}
                 strokeWidth="1px"
-                fill="white"
+                fill={getColor()}
                 alignmentBaseline="middle"
                 className={node.id}
             >
@@ -99,9 +93,9 @@ export default function Node({node, deleteNode}){
                 
             {node.lr === "l" ? 
             
-               <path id={`arrow${node.id}`} d={`M ${node.parent.x-13},${node.parent.y+13} L ${node.x+13},${node.y-13}`} style={{stroke: "#42a5f5", strokeWidth: 2}}/>
+               <path id={`arrow${node.id}`} d={`M ${node.parent.x-13},${node.parent.y+13} L ${node.x+13},${node.y-13}`} style={{stroke: "#2d6a4f", strokeWidth: 2}}/>
             
-            : <path id={`arrow${node.id}`} d={`M ${node.parent.x+13},${node.parent.y+13} L ${node.x-13},${node.y-13}`} style={{stroke: "#42a5f5", strokeWidth: 2}}/>
+            : <path id={`arrow${node.id}`} d={`M ${node.parent.x+13},${node.parent.y+13} L ${node.x-13},${node.y-13}`} style={{stroke: "#2d6a4f", strokeWidth: 2}}/>
             }
 
         </> 

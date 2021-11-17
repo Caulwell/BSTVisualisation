@@ -3,21 +3,50 @@ import "./TreeOperationsPanel.css";
 import { UserContext } from "../../context/UserContext";
 
 
-export default function TreeOperationsPanel({addNode, searchForNode, traverseTree, saveTree, treeFromCSV}){
+export default function TreeOperationsPanel({addNode, searchForNode, traverseTree, saveTree, treeFromCSV, clearTree}){
 
     const [addInput, setAddInput] = useState("");
     const [searchInput, setSearchInput] = useState("");
     const [deleteInput, setDeleteInput] = useState("");
     const [userContext, setUserContext] = useContext(UserContext);
     const [saveInput, setSaveInput] = useState("");
-
-    const [open, setOpen] = useState(false);
-
+    const [speedInput, setSpeedInput] = useState(1);
     const [selectedFile, setSelectedFile] = useState(null);
+
+    const [open, setOpen] = useState(true);
+
+    
 
     const handleFileInput = e => {
         console.log(e.target.files);
         setSelectedFile(e.target.files[0]);
+    };
+
+   
+
+    useEffect(() => {
+        setUserContext(oldValues => {
+            return {...oldValues, animationSpeed: 1 - (speedInput)};
+        });
+    }, []);
+
+
+    const handleSpeedChange = e => {
+        console.log(e.target.value);
+        setSpeedInput(e.target.value);
+    };
+
+    const handleAnimationSpeed = () => {
+
+        console.log(speedInput);
+
+      let newSpeed = 1 - (speedInput);
+
+          if(newSpeed !== userContext.animationSpeed){
+              setUserContext(oldValues => {
+                  return {...oldValues, animationSpeed: newSpeed};
+              });
+          }
     };
 
     const handleKeypress = e => {
@@ -61,6 +90,9 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
                 break;
             case "generateButton":
                 treeFromCSV(selectedFile);
+                break;
+            case "clearButton":
+                clearTree();
                 break;
             default:
                 break;
@@ -206,10 +238,29 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
                     {/* clear tree */}
                     <div className="dropdown-menu-item clear-tree-menu">
                         Clear Tree
-                        <button >
+                        <button name="clearButton" onClick={handleButtonPress}>
                             Clear 
                         </button>
                     </div> 
+
+                    <div className="dropdown-control" >
+                        Animations
+                    </div>
+
+                    <div className="dropdown-menu-item speed-change">
+                    Animation Speed
+                <input 
+                    type="range"
+                    className="speedInput"
+                    onChange={handleSpeedChange} 
+                    onMouseUp={handleAnimationSpeed}
+                    min={0.1} 
+                    max={1} 
+                    step={0.1} 
+                    value={speedInput} 
+                > 
+                </input>
+            </div>
             </div>
             }
             

@@ -12,7 +12,6 @@ import { insertAnimation, deleteAnimation, moveNodes, searchAnimation, traversal
 import configureZoom from "../../util/zoomPan";
 import MessageBar from "../../components/MessageBar/MessageBar";
 import TreeMetaPanel from "../../components/TreeMetaPanel/TreeMetaPanel";
-import AnimationPanel from "../../components/AnimationPanel/AnimationPanel";
 import shortid from "shortid";
 
 
@@ -263,6 +262,28 @@ export default function Tree({type, setAlert}){
 
   };
 
+  const clearTree = () => {
+
+    if(type === "bst"){
+      setTree(new BST());
+      setUserContext(oldValues => {
+        return {...oldValues, currentBST: null, currentBSTMessages: []};
+      });
+    } else if(type === "avl"){
+      setTree(new AVL());
+      setUserContext(oldValues => {
+        return {...oldValues, currentAVL: null, currentAVLMessages: []};
+      });
+    } else {
+      setTree(new RB());
+      setUserContext(oldValues => {
+        return {...oldValues, currentRB: null, currentRBMessages: []};
+      });
+    }
+    setNodes([]);
+    setOperationMessages([]);
+  };
+
   // method to save tree
   const saveTree = (name) => {
 
@@ -343,22 +364,18 @@ export default function Tree({type, setAlert}){
     return (
   
     <div className="tree-page">
-
-      
     
-      <TreeOperationsPanel addNode={addNode} searchForNode={searchForNode} traverseTree={traverseTree} saveTree={saveTree} treeFromCSV={treeFromCSV}/>
-      
+      <TreeOperationsPanel addNode={addNode} searchForNode={searchForNode} traverseTree={traverseTree} saveTree={saveTree} treeFromCSV={treeFromCSV} clearTree={clearTree}/>
       <MessageBar messages={operationMessages}/>
       <TreeMetaPanel treeFromCSV={treeFromCSV}/>
 
         <div id="svgContainer" ref={svgContainerEl}>
-        <svg id="canvas" viewBox={`0 0 ${window.innerWidth} ${window.innerHeight * 0.81}`}  ref={svgEl}>
+        <svg id="canvas" viewBox={`0 0 ${window.innerWidth} ${window.innerHeight * 0.83}`}  ref={svgEl}>
               {nodes.map(node => {
                   return <Node key={node.id} node={node} deleteNode={deleteNode} />
               })}
         </svg>
       </div>
-      <AnimationPanel/>
       
     </div>
     )
