@@ -23,10 +23,10 @@ export default function MessageBar({messages}){
     const Operation = ({message, open, setMessageOpen}) => {
 
         const handleClick = () => {
-            if(message.name === messageOpen){
+            if(message.id === messageOpen){
                 setMessageOpen("");
             } else {
-                setMessageOpen(message.name);
+                setMessageOpen(message.id);
             }
         };
 
@@ -62,8 +62,8 @@ export default function MessageBar({messages}){
                 return (
                     <Operation 
                         message={message} 
-                        key={shortid.generate()}
-                        open={messageOpen === message.name ? true : false} 
+                        key={message.id}
+                        open={messageOpen === message.id ? true : false} 
                         messageOpen={messageOpen}
                         setMessageOpen={setMessageOpen}
                     />

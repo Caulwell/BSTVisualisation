@@ -13,6 +13,7 @@ import configureZoom from "../../util/zoomPan";
 import MessageBar from "../../components/MessageBar/MessageBar";
 import TreeMetaPanel from "../../components/TreeMetaPanel/TreeMetaPanel";
 import AnimationPanel from "../../components/AnimationPanel/AnimationPanel";
+import shortid from "shortid";
 
 
 export default function Tree({type, setAlert}){
@@ -119,8 +120,11 @@ export default function Tree({type, setAlert}){
 
   // method to set operation messages state, to initiate use effect only when new ones added, not when resetting to empty array
   const getAndSetOperationMessages = () => {
+
+    let operationMessage = tree.operationMessage;
+    operationMessage.id = shortid.generate();
     setAddingMessage(true);
-    setOperationMessages([tree.operationMessage, ...operationMessages]);
+    setOperationMessages([operationMessage, ...operationMessages]);
     setAddingMessage(false);
   };
 
