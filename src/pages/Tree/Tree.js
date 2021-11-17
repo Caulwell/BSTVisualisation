@@ -1,5 +1,5 @@
 import {useEffect, useState, useContext, useRef } from "react";
-import Controls from "../../components/ControlBar/ControlBar";
+import TreeOperationsPanel from "../../components/TreeOperationsPanel/TreeOperationsPanel";
 import Node from "../../components/Node/Node";
 import BST from "../../classes/BST";
 import "./Tree.css";
@@ -11,6 +11,8 @@ import RB from "../../classes/RB";
 import { insertAnimation, deleteAnimation, moveNodes, searchAnimation, traversalAnimation, checkBalanceAnimation, quickInsert } from "../../util/animations";
 import configureZoom from "../../util/zoomPan";
 import MessageBar from "../../components/MessageBar/MessageBar";
+import TreeMetaPanel from "../../components/TreeMetaPanel/TreeMetaPanel";
+import AnimationPanel from "../../components/AnimationPanel/AnimationPanel";
 
 
 export default function Tree({type, setAlert}){
@@ -336,34 +338,21 @@ export default function Tree({type, setAlert}){
 
     return (
       <>
-      {/* {alert ? <Alert severity={alert.severity}>{alert.text}</Alert>: null} */}
-    <div className="Tree flex">
-      <Controls addNode={addNode} searchForNode={searchForNode} traverseTree={traverseTree} saveTree={saveTree} treeFromCSV={treeFromCSV}/>
-      <main>
+    <div className="tree-page">
 
-      <div  >
-      <Paper>
-        <div className="info-panel flex">
-          <Typography color="white">{type.toUpperCase()} Tree</Typography>
-          <Typography color="white">Number of Nodes: {tree && tree.numNodes}</Typography>
-          <Typography color="white">Tree Depth: {tree && tree.getDepth(tree.getRoot())}</Typography>
-          <Typography color="white">Min Node: {tree && tree.getMinNode()}</Typography>
-          <Typography color="white">Max Node: {tree && tree.getMaxNode()}</Typography>
-        </div>
-        </Paper>
-        <div className="flex">
+      <TreeMetaPanel treeFromCSV={treeFromCSV}/>
+    
+      <TreeOperationsPanel addNode={addNode} searchForNode={searchForNode} traverseTree={traverseTree} saveTree={saveTree} treeFromCSV={treeFromCSV}/>
+      <MessageBar messages={operationMessages}/>
+
         <div id="svgContainer" ref={svgContainerEl}>
-        <svg id="canvas" width={window.innerWidth - 600} height={window.innerHeight-210} ref={svgEl}>
+        <svg id="canvas" width={window.innerWidth} height={window.innerHeight * 0.73} ref={svgEl}>
               {nodes.map(node => {
                   return <Node key={node.id} node={node} deleteNode={deleteNode} />
               })}
         </svg>
-        </div>
-        <MessageBar messages={operationMessages}/>
-        </div>
       </div>
-      
-      </main>
+      <AnimationPanel/>
       
     </div>
     

@@ -1,0 +1,10 @@
+.operations-drop-down{
+    background-color: white;
+    cursor: pointer;
+    position: absolute;
+    width: 20%;
+}
+
+.dropdown-control{
+    background-color: red;
+}

@@ -23,6 +23,7 @@ export default class BT {
     }
 
     getDepth(root){
+        // depth of tree is 1 + max depth of left/right branch
         if(! root) return 0;
         return 1 + Math.max(this.getDepth(root.left), this.getDepth(root.right));
     }
@@ -35,6 +36,7 @@ export default class BT {
     }
 
     getMinNode(){
+        // get min value of tree
         let curr = this.root;
 
         if(!curr) return "null";
@@ -47,6 +49,7 @@ export default class BT {
     }
 
     getMaxNode(){
+        // get max value of tree
         let curr = this.root;
 
         if(!curr) return "null";
@@ -63,6 +66,7 @@ export default class BT {
     }
 
     values(top) {
+        // get all nodes in an array
         if (!top) return [];
         var array = [];
         search(top, 1);
@@ -79,6 +83,7 @@ export default class BT {
     }
 
     resetAnimationObjects(){
+        // perform this at beginning of any operation to ensure no duplicates
         this.affectedNodes = new Set();
         this.insertionAnimation = {highlightNodes: [], node: null};
         this.deletionAnimation = {highlightNodes: [], node: null};
@@ -86,7 +91,7 @@ export default class BT {
     }
 
     ///// OPERATIONS ////////
-
+    
     insert(value){
 
         this.resetAnimationObjects();

@@ -1,0 +1,9 @@
+.tree-meta-panel{
+    display: flex;
+    background-color: yellow;
+    height: 8vh;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 10%;
+    padding-right: 10%;
+}

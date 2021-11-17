@@ -1,3 +1,31 @@
 .message-bar{
-    margin-top: 2rem;
+    position:absolute;
+    right:0;
+    width: 20%;
+}
+
+.message-bar-title{
+    background-color: red;
+    cursor: pointer;
+}
+
+.message-bar-content{
+
+}
+
+.message-bar-item{
+    background-color: green;
+    cursor: pointer;
+    height: 2rem;
+}
+
+.message-bar-operation-content{
+    position:relative;
+    right: 100%;
+    background-color: burlywood;
+    bottom: 2.5rem;
+}
+
+.message-bar-decision{
+    height: 2rem;
 }
