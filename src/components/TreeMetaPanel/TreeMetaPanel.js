@@ -1,78 +1,43 @@
 import "./TreeMetaPanel.css";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function TreeMetaPanel({treeFromCSV}){
+export default function TreeMetaPanel(){
 
+    const [selectedButton, setSelectedButton] = useState(null);
 
-    const [selectedFile, setSelectedFile] = useState(null);
+    useEffect(() => {
+        setSelectedButton(window.location.pathname);
+    },[]);
 
-    const handleFileInput = e => {
-        console.log(e.target.files);
-        setSelectedFile(e.target.files[0]);
+    const handleClick = (e) => {
+        setSelectedButton(e.target.name);
     };
-
-    const handleButtonPress = e => {
-        switch(e.currentTarget.getAttribute("name")){
-          case "generateButton":
-              treeFromCSV(selectedFile);
-              break;
-          default:
-              break;
-
-        }
-      
-    };
-
 
     return (
         <div className="tree-meta-panel">
             <div className="tree-meta-item tree-type-item">
                 <div className="btn-group">
                 <Link to={"/bst"}>
-                <button class="first-child">
+                <button name="/bst" className={selectedButton === "/bst" ? "selectedButton first-child" : "first-child"} onClick={handleClick}>
                     BST
                 </button>
                 </Link>
 
                 <Link to={"/avl"}>
-                <button className="middle-child">
+                <button name="/avl" className={selectedButton === "/avl" ? "selectedButton middle-child" : "middle-child"} onClick={handleClick}>
                     AVL
                 </button>
                 </Link>
 
                 <Link to={"/red-black"}>
-                <button className="last-child">
+                <button name="/red-black" className={selectedButton === "/red-black" ? " last-child selectedButton" : "last-child"} onClick={handleClick}>
                     Red-Black
                 </button>
                 </Link>
 
                 </div>
                
-            </div>
-
-            <div className="tree-meta-item random-tree-item">
-                 Random Tree
-                <button>
-                    Generate
-                </button>
-            </div>
-
-            <div className="tree-meta-item csv-tree-item">
-                 Upload CSV
-                <input type="file" accept="*.csv" onChange={handleFileInput}>
-                    
-                </input>
-                <button name="generateButton" onClick={handleButtonPress}>
-                    Generate
-                </button>
-            </div>
-
-            <div className="tree-meta-item clear-tree-item">
-                 Clear Tree
-                <button>
-                    Clear
-                </button>
             </div>
         </div>
     )

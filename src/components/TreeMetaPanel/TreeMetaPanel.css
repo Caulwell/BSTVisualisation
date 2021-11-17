@@ -1,12 +1,12 @@
 .tree-meta-panel{
     display: flex;
-    background-color: #081C15;
     color: white;
-    height: 7vh;
+    height: 5vh;
+    width: 60vw;
+    margin: 0 auto;
+    margin-right: 18vw;
     align-items: center;
-    justify-content: space-between;
-    padding-left: 15%;
-    padding-right: 15%;
+    justify-content: space-evenly;
 }
 
 .tree-type-item{
@@ -17,13 +17,13 @@
 }
 
 /* SELECT A NEW TREE TYPE */
-.btn-group button{ /* Green background */
-    background-color: transparent;
-    border: 1px solid #74C69D; /* Green border */
-    color: white; /* White text */
-    padding: 5px 12px; /* Some padding */
-    cursor: pointer; /* Pointer/hand icon */
-    float: left; /* Float the buttons side by side */
+.btn-group button{ 
+    background-color: #1b4332;
+    border: none;
+    color: white; 
+    padding: 5px 12px;
+    cursor: pointer; 
+    float: left; 
     font-size: 0.8rem;
 }
 
@@ -53,4 +53,8 @@
  background-color: #1B4332
 }
 
-/* GENERATE A NEW TREE */
+
+.selectedButton{
+    background-color: #40916c !important;
+}
+

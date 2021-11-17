@@ -344,10 +344,12 @@ export default function Tree({type, setAlert}){
   
     <div className="tree-page">
 
-      <TreeMetaPanel treeFromCSV={treeFromCSV}/>
+      
     
       <TreeOperationsPanel addNode={addNode} searchForNode={searchForNode} traverseTree={traverseTree} saveTree={saveTree} treeFromCSV={treeFromCSV}/>
+      
       <MessageBar messages={operationMessages}/>
+      <TreeMetaPanel treeFromCSV={treeFromCSV}/>
 
         <div id="svgContainer" ref={svgContainerEl}>
         <svg id="canvas" viewBox={`0 0 ${window.innerWidth} ${window.innerHeight * 0.81}`}  ref={svgEl}>

@@ -32,7 +32,7 @@ export default function MessageBar({messages}){
 
         return (
             <div className="message-bar-item"  >
-                <div className="message-bar-item-title" onClick={handleClick}>
+                <div className={messageOpen === message.id ? "selectedMessage message-bar-item-title" : "message-bar-item-title"} onClick={handleClick}>
                 {message.name}
                 </div>
                    

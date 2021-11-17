@@ -12,7 +12,7 @@ a:hover{
     text-decoration: none;
 }
 
-button{
+button, .fileInputLabel{
     border-radius: 6px;
     color: white;
     background-color: transparent;
@@ -21,6 +21,6 @@ button{
     padding: 0.2rem 0;
 }
 
-button:hover{
+button:hover, .fileInputLabel:hover{
     background-color: #74C69D;
 }

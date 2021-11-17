@@ -3,7 +3,7 @@ import "./TreeOperationsPanel.css";
 import { UserContext } from "../../context/UserContext";
 
 
-export default function TreeOperationsPanel({addNode, searchForNode, traverseTree, saveTree}){
+export default function TreeOperationsPanel({addNode, searchForNode, traverseTree, saveTree, treeFromCSV}){
 
     const [addInput, setAddInput] = useState("");
     const [searchInput, setSearchInput] = useState("");
@@ -13,9 +13,12 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
 
     const [open, setOpen] = useState(false);
 
-    const controls = ["Tree Type", "New Node", "Search", "In Order", "Pre Order", "Post Order", "Upload CSV", "Animation Speed", "Save Tree"];
+    const [selectedFile, setSelectedFile] = useState(null);
 
-    const drawerWidth = 240;
+    const handleFileInput = e => {
+        console.log(e.target.files);
+        setSelectedFile(e.target.files[0]);
+    };
 
     const handleKeypress = e => {
         if(e.key === "Enter"){
@@ -55,6 +58,9 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
                 break;
             case "saveButton":
                 saveTree(saveInput);
+                break;
+            case "generateButton":
+                treeFromCSV(selectedFile);
                 break;
             default:
                 break;
@@ -174,6 +180,36 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
                         Find
                         </button>
                     </div>
+
+                    <div className="dropdown-control" >
+                        Tree
+                    </div>
+
+                    {/* generate random tree */}
+                    <div className="dropdown-menu-item random-tree-menu">
+                        Generate Random Tree
+                        <button >
+                            Generate
+                        </button>
+                    </div>
+
+                    {/* csv tree generation */}
+                    <div className="dropdown-menu-item csv-tree-menu">
+                        Generate Using CSV
+                        <input className="fileInput" id="fileInput" type="file" accept="*.csv" onChange={handleFileInput}/>
+                        <label className="fileInputLabel" for="fileInput">{selectedFile ? selectedFile.name : "Upload"}</label>
+                        <button  name="generateButton" onClick={handleButtonPress}>
+                            Generate
+                        </button>
+                    </div>
+
+                    {/* clear tree */}
+                    <div className="dropdown-menu-item clear-tree-menu">
+                        Clear Tree
+                        <button >
+                            Clear 
+                        </button>
+                    </div> 
             </div>
             }
             

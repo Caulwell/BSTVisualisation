@@ -9,6 +9,7 @@
 
 .dropdown-control{
     cursor: pointer;
+    background-color: #1b4332;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -31,4 +32,17 @@
     justify-content: space-between;
     margin-bottom: 0.3rem;
     border-bottom: 1px solid #2D6A4F;
+}
+
+.fileInput{
+    opacity: 0;
+    width: 0.1px;
+    height: 0.1px;
+    position: absolute;
+}
+
+.fileInputLabel{
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
 }

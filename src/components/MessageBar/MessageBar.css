@@ -33,6 +33,10 @@
     cursor: pointer;
 }
 
+.selectedMessage{
+    background-color:#74C69D;
+}
+
 .message-bar-item-title:hover{
     background-color: #74C69D;
     opacity: 0.9;
