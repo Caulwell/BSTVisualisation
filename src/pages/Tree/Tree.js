@@ -321,11 +321,11 @@ export default function Tree({type, setAlert}){
 
   // method to generate tree from CSV input
   const treeFromCSV = file => {
-    
-    let reader = new FileReader();
 
     const renderTree = type === "bst" ? new BST() : type === "avl" ? new AVL() : new RB();
     setNodes([]);
+    
+    let reader = new FileReader();
 
     reader.onload = e => {
       const text = e.target.result;
@@ -343,21 +343,45 @@ export default function Tree({type, setAlert}){
         return;
       }
 
-      setLoadingTree(true);
-      setGeneratingTree(true);
-
-      renderTree.getTreeFromValues(data);
-      renderTree.resetLayout(renderTree.getRoot());
-      renderTree.checkLayout(renderTree.getRoot());
-      renderTree.resolveCoords(renderTree.getRoot());
-
-      setNodes(renderTree.values(renderTree.getRoot()));
-
-      setTree(renderTree);
+      createTreeFromArray(renderTree, data);
     };
 
     reader.readAsText(file);
 
+  };
+
+  const randomTree = () => {
+
+    const renderTree = type === "bst" ? new BST() : type === "avl" ? new AVL() : new RB();
+    setNodes([]);
+
+    let data = [];
+
+    let numNodes = Math.floor(Math.random() * 20);
+
+    for(let i = 0; i < numNodes; i++){
+      data.push(Math.floor(Math.random() * 1000));
+    }
+
+
+
+    createTreeFromArray(renderTree, data);
+    
+  }
+
+  const createTreeFromArray = (tree, data) => {
+
+      setLoadingTree(true);
+      setGeneratingTree(true);
+
+      tree.getTreeFromValues(data);
+      tree.resetLayout(tree.getRoot());
+      tree.checkLayout(tree.getRoot());
+      tree.resolveCoords(tree.getRoot());
+
+      setNodes(tree.values(tree.getRoot()));
+
+      setTree(tree);
   };
 
 
@@ -365,7 +389,7 @@ export default function Tree({type, setAlert}){
   
     <div className="tree-page">
     
-      <TreeOperationsPanel addNode={addNode} searchForNode={searchForNode} traverseTree={traverseTree} saveTree={saveTree} treeFromCSV={treeFromCSV} clearTree={clearTree}/>
+      <TreeOperationsPanel addNode={addNode} searchForNode={searchForNode} traverseTree={traverseTree} saveTree={saveTree} treeFromCSV={treeFromCSV} clearTree={clearTree} randomTree={randomTree}/>
       <MessageBar messages={operationMessages}/>
       <TreeMetaPanel treeFromCSV={treeFromCSV}/>
 

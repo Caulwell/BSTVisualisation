@@ -3,7 +3,7 @@ import "./TreeOperationsPanel.css";
 import { UserContext } from "../../context/UserContext";
 
 
-export default function TreeOperationsPanel({addNode, searchForNode, traverseTree, saveTree, treeFromCSV, clearTree}){
+export default function TreeOperationsPanel({addNode, searchForNode, traverseTree, saveTree, treeFromCSV, clearTree, randomTree}){
 
     const [addInput, setAddInput] = useState("");
     const [searchInput, setSearchInput] = useState("");
@@ -15,14 +15,10 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
 
     const [open, setOpen] = useState(true);
 
-    
-
     const handleFileInput = e => {
         console.log(e.target.files);
         setSelectedFile(e.target.files[0]);
     };
-
-   
 
     useEffect(() => {
         setUserContext(oldValues => {
@@ -93,6 +89,9 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
                 break;
             case "clearButton":
                 clearTree();
+                break;
+            case "randomTreeButton":
+                randomTree();
                 break;
             default:
                 break;
@@ -220,7 +219,7 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
                     {/* generate random tree */}
                     <div className="dropdown-menu-item random-tree-menu">
                         Generate Random Tree
-                        <button >
+                        <button name="randomTreeButton" onClick={handleButtonPress}>
                             Generate
                         </button>
                     </div>
