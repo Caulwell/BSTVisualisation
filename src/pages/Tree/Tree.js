@@ -324,6 +324,7 @@ export default function Tree({type, setAlert}){
 
     const renderTree = type === "bst" ? new BST() : type === "avl" ? new AVL() : new RB();
     setNodes([]);
+    setOperationMessages([]);
     
     let reader = new FileReader();
 
@@ -354,10 +355,11 @@ export default function Tree({type, setAlert}){
 
     const renderTree = type === "bst" ? new BST() : type === "avl" ? new AVL() : new RB();
     setNodes([]);
+    setOperationMessages([]);
 
     let data = [];
 
-    let numNodes = Math.floor(Math.random() * 20);
+    let numNodes = Math.floor(Math.random() * (20 - 3) + 3);
 
     for(let i = 0; i < numNodes; i++){
       data.push(Math.floor(Math.random() * 1000));
