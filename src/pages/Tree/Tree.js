@@ -261,6 +261,20 @@ export default function Tree({type, setAlert}){
 
   };
 
+  // max node
+  const maxNode = () => {
+    tree.getMaxNode();
+    traversalAnimation([...tree.getAffectedNodes()], userContext.animationSpeed);
+    getAndSetOperationMessages();
+  }
+
+  // min node
+  const minNode = () => {
+    tree.getMinNode();
+    traversalAnimation([...tree.getAffectedNodes()], userContext.animationSpeed);
+    getAndSetOperationMessages();
+  }
+
   const clearTree = () => {
 
     if(type === "bst"){
@@ -390,7 +404,7 @@ export default function Tree({type, setAlert}){
   
     <div className="tree-page">
     
-      <TreeOperationsPanel addNode={addNode} searchForNode={searchForNode} traverseTree={traverseTree} saveTree={saveTree} treeFromCSV={treeFromCSV} clearTree={clearTree} randomTree={randomTree}/>
+      <TreeOperationsPanel addNode={addNode} searchForNode={searchForNode} traverseTree={traverseTree} saveTree={saveTree} treeFromCSV={treeFromCSV} clearTree={clearTree} randomTree={randomTree} minNode={minNode} maxNode={maxNode}/>
       <MessageBar messages={operationMessages}/>
       <TreeMetaPanel treeFromCSV={treeFromCSV}/>
 

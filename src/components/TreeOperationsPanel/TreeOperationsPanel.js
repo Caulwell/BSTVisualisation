@@ -1,9 +1,10 @@
 import {useState, useRef, useContext, useEffect} from "react";
 import "./TreeOperationsPanel.css";
 import { UserContext } from "../../context/UserContext";
+import { mergeBreakpointsInOrder } from "@mui/system";
 
 
-export default function TreeOperationsPanel({addNode, searchForNode, traverseTree, saveTree, treeFromCSV, clearTree, randomTree}){
+export default function TreeOperationsPanel({addNode, searchForNode, traverseTree, saveTree, treeFromCSV, clearTree, randomTree, minNode, maxNode}){
 
     const [addInput, setAddInput] = useState("");
     const [searchInput, setSearchInput] = useState("");
@@ -92,6 +93,12 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
                 break;
             case "randomTreeButton":
                 randomTree();
+                break;
+            case "getMinButton":
+                minNode();
+                break;
+            case "getMaxButton":
+                maxNode();
                 break;
             default:
                 break;

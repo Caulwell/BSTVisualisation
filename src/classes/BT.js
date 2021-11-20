@@ -36,29 +36,68 @@ export default class BT {
     }
 
     getMinNode(){
+        this.resetAnimationObjects();
+
+        this.operationMessage = {name: "Get Min Node", decisions: ["Checking root"]};
+        let nodes = [];
         // get min value of tree
         let curr = this.root;
 
-        if(!curr) return "null";
+        if(!curr){
+            this.operationMessage.decisions.push("Root is null, terminating operation");
+            return;
+        }
+
+        nodes.push(curr);
+        this.operationMessage.decisions.push("Visiting root: " + curr.value);
 
         while(curr.left){
+            this.operationMessage.decisions.push("Checking " + curr.value + ".left: " + curr.left.value);
             curr = curr.left;
+            this.operationMessage.decisions.push("Visiting " + curr.value);
+            nodes.push(curr);
+
         }
+
+        this.operationMessage.decisions.push(curr.value + ".left is null");
+        this.operationMessage.decisions.push("Minimum node: " + curr.value);
+
+        this.affectedNodes =  new Set(nodes);
 
         return curr.value;
     }
 
     getMaxNode(){
         // get max value of tree
+        this.resetAnimationObjects();
+
+        this.operationMessage = {name: "Get Max Node", decisions: ["Checking root"]};
+        let nodes = [];
+        // get min value of tree
         let curr = this.root;
 
-        if(!curr) return "null";
-
-        while(curr.right){
-            curr = curr.right;
+        if(!curr){
+            this.operationMessage.decisions.push("Root is null, terminating operation");
+            return;
         }
 
-        return curr.value || "null";
+        nodes.push(curr);
+        this.operationMessage.decisions.push("Visiting root: " + curr.value);
+
+        while(curr.right){
+            this.operationMessage.decisions.push("Checking " + curr.value + ".right: " + curr.right.value);
+            curr = curr.right;
+            this.operationMessage.decisions.push("Visiting " + curr.value);
+            nodes.push(curr);
+
+        }
+
+        this.operationMessage.decisions.push(curr.value + ".right is null");
+        this.operationMessage.decisions.push("Maximum node: " + curr.value);
+
+        this.affectedNodes =  new Set(nodes);
+
+        return curr.value;
     }
 
     getAffectedNodes(){
