@@ -21,13 +21,14 @@ export default function Tree({type, setAlert}){
   const [tree, setTree] = useState();
   const [nodes, setNodes] = useState([]);
   const [operationMessages, setOperationMessages] = useState([]);
-  const [loadingTree, setLoadingTree] = useState(false);
+  const [loadingTree, setLoadingTree] = useState(true);
   const [addingMessage, setAddingMessage] = useState(false);
   const [generatingTree, setGeneratingTree] = useState(false);
   const svgEl = useRef(null);
   const svgContainerEl = useRef(null);
 
   const timer = ms => new Promise(res => setTimeout(res, ms));
+
 
   
   /// USE EFFECTS //////
@@ -39,32 +40,32 @@ export default function Tree({type, setAlert}){
 
   // On changing type of tree - reset state and if a tree already in memory, load it
   useEffect(() => {
+    setNodes([]);
+    setOperationMessages([]);
     if(type === "bst"){
       setTree(new BST());
-      setNodes([]);
-      setOperationMessages([]);
       if(userContext.currentBST) renderCurrentTree(userContext.currentBST, userContext.currentBSTMessages || []);
     } else if(type === "avl"){
       setTree(new AVL());
-      setNodes([]);
-      setOperationMessages([]);
       if(userContext.currentAVL) renderCurrentTree(userContext.currentAVL, userContext.currentAVLMessages || []);
     } else {
       setTree(new RB());
-      setNodes([]);
-      setOperationMessages([]);
       if(userContext.currentRB) renderCurrentTree(userContext.currentRB, userContext.currentRBMessages || []);  
     }
+
+    
     
   }, [type]);
 
   // when loading a whole tree from memory, on setting nodes, perform animations
   useEffect(() => {
-    loadingTree && nodes.forEach(async node => {
-      quickInsert(node);
-    });
-    setLoadingTree(false);
-  },[nodes]);
+    if(loadingTree && nodes.length){
+      nodes.forEach(async node => {
+        quickInsert(node);
+      });
+      setLoadingTree(false);
+    }
+  },[loadingTree,nodes]);
 
   // when operationMessages change, save them in memory to be loaded back when same tree rendered again
   useEffect(() => {
@@ -130,11 +131,11 @@ export default function Tree({type, setAlert}){
   // method to render the tree saved in memory, based on type of tree currently selected
   const renderCurrentTree = (tree, messages) => {
 
+    setLoadingTree(true);
+
     const renderTree = type === "bst" ? new BST() : type === "avl" ? new AVL() : new RB();
     let newRoot = renderTree.getTreeFromJSON(tree)[0];
     renderTree.setRoot(newRoot);
-
-    setLoadingTree(true);
 
     let nodesToRender = renderTree.values(renderTree.getRoot());
     setOperationMessages(messages);
@@ -144,9 +145,7 @@ export default function Tree({type, setAlert}){
     renderTree.numInsertedTotal = nodesToRender.length;
 
     setTree(renderTree);
-    console.log(messages);
     
-
   };
 
   /////// OPERATIONS /////
