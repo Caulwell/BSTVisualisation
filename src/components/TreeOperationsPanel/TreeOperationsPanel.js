@@ -10,7 +10,6 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
     const [searchInput, setSearchInput] = useState("");
     const [deleteInput, setDeleteInput] = useState("");
     const [userContext, setUserContext] = useContext(UserContext);
-    const [saveInput, setSaveInput] = useState("");
     const [speedInput, setSpeedInput] = useState(1);
     const [selectedFile, setSelectedFile] = useState(null);
 
@@ -83,7 +82,8 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
                 traverseTree("post");
                 break;
             case "saveButton":
-                saveTree(saveInput);
+                setShowModal(true);
+                setModalContent({title: "Save Tree to File", main: "Click below to save tree to file", approveFunction: saveTree});
                 break;
             case "generateButton":
                 treeFromCSV(selectedFile);
@@ -250,6 +250,15 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
                             Clear 
                         </button>
                     </div> 
+
+                    {/* save to file */}
+                    <div className="dropdown-menu-item clear-tree-menu">
+                        Save to file
+                        <button  name="saveButton" onClick={handleButtonPress}>
+                            Save
+                        </button>
+                    </div> 
+
 
                     <div className="dropdown-control" >
                         Animations

@@ -304,38 +304,23 @@ export default function Tree({type, setAlert}){
   };
 
   // method to save tree
-  const saveTree = (name) => {
+  const saveTree = () => {
 
     // create a new object, removing uncessessary attributes
     let savingTree = {};
     savingTree.root = tree.root;
     savingTree.type = type;
-    savingTree.name = name;
 
     // stringify circular structure - third party library allows this
     let treeJSON = stringify(savingTree);
     treeJSON = toJSON(treeJSON);
     
-    // post to route - if good response, set positive alert, else, negative alert
-    fetch("http://localhost:4000/saveTree", {
-                method: "POST",
-                credentials: "include",
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${userContext.token}`,
-                },
-                body: treeJSON,
-            })
-            .then(async response => {
-              if(response.ok){
-                // setAlert - positive
-                setAlert({severity: "success", text: "You have successfully saved this tree!"});
-              } else {
-                // setAlert - negative
-                setAlert({severity: "error", text: "Something went wrong, we could not save this tree for you. Please try again"});
-              }
-              
-            });
+    // save as text file
+    var a = document.createElement("a");
+    var file = new Blob([treeJSON], {type: "text/plain"});
+    a.href = URL.createObjectURL(file);
+    a.download = `${type}.txt`;
+    a.click();
   };
 
   // method to generate tree from CSV input
