@@ -4,21 +4,26 @@ import { UserContext } from "../../context/UserContext";
 import { mergeBreakpointsInOrder } from "@mui/system";
 
 
-export default function TreeOperationsPanel({addNode, searchForNode, traverseTree, saveTree, treeFromCSV, clearTree, randomTree, minNode, maxNode, setShowModal, setModalContent}){
+export default function TreeOperationsPanel({addNode, searchForNode, traverseTree, saveTree, treeFromCSV, treeFromFile, clearTree, randomTree, minNode, maxNode, setShowModal, setModalContent}){
 
     const [addInput, setAddInput] = useState("");
     const [searchInput, setSearchInput] = useState("");
     const [deleteInput, setDeleteInput] = useState("");
     const [userContext, setUserContext] = useContext(UserContext);
     const [speedInput, setSpeedInput] = useState(1);
-    const [selectedFile, setSelectedFile] = useState(null);
+    const [selectedCSV, setSelectedCSV] = useState(null);
+    const [selectedTXT, setSelectedTXT] = useState(null);
 
     const [open, setOpen] = useState(true);
 
-    const handleFileInput = e => {
+    const handleCSVInput = e => {
         console.log(e.target.files);
-        setSelectedFile(e.target.files[0]);
+        setSelectedCSV(e.target.files[0]);
     };
+
+    const handleTXTInput = e => {
+        setSelectedTXT(e.target.files[0]);
+    }
 
     useEffect(() => {
         setUserContext(oldValues => {
@@ -86,12 +91,14 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
                 setModalContent({title: "Save Tree to File", main: "Click below to save tree to file", approveFunction: saveTree});
                 break;
             case "generateButton":
-                treeFromCSV(selectedFile);
+                treeFromCSV(selectedCSV);
+                break;
+            case "txtGenerateButton":
+                treeFromFile(selectedTXT);
                 break;
             case "clearButton":
                 setShowModal(true);
                 setModalContent({title: "Clear Tree", main: "Are you sure you want to remove all nodes?", approveFunction: clearTree});
-                // clearTree();
                 break;
             case "randomTreeButton":
                 randomTree();
@@ -236,8 +243,8 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
                     {/* csv tree generation */}
                     <div className="dropdown-menu-item csv-tree-menu">
                         Generate Using CSV
-                        <input className="fileInput" id="fileInput" type="file" accept="*.csv" onChange={handleFileInput}/>
-                        <label className="fileInputLabel" for="fileInput">{selectedFile ? selectedFile.name : "Upload"}</label>
+                        <input className="fileInput" id="fileInput" type="file" accept="*.csv" onChange={handleCSVInput}/>
+                        <label className="fileInputLabel" for="fileInput">{selectedCSV ? selectedCSV.name : "Upload"}</label>
                         <button  name="generateButton" onClick={handleButtonPress}>
                             Generate
                         </button>
@@ -256,6 +263,16 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
                         Save to file
                         <button  name="saveButton" onClick={handleButtonPress}>
                             Save
+                        </button>
+                    </div> 
+
+                    {/* load from file */}
+                    <div className="dropdown-menu-item clear-tree-menu">
+                        Load from file
+                        <input className="fileInput" id="txtFileInput" type="file" accept="*.txt" onChange={handleTXTInput}/>
+                        <label className="fileInputLabel" for="txtFileInput">{selectedTXT ? selectedTXT.name : "Upload"}</label>
+                        <button  name="txtGenerateButton" onClick={handleButtonPress}>
+                            Generate
                         </button>
                     </div> 
 

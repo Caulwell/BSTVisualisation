@@ -3,7 +3,7 @@ import TreeOperationsPanel from "../../components/TreeOperationsPanel/TreeOperat
 import Node from "../../components/Node/Node";
 import BST from "../../classes/BST";
 import "./Tree.css";
-import {stringify, toJSON} from "flatted";
+import {parse, stringify, toJSON} from "flatted";
 import { UserContext } from "../../context/UserContext";
 import AVL from "../../classes/AVL";
 import RB from "../../classes/RB";
@@ -13,6 +13,7 @@ import MessageBar from "../../components/MessageBar/MessageBar";
 import TreeMetaPanel from "../../components/TreeMetaPanel/TreeMetaPanel";
 import shortid from "shortid";
 import Modal from "../../components/Modal/Modal";
+import {fromJSON} from "flatted";
 
 
 export default function Tree({type, setAlert}){
@@ -355,6 +356,31 @@ export default function Tree({type, setAlert}){
 
   };
 
+  const treeFromFile = file => {
+
+    if(!file || file.type !== "text/plain"){
+      return;
+    }
+
+    const renderTree = type === "bst" ? new BST() : type === "avl" ? new AVL() : new RB();
+    setNodes([]);
+    setOperationMessages([]);
+
+    let tree = "";
+
+    file.text()
+      .then(result => {
+        tree = result;
+        let treeObject = parse(tree);
+        renderCurrentTree(treeObject, []);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+      
+  };
+
   const randomTree = () => {
 
     const renderTree = type === "bst" ? new BST() : type === "avl" ? new AVL() : new RB();
@@ -397,9 +423,23 @@ export default function Tree({type, setAlert}){
 
     <Modal show={showModal} handleClose={closeModal} content={modalContent}/>
     
-      <TreeOperationsPanel addNode={addNode} searchForNode={searchForNode} traverseTree={traverseTree} saveTree={saveTree} treeFromCSV={treeFromCSV} clearTree={clearTree} randomTree={randomTree} minNode={minNode} maxNode={maxNode} setShowModal={setShowModal} setModalContent={setModalContent}/>
+      <TreeOperationsPanel 
+        addNode={addNode} 
+        searchForNode={searchForNode} 
+        traverseTree={traverseTree} 
+        saveTree={saveTree} 
+        treeFromCSV={treeFromCSV} 
+        treeFromFile={treeFromFile}
+        clearTree={clearTree} 
+        randomTree={randomTree} 
+        minNode={minNode} 
+        maxNode={maxNode} 
+        setShowModal={setShowModal} 
+        setModalContent={setModalContent}
+
+      />
       <MessageBar messages={operationMessages}/>
-      <TreeMetaPanel treeFromCSV={treeFromCSV}/>
+      <TreeMetaPanel/>
 
         <div id="svgContainer" ref={svgContainerEl}>
         <svg id="canvas" viewBox={`0 0 ${window.innerWidth} ${window.innerHeight * 0.83}`}  ref={svgEl}>
