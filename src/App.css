@@ -17,6 +17,7 @@ button, .fileInputLabel{
     color: white;
     background-color: transparent;
     border: 2px solid #74C69D;
+    cursor: pointer;
     width: 6rem;
     padding: 0.2rem 0;
 }

@@ -1,4 +1,3 @@
-import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import Tree from "./pages/Tree/Tree";
 import {useContext, useEffect, useCallback, useState} from "react";

@@ -5,7 +5,6 @@ import BST from "../../classes/BST";
 import "./Tree.css";
 import {stringify, toJSON} from "flatted";
 import { UserContext } from "../../context/UserContext";
-import { Card, Paper, Typography } from "@mui/material";
 import AVL from "../../classes/AVL";
 import RB from "../../classes/RB";
 import { insertAnimation, deleteAnimation, moveNodes, searchAnimation, traversalAnimation, checkBalanceAnimation, quickInsert } from "../../util/animations";
@@ -13,6 +12,7 @@ import configureZoom from "../../util/zoomPan";
 import MessageBar from "../../components/MessageBar/MessageBar";
 import TreeMetaPanel from "../../components/TreeMetaPanel/TreeMetaPanel";
 import shortid from "shortid";
+import Modal from "../../components/Modal/Modal";
 
 
 export default function Tree({type, setAlert}){
@@ -27,9 +27,15 @@ export default function Tree({type, setAlert}){
   const svgEl = useRef(null);
   const svgContainerEl = useRef(null);
 
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState({});
+
   const timer = ms => new Promise(res => setTimeout(res, ms));
 
 
+  const closeModal = () => {
+    setShowModal(false);
+  }
   
   /// USE EFFECTS //////
 
@@ -403,8 +409,10 @@ export default function Tree({type, setAlert}){
     return (
   
     <div className="tree-page">
+
+    <Modal show={showModal} handleClose={closeModal} content={modalContent}/>
     
-      <TreeOperationsPanel addNode={addNode} searchForNode={searchForNode} traverseTree={traverseTree} saveTree={saveTree} treeFromCSV={treeFromCSV} clearTree={clearTree} randomTree={randomTree} minNode={minNode} maxNode={maxNode}/>
+      <TreeOperationsPanel addNode={addNode} searchForNode={searchForNode} traverseTree={traverseTree} saveTree={saveTree} treeFromCSV={treeFromCSV} clearTree={clearTree} randomTree={randomTree} minNode={minNode} maxNode={maxNode} setShowModal={setShowModal} setModalContent={setModalContent}/>
       <MessageBar messages={operationMessages}/>
       <TreeMetaPanel treeFromCSV={treeFromCSV}/>
 

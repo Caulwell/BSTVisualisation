@@ -4,7 +4,7 @@ import { UserContext } from "../../context/UserContext";
 import { mergeBreakpointsInOrder } from "@mui/system";
 
 
-export default function TreeOperationsPanel({addNode, searchForNode, traverseTree, saveTree, treeFromCSV, clearTree, randomTree, minNode, maxNode}){
+export default function TreeOperationsPanel({addNode, searchForNode, traverseTree, saveTree, treeFromCSV, clearTree, randomTree, minNode, maxNode, setShowModal, setModalContent}){
 
     const [addInput, setAddInput] = useState("");
     const [searchInput, setSearchInput] = useState("");
@@ -89,7 +89,9 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
                 treeFromCSV(selectedFile);
                 break;
             case "clearButton":
-                clearTree();
+                setShowModal(true);
+                setModalContent({title: "Clear Tree", main: "Are you sure you want to remove all nodes?", approveFunction: clearTree});
+                // clearTree();
                 break;
             case "randomTreeButton":
                 randomTree();
