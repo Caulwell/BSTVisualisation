@@ -15,10 +15,17 @@
     fill: transparent;
 }
 
-.tooltip-button{
-    margin-top:0.5rem;
-}
-
 .hide{
     display: none;
+}
+
+.node-tooltip{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.node-tooltip-info{
+    border-bottom: 1px solid grey;
+    margin-bottom: 0.3rem;
 }

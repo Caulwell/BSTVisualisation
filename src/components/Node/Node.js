@@ -1,4 +1,3 @@
-import { insertAnimation } from "../../util/animations";
 import {useContext, useEffect, useState} from "react";
 import { Tooltip, Button, ClickAwayListener } from "@mui/material";
 import "./Node.css";
@@ -37,19 +36,19 @@ export default function Node({node, deleteNode}){
 
     const getTooltipContent = () => {
         return (
-            <>
-            <div>{"Depth: " + node.getDepth()}</div>
-            <div>{node.parent ? "Parent: " + node.parent.value  : "Parent: null"}</div>
-            <div>{node.left ? "Left: " + node.left.value  : "Left: null"}</div>
-            <div>{node.right ? "Right: " + node.right.value  : "Right: null"}</div>
+            <div className="node-tooltip">
+            <div className="node-tooltip-info">{"Depth: " + node.getDepth()}</div>
+            <div className="node-tooltip-info">{node.parent ? "Parent: " + node.parent.value  : "Parent: null"}</div>
+            <div className="node-tooltip-info">{node.left ? "Left: " + node.left.value  : "Left: null"}</div>
+            <div className="node-tooltip-info">{node.right ? "Right: " + node.right.value  : "Right: null"}</div>
             
             {node.type === "avl" && <>
-                {(node.getBalanceFactor() >=0 || node.getBalanceFactor() < 0) && <div>Balance Factor: {node.getBalanceFactor()}</div>}
-                {node.getHeight() >=0 && <div>Height: {node.getHeight()}</div>}
+                {(node.getBalanceFactor() >=0 || node.getBalanceFactor() < 0) && <div className="node-tooltip-info">Balance Factor: {node.getBalanceFactor()}</div>}
+                {node.getHeight() >=0 && <div className="node-tooltip-info">Height: {node.getHeight()}</div>}
                 </>
             }
-            <div className="tooltip-button"><Button onClick={handleClick} name="deleteButton" size="small" color="error" variant="contained" >Delete</Button></div>
-            </>
+            <div ><button className="tooltip-button button-warning" onClick={handleClick} name="deleteButton" size="small"  >Delete</button></div>
+            </div>
         )
 
     }

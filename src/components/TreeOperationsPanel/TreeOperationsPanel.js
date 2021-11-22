@@ -244,7 +244,7 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
                     {/* clear tree */}
                     <div className="dropdown-menu-item clear-tree-menu">
                         Clear Tree
-                        <button name="clearButton" onClick={handleButtonPress}>
+                        <button className="button-warning" name="clearButton" onClick={handleButtonPress}>
                             Clear 
                         </button>
                     </div> 
