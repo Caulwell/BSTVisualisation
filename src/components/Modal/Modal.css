@@ -19,14 +19,6 @@ left:50%;
 transform: translate(-50%,-50%);
 }
 
-.display-block {
-    display: block;
-}
-    
-.display-none {
-    display: none;
-}
-
 .modal-title{
     font-size: 1.5rem;
     border-bottom: 1px solid grey;

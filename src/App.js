@@ -7,8 +7,6 @@ import Header from "./components/Header/Header";
 
 import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
 import Welcome from "./pages/Welcome/Welcome";
-import TreeList from "./pages/TreeList/TreeList";
-import { Alert } from "@mui/material";
 import Footer from "./components/Footer/Footer";
 
 export default function App() {
@@ -22,22 +20,18 @@ export default function App() {
       <div id="App">
       
       <Header/>
-      {alert && <Alert onClose={() => setAlert(null)} severity={alert.severity}>{alert.text}</Alert>}
       <Switch>
         <Route exact path="/">
           <Welcome/>
         </Route>
         <Route exact path="/bst">
-          <Tree type="bst" setAlert={setAlert}/>
+          <Tree type="bst" />
         </Route>
         <Route exact path="/avl">
-          <Tree type="avl" setAlert={setAlert}/>
+          <Tree type="avl" />
         </Route>
         <Route exact path="/red-black">
-          <Tree type="rb" setAlert={setAlert}/>
-        </Route>
-        <Route exact path="/savedTrees">
-          <TreeList/>
+          <Tree type="rb" />
         </Route>
       </Switch>
       <Footer/>

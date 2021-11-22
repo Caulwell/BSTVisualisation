@@ -13,10 +13,10 @@ import MessageBar from "../../components/MessageBar/MessageBar";
 import TreeMetaPanel from "../../components/TreeMetaPanel/TreeMetaPanel";
 import shortid from "shortid";
 import Modal from "../../components/Modal/Modal";
-import {fromJSON} from "flatted";
+import Alert from "../../components/Alert/Alert";
 
 
-export default function Tree({type, setAlert}){
+export default function Tree({type}){
 
   const [userContext, setUserContext] = useContext(UserContext);
   const [tree, setTree] = useState();
@@ -31,12 +31,19 @@ export default function Tree({type, setAlert}){
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState({});
 
+  const [alert, setAlert] = useState({type: "", content: ""});
+  const [showAlert, setShowAlert] = useState(false);
+
   const timer = ms => new Promise(res => setTimeout(res, ms));
 
 
   const closeModal = () => {
     setShowModal(false);
-  }
+  };
+
+  const closeAlert = () => {
+    setShowAlert(false);
+  };
   
   /// USE EFFECTS //////
 
@@ -44,6 +51,15 @@ export default function Tree({type, setAlert}){
   useEffect(() => {
     configureZoom(svgEl, svgContainerEl);
   },[]);
+
+  // when showAlert is set to true, set it to false after 5 seconds
+  useEffect(() => {
+    if(showAlert){
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 5000);
+    }
+  },[showAlert]);
 
   // On changing type of tree - reset state and if a tree already in memory, load it
   useEffect(() => {
@@ -327,6 +343,14 @@ export default function Tree({type, setAlert}){
   // method to generate tree from CSV input
   const treeFromCSV = file => {
 
+    // display error alert if no file specified
+    if(!file){
+      console.log("no file");
+      setAlert({type: "failure", content: "No file was specified. Please upload a file and then click generate"});
+      setShowAlert(true);
+      return;
+    }
+
     const renderTree = type === "bst" ? new BST() : type === "avl" ? new AVL() : new RB();
     setNodes([]);
     setOperationMessages([]);
@@ -344,8 +368,10 @@ export default function Tree({type, setAlert}){
         data[index] = parseInt(number);
       });
 
+      // if CSV not just numbers and commas, will present error - show alert if error encountered
       if(error){
-        setAlert({severity: "error", text: "There was a problem with your file - please make sure it is made of comma seperated numbers"});
+        setAlert({type: "failure", content: "There was a problem with your file - please make sure it is made of comma seperated numbers"});
+        setShowAlert(true);
         return;
       }
 
@@ -359,10 +385,12 @@ export default function Tree({type, setAlert}){
   const treeFromFile = file => {
 
     if(!file || file.type !== "text/plain"){
-      return;
+      setAlert({type: "failure", content: "The file type must be .txt for this function to work"});
+      setShowAlert(true);
+      return; // set alert that file type is wrong
     }
 
-    const renderTree = type === "bst" ? new BST() : type === "avl" ? new AVL() : new RB();
+    setGeneratingTree(true);
     setNodes([]);
     setOperationMessages([]);
 
@@ -372,10 +400,15 @@ export default function Tree({type, setAlert}){
       .then(result => {
         tree = result;
         let treeObject = parse(tree);
+        if(treeObject.type !== type){
+          setAlert({type: "failure", content: "The loaded tree is a " + treeObject.type + " - please load this tree on the " + treeObject.type + " page"});
+          setShowAlert(true);
+          return; // set alert that it is the wrong type - provide what type the file is
+        }
         renderCurrentTree(treeObject, []);
       })
       .catch(err => {
-        console.log(err);
+        console.log(err); // set alert that something went wrong with file loading
       });
 
       
@@ -422,7 +455,7 @@ export default function Tree({type, setAlert}){
     <div className="tree-page">
 
     <Modal show={showModal} handleClose={closeModal} content={modalContent}/>
-    
+    <Alert type={alert.type} content={alert.content} show={showAlert} handleClose={closeAlert}></Alert>
       <TreeOperationsPanel 
         addNode={addNode} 
         searchForNode={searchForNode} 

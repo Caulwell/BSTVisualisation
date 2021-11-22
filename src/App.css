@@ -2,6 +2,15 @@ body{
     max-height: 100vh;
 }
 
+.display-block {
+    display: block;
+}
+    
+.display-none {
+    display: none;
+}
+
+
 a{
     color: white;
     text-decoration: none;
