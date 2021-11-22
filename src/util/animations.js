@@ -2,46 +2,64 @@ import anime from "animejs";
 
 function searchAnimation(nodes, foundNode, animationSpeed){
 
-    const maxDuration = 1000;
+    return new Promise((resolve, reject) => {
 
-    const tl = anime.timeline({
+        const maxDuration = 1000;
+
+        const tl = anime.timeline({
+        
+        });
+
+        const testFinalAnimationDone = i => {
+
+            if(i === nodes.length -1){
+                resolve("done");
+            }
+        }
+        
+        for(let i = 0; i < nodes.length; i++){
     
-    });
+            let node = nodes[i];
+            let HTMLnode = document.getElementById(node.id);
+            HTMLnode.classList.add(`highlighting${node.id}`);
     
-    for(let i = 0; i < nodes.length; i++){
-
-        let node = nodes[i];
-        let HTMLnode = document.getElementById(node.id);
-        HTMLnode.classList.add(`highlighting${node.id}`);
-
-        tl.add({
-            targets: `.highlighting${node.id}`,
-            scale: {value: 1.5, duration: maxDuration*animationSpeed+100},
-        });
-        tl.add({
-            targets: `.highlighting${node.id}`,
-            scale: {value: 1, duration: maxDuration*animationSpeed+100}
-        });
-
-        HTMLnode.classList.remove(`highlighting${node.id}`);
+            tl.add({
+                targets: `.highlighting${node.id}`,
+                scale: {value: 1.5, duration: maxDuration*animationSpeed+100},
+            });
+            tl.add({
+                targets: `.highlighting${node.id}`,
+                scale: {value: 1, duration: maxDuration*animationSpeed+100},
+                complete: (anim) => {
+                    if(!foundNode) testFinalAnimationDone(i);
+                }
+            });
     
-    }
+            HTMLnode.classList.remove(`highlighting${node.id}`);
+        
+        }
+    
+        if(foundNode){
+            let HTMLnode = document.getElementById(foundNode.id);
+            HTMLnode.classList.add("foundNodeHighlight");
+    
+            tl.add({
+                targets: ".foundNodeHighlight",
+                scale: {value: 2, duration: maxDuration*animationSpeed+200}
+            });
+            tl.add({
+                targets: ".foundNodeHighlight",
+                scale: {value: 1, duration: maxDuration*animationSpeed+200},
+                complete: anim => {
+                    resolve("done");
+                }
+            });
+    
+            HTMLnode.classList.remove("foundNodeHighlight");
+        }
+    })
 
-    if(foundNode){
-        let HTMLnode = document.getElementById(foundNode.id);
-        HTMLnode.classList.add("foundNodeHighlight");
-
-        tl.add({
-            targets: ".foundNodeHighlight",
-            scale: {value: 2, duration: maxDuration*animationSpeed+200}
-        });
-        tl.add({
-            targets: ".foundNodeHighlight",
-            scale: {value: 1, duration: maxDuration*animationSpeed+200}
-        });
-
-        HTMLnode.classList.remove("foundNodeHighlight");
-    }
+   
 
     
    
@@ -271,28 +289,42 @@ function moveNodes(nodes, animationSpeed){
 
 function traversalAnimation(nodes, animationSpeed){
 
-    const maxDuration = 1000;
+    return new Promise((resolve, reject) => {
 
-    const tl = anime.timeline({
-    
+        const maxDuration = 1000;
+
+        const testFinalAnimationDone = (i) => {
+            if(i === nodes.length -1){
+                resolve("done");
+            }
+        }
+
+        const tl = anime.timeline({
+        
+        });
+        
+        for(let i = 0; i < nodes.length; i++){
+
+            let node = nodes[i];
+            let HTMLnode = document.getElementById(node.id);
+            HTMLnode.classList.add(`highlighting${node.id}`);
+
+            tl.add({
+                targets: `.highlighting${node.id}`,
+                scale: {value: 1.5, duration: maxDuration*animationSpeed+100},
+            });
+            tl.add({
+                targets: `.highlighting${node.id}`,
+                scale: {value: 1, duration: maxDuration*animationSpeed+100},
+                complete: (anim) => {
+                    testFinalAnimationDone(i);
+                }
+            });
+        
+        }
     });
-    
-    for(let i = 0; i < nodes.length; i++){
 
-        let node = nodes[i];
-        let HTMLnode = document.getElementById(node.id);
-        HTMLnode.classList.add(`highlighting${node.id}`);
-
-        tl.add({
-            targets: `.highlighting${node.id}`,
-            scale: {value: 1.5, duration: maxDuration*animationSpeed+100},
-        });
-        tl.add({
-            targets: `.highlighting${node.id}`,
-            scale: {value: 1, duration: maxDuration*animationSpeed+100}
-        });
     
-    }
 }
 
 function quickInsert(node){

@@ -34,6 +34,8 @@ export default function Tree({type}){
   const [alert, setAlert] = useState({type: "", content: ""});
   const [showAlert, setShowAlert] = useState(false);
 
+  const [inputsDisabled, setInputsDisabled] = useState(false);
+
   const timer = ms => new Promise(res => setTimeout(res, ms));
 
 
@@ -178,6 +180,8 @@ export default function Tree({type}){
 
     if(value !== ""){
 
+      setInputsDisabled(true);
+
       // set internal data structure
       let insertedNode = tree.insert(parseInt(value));
       // render node in intitial position
@@ -202,6 +206,7 @@ export default function Tree({type}){
           tree.fixOnInsertion(insertedNode);
           
         }
+
       }
 
       // add a new operationMessage to display to user
@@ -222,20 +227,26 @@ export default function Tree({type}){
 
       setNodes(tree.values(tree.getRoot()));
       saveCurrentTree();
+      setInputsDisabled(false);
     }
   }
 
   // search for node method
-  const searchForNode = (value) => {
+  async function searchForNode(value){
     if(value !== ""){
+      setInputsDisabled(true);
       tree.search(parseInt(value));
-      searchAnimation([...tree.getAffectedNodes()], tree.foundNode, userContext.animationSpeed);
+      const animationDone = await searchAnimation([...tree.getAffectedNodes()], tree.foundNode, userContext.animationSpeed);
+      console.log(animationDone);
       getAndSetOperationMessages();
+      setInputsDisabled(false);
     }
   };
 
   // deletion method
   async function deleteNode(node){
+    
+    setInputsDisabled(true);
 
     let deletedParent = tree.delete(node);
     await deleteAnimation(tree.deletionAnimation.highlightNodes, tree.deletionAnimation.node, userContext.animationSpeed);
@@ -257,6 +268,8 @@ export default function Tree({type}){
           tree.fixOnDelete(tree.deleteFixNode);
         }
       }
+
+      setInputsDisabled(false);
       
     }
     // add a new operationMessage to display to user - useEffect will also trigger saving tree to context on state change
@@ -277,24 +290,31 @@ export default function Tree({type}){
   };
 
   // traversal method
-  const traverseTree = (order) => {
+  async function traverseTree(order){
     tree.traversal(order);
-    traversalAnimation([...tree.getAffectedNodes()], userContext.animationSpeed);
+    setInputsDisabled(true);
+    const animationDone = await traversalAnimation([...tree.getAffectedNodes()], userContext.animationSpeed);
+    setInputsDisabled(false);
     getAndSetOperationMessages();
 
   };
 
   // max node
-  const maxNode = () => {
+  async function maxNode (){
+    setInputsDisabled(true);
     tree.getMaxNode();
-    traversalAnimation([...tree.getAffectedNodes()], userContext.animationSpeed);
+    const animationDone = await traversalAnimation([...tree.getAffectedNodes()], userContext.animationSpeed);
+    console.log(animationDone);
+    setInputsDisabled(false);
     getAndSetOperationMessages();
-  }
+  };
 
   // min node
-  const minNode = () => {
+  async function minNode (){
+    setInputsDisabled(true);
     tree.getMinNode();
-    traversalAnimation([...tree.getAffectedNodes()], userContext.animationSpeed);
+    const animationDone = await traversalAnimation([...tree.getAffectedNodes()], userContext.animationSpeed);
+    setInputsDisabled(false);
     getAndSetOperationMessages();
   }
 
@@ -457,6 +477,7 @@ export default function Tree({type}){
     <Modal show={showModal} handleClose={closeModal} content={modalContent}/>
     <Alert type={alert.type} content={alert.content} show={showAlert} handleClose={closeAlert}></Alert>
       <TreeOperationsPanel 
+        inputsDisabled={inputsDisabled}
         addNode={addNode} 
         searchForNode={searchForNode} 
         traverseTree={traverseTree} 

@@ -4,7 +4,7 @@ import { UserContext } from "../../context/UserContext";
 import { mergeBreakpointsInOrder } from "@mui/system";
 
 
-export default function TreeOperationsPanel({addNode, searchForNode, traverseTree, saveTree, treeFromCSV, treeFromFile, clearTree, randomTree, minNode, maxNode, setShowModal, setModalContent}){
+export default function TreeOperationsPanel({inputsDisabled, addNode, searchForNode, traverseTree, saveTree, treeFromCSV, treeFromFile, clearTree, randomTree, minNode, maxNode, setShowModal, setModalContent}){
 
     const [addInput, setAddInput] = useState("");
     const [searchInput, setSearchInput] = useState("");
@@ -138,10 +138,13 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
                             name="addInput" 
                             onChange={e => setAddInput(e.target.value)} 
                             onKeyPress={handleKeypress}
+                            disabled={inputsDisabled}
                         />
                         <button  
                             name="addButton" 
-                            onClick={handleButtonPress}>
+                            onClick={handleButtonPress}
+                            disabled={inputsDisabled}
+                            >
                         Add
                         </button>
                     </div>
@@ -156,10 +159,13 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
                             name="searchInput" 
                             onChange={e => setSearchInput(e.target.value)} 
                             onKeyPress={handleKeypress}
+                            disabled={inputsDisabled}
                         />
                         <button  
                             name="searchButton" 
-                            onClick={handleButtonPress}>
+                            onClick={handleButtonPress}
+                            disabled={inputsDisabled}
+                            >
                         Search
                         </button>
                     </div>
@@ -174,10 +180,13 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
                             name="deleteInput" 
                             onChange={e => setDeleteInput(e.target.value)} 
                             onKeyPress={handleKeypress}
+                            disabled={inputsDisabled}
                         />
                         <button  
                             name="deleteButton" 
-                            onClick={handleButtonPress}>
+                            onClick={handleButtonPress}
+                            disabled={inputsDisabled}
+                            >
                         Delete
                         </button>
                     </div>
@@ -189,19 +198,25 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
                         <button  
                             name="inOrder" 
                             className="first-child"
-                            onClick={handleButtonPress}>
+                            onClick={handleButtonPress}
+                            disabled={inputsDisabled}
+                            >
                         In-Order
                         </button>
                         <button  
                             name="preOrder" 
                             className="middle-child"
-                            onClick={handleButtonPress}>
+                            onClick={handleButtonPress}
+                            disabled={inputsDisabled}
+                            >
                         Pre-Order
                         </button>
                         <button  
                             name="postOrder" 
                             className="last-child"
-                            onClick={handleButtonPress}>
+                            onClick={handleButtonPress}
+                            disabled={inputsDisabled}
+                            >
                         Post-Order
                         </button>
                         </div>
@@ -213,7 +228,9 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
                         Get Min
                         <button  
                             name="getMinButton" 
-                            onClick={handleButtonPress}>
+                            onClick={handleButtonPress}
+                            disabled={inputsDisabled}
+                            >
                         Find
                         </button>
                     </div>
@@ -223,7 +240,9 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
                         Get Max
                         <button  
                             name="getMaxButton" 
-                            onClick={handleButtonPress}>
+                            onClick={handleButtonPress}
+                            disabled={inputsDisabled}
+                            >
                         Find
                         </button>
                     </div>
@@ -235,7 +254,7 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
                     {/* generate random tree */}
                     <div className="dropdown-menu-item random-tree-menu">
                         Generate Random Tree
-                        <button name="randomTreeButton" onClick={handleButtonPress}>
+                        <button name="randomTreeButton" onClick={handleButtonPress} disabled={inputsDisabled}>
                             Generate
                         </button>
                     </div>
@@ -243,9 +262,9 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
                     {/* csv tree generation */}
                     <div className="dropdown-menu-item csv-tree-menu">
                         Generate Using CSV
-                        <input className="fileInput" id="fileInput" type="file" accept="*.csv" onChange={handleCSVInput}/>
+                        <input className="fileInput" id="fileInput" type="file" accept="*.csv" onChange={handleCSVInput} disabled={inputsDisabled}/>
                         <label className="fileInputLabel" for="fileInput">{selectedCSV ? selectedCSV.name : "Upload"}</label>
-                        <button  name="generateButton" onClick={handleButtonPress}>
+                        <button  name="generateButton" onClick={handleButtonPress} disabled={inputsDisabled}>
                             Generate
                         </button>
                     </div>
@@ -253,7 +272,7 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
                     {/* clear tree */}
                     <div className="dropdown-menu-item clear-tree-menu">
                         Clear Tree
-                        <button className="button-warning" name="clearButton" onClick={handleButtonPress}>
+                        <button className="button-warning" name="clearButton" onClick={handleButtonPress} disabled={inputsDisabled}>
                             Clear 
                         </button>
                     </div> 
@@ -261,7 +280,7 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
                     {/* save to file */}
                     <div className="dropdown-menu-item clear-tree-menu">
                         Save to file
-                        <button  name="saveButton" onClick={handleButtonPress}>
+                        <button  name="saveButton" onClick={handleButtonPress} disabled={inputsDisabled}>
                             Save
                         </button>
                     </div> 
@@ -269,9 +288,9 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
                     {/* load from file */}
                     <div className="dropdown-menu-item clear-tree-menu">
                         Load from file
-                        <input className="fileInput" id="txtFileInput" type="file" accept="*.txt" onChange={handleTXTInput}/>
+                        <input className="fileInput" id="txtFileInput" type="file" accept="*.txt" onChange={handleTXTInput} disabled={inputsDisabled}/>
                         <label className="fileInputLabel" for="txtFileInput">{selectedTXT ? selectedTXT.name : "Upload"}</label>
-                        <button  name="txtGenerateButton" onClick={handleButtonPress}>
+                        <button  name="txtGenerateButton" onClick={handleButtonPress} disabled={inputsDisabled}>
                             Generate
                         </button>
                     </div> 
@@ -288,6 +307,7 @@ export default function TreeOperationsPanel({addNode, searchForNode, traverseTre
                     className="speedInput"
                     onChange={handleSpeedChange} 
                     onMouseUp={handleAnimationSpeed}
+                    disabled={inputsDisabled}
                     min={0.1} 
                     max={1} 
                     step={0.1} 

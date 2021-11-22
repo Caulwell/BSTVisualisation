@@ -2,8 +2,8 @@
     opacity: 1; 
     padding: 1rem;
     position: fixed;
-    top: 10%;
-    left: 40%;
+    top: 12%;
+    left: 21%;
     border-radius: 10px;
     height: auto;
     width: auto;
@@ -28,6 +28,7 @@
 
 .alert-content{
     display: flex;
+    justify-content: center;
     flex-wrap: nowrap;
 }
 
