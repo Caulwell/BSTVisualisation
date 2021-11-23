@@ -9,9 +9,8 @@ export default class BT {
         this.numInsertedTotal = 0;
         this.foundNode = null;
         this.affectedNodes = new Set();
-        this.insertionAnimation = {highlightNodes: [], node: null};
+        this.operationAnimation = {highlightNodes: [], node: null};
         this.operationMessage = {name: "", decisions: []};
-        this.deletionAnimation = {highlightNodes: [], node: null};
         this.shiftNodesAnimation = [];
     }
 
@@ -53,12 +52,12 @@ export default class BT {
         this.operationMessage.decisions.push(string);
     }
 
-    addInsertionAnimationHighlightNode(node){
-        this.insertionAnimation.highlightNodes.push(node);
+    addOperationAnimationHighlightNode(node){
+        this.operationAnimation.highlightNodes.push(node);
     }
 
-    addInsertionAnimationInsertedNode(node){
-        this.insertionAnimation.node = node;
+    addOperationAnimationMainNode(node){
+        this.operationAnimation.node = node;
     }
 
     parentOf(node){
@@ -161,7 +160,7 @@ export default class BT {
             
           if (node !== null) {
             array.push(node);
-            search(node.left, level + 1);
+            search(this.leftOf(node, level + 1));
             search(node.right, level + 1);
           }
         }
@@ -171,8 +170,7 @@ export default class BT {
     resetAnimationObjects(){
         // perform this at beginning of any operation to ensure no duplicates
         this.affectedNodes = new Set();
-        this.insertionAnimation = {highlightNodes: [], node: null};
-        this.deletionAnimation = {highlightNodes: [], node: null};
+        this.operationAnimation = {highlightNodes: [], node: null};
         this.shiftNodesAnimation = [];
     }
 
@@ -188,7 +186,7 @@ export default class BT {
 
         if(this.root === null){
             this.insertAtTop(node);
-            this.addInsertionAnimationInsertedNode(node);
+            this.addOperationAnimationMainNode(node);
             this.addOperationMessageDecision("No root node found, " + value + "is now root")
             return node;
 
@@ -200,27 +198,27 @@ export default class BT {
 
                     this.addOperationMessageDecision(value + " < " + curr.value + ": checking " + curr.value + ".left");
 
-                    this.addInsertionAnimationHighlightNode(curr);
+                    this.addOperationAnimationHighlightNode(curr);
 
                     if(!this.leftOf(curr)){
                         this.addLeftChild(curr, node);
-                        this.addInsertionAnimationInsertedNode(node);
+                        this.addOperationAnimationMainNode(node);
                         this.addOperationMessageDecision(curr.value + ".left is null, inserting " + value + " in place");
                         return node;
                     }
 
                     curr = this.leftOf(curr); 
 
-                } else if(node.moreThanOrEqual(curr)) {
+                } else if(node.moreThan(curr) || node.equalTo(curr)) {
 
                     if(value === curr.value) this.addOperationMessageDecision(value + " == " + curr.value + ": checking " + curr.value + ".right");
                     if(value > curr.value) this.addOperationMessageDecision(value + " > " + curr.value + ": checking " + curr.value + ".right");
 
-                    this.addInsertionAnimationHighlightNode(curr);
+                    this.addOperationAnimationHighlightNode(curr);
 
                     if(curr.right === null){
                         this.addRightChild(curr, node);
-                        this.insertionAnimation.node = node;
+                        this.addOperationAnimationMainNode = node;
                         this.addOperationMessageDecision(curr.value + ".right is null, inserting " + value + " in place");
                         return node;
                     }
@@ -243,33 +241,34 @@ export default class BT {
 
         // reset animation and message attributes as new operation
         this.resetAnimationObjects();
-        this.operationMessage = {name: "Deleting " + node.value, decisions: ["Searching for " + node.value]};
+        this.initOperationMessage("Deleting " + node.value);
+        this.addOperationMessageDecision("Searching for " + node.value);
 
         // get nodes to animate
         const getNodes = (node) => {
             if(!node) return;
             getNodes(node.parent);
-            this.deletionAnimation.highlightNodes.push(node);
+            this.addOperationAnimationHighlightNode(node);
         };
 
         // setting tree attributes for animating deletion
         getNodes(node.parent);
-        this.deletionAnimation.node = node;
+        this.addOperationAnimationMainNode(node);
 
         // setting tree attributes for deletion messages
-        this.deletionAnimation.highlightNodes.forEach(element => {
-            if(node.value < element.value){
+        this.operationAnimation.highlightNodes.forEach(element => {
+            if(node.lessThan(element)){
                 this.addOperationMessageDecision(node.value + " < " + element.value + ": checking " + element.value + ".left" );
-                if(element.left === node) this.addOperationMessageDecision(element.value + ".left === " + node.value + ": deleting " + node.value);
+                if(this.leftOf(element) === node) this.addOperationMessageDecision(element.value + ".left === " + node.value + ": deleting " + node.value);
             } 
-            if(node.value > element.value){
+            if(node.moreThan(element)){
                 this.addOperationMessageDecision(node.value + " > " + element.value + ": checking " + element.value + ".right" );
-                if(element.right === node) this.addOperationMessageDecision(element.value + ".right === " + node.value + ": deleting " + node.value);
+                if(this.rightOf(element) === node) this.addOperationMessageDecision(element.value + ".right === " + node.value + ": deleting " + node.value);
             }
         });
 
         // IS A LEAF NODE
-        if(node.left === null && node.right === null){
+        if(node.isLeaf()){
 
             this.addOperationMessageDecision(node.value + " is a leaf node");
 
@@ -278,26 +277,26 @@ export default class BT {
                 this.setRoot(null);
             } else {
                 // not root node
-                if(node.parent.left === node) node.parent.setLeft(null);
-                if(node.parent.right === node) node.parent.setRight(null);
+                if(this.leftOf(this.parentOf(node)) === node) node.parent.setLeft(null);
+                if(this.rightOf(this.parentOf(node)) === node) node.parent.setRight(null);
             }
 
         // ONLY HAS A LEFT CHILD
-        } else if (node.left !== null && node.right === null){
+        } else if (this.leftOf(node) !== null && this.rightOf(node) === null){
 
             this.addOperationMessageDecision(node.value + " only has a left child");
-            this.addOperationMessageDecision(node.left.value + " replaces " + node.value);
+            this.addOperationMessageDecision(this.leftOf(node.value + " replaces " + node.value));
   
             // is root node
             if(node === this.root){
-                this.setRoot(node.left);
+                this.setRoot(this.leftOf(node));
             // not root node
             } else {
-                if(node.parent.left === node){
-                    node.parent.setLeft(node.left);
+                if(this.leftOf(this.parentOf(node)) === node){
+                    node.parent.setLeft(this.leftOf(node));
                 } 
-                if(node.parent.right === node){
-                    node.parent.setRight(node.left);
+                if(this.rightOf(this.parentOf(node)) === node){
+                    node.parent.setRight(this.leftOf(node));
                 }   
             }
 
@@ -305,25 +304,25 @@ export default class BT {
             
 
         // ONLY HAS A RIGHT CHILD
-        } else if (node.right !== null && node.left === null){
+        } else if (this.rightOf(node) !== null && this.leftOf(node === null)){
 
             this.addOperationMessageDecision(node.value + " only has a right child");
-            this.addOperationMessageDecision(node.right.value + " replaces " + node.value);
+            this.addOperationMessageDecision(this.rightOf(node).value + " replaces " + node.value);
 
             // is root node
             if(node === this.root){
-                this.setRoot(node.right);
+                this.setRoot(this.rightOf(node));
             // not root node
             } else {
-                if(node.parent.left === node) node.parent.setLeft(node.right);
-                if(node.parent.right === node) node.parent.setRight(node.right);
+                if(node.parent.left === node) node.parent.setLeft(this.rightOf(node));
+                if(node.parent.right === node) node.parent.setRight(this.rightOf(node));
             }
            
 
         // HAS TWO CHILDREN
-        } else if (node.right !== null && node.left !== null){
+        } else if (this.rightOf(node) !== null && this.leftOf(node !== null)){
 
-            let replacement = this.getLeftMostElementReal(node.right);
+            let replacement = this.getLeftMostElementReal(this.rightOf(node));
 
             this.addOperationMessageDecision(node.value + "  has two children");
             this.addOperationMessageDecision(replacement.value + " is leftmost node in right subtree of " + node.value);
@@ -343,12 +342,12 @@ export default class BT {
             }
             
             // replacement cannot have a left, so set it to node's left
-            replacement.setLeft(node.left);
+            replacement.setLeft(this.leftOf(node));
 
             // don't want to set right to itself, but if node did have a right, set it for replacement
-            if(node.right !== replacement && node.right !== null){
-                if(node.right.left === null) node.right.setLeft(replacement.right);
-                replacement.setRight(node.right);
+            if(this.rightOf(node) !== replacement && this.rightOf(node) !== null){
+                if(this.rightOf(node).left === null) this.rightOf(node).setLeft(replacement.right);
+                replacement.setRight(this.rightOf(node));
             } 
 
         }
@@ -356,35 +355,50 @@ export default class BT {
         return node.parent;  
     }
 
+
+
+
     traversal(order){
         let nodes = [];
         if(order === "in"){
-            this.operationMessage = {name: "In-Order Traversal", decisions: ["Traversing left subtree of a node"]};
+            this.initOperationMessage("In-Order Traversal");
+            this.addOperationMessageDecision("Traversing left subtree of a node")
             this.addOperationMessageDecision("The node itself");
             this.addOperationMessageDecision("Then the right subtree of the node");
+
             this.affectedNodes =  new Set(this.inOrder(this.root, nodes));
+
             this.addOperationMessageDecision("Values: ");
             this.addOperationMessageDecision([...this.affectedNodes]
                 .map(node => node.value)
                 .join(","));
+
         } else if(order === "pre"){
-            this.operationMessage = {name: "Pre-Order Traversal", decisions: ["Traversing a node"]};
+            this.initOperationMessage("Pre-Order Traversal");
+            this.addOperationMessageDecision("Traversing a node")
             this.addOperationMessageDecision("The left subtree of the node");
             this.addOperationMessageDecision("Then the right subtree of the node");
+
             this.affectedNodes =  new Set(this.preOrder(this.root, nodes));
+
             this.addOperationMessageDecision("Values: ");
             this.addOperationMessageDecision([...this.affectedNodes]
                 .map(node => node.value)
                 .join(","));
+
         } else if(order === "post"){
-            this.operationMessage = {name: "Post-Order Traversal", decisions: ["Traversing the left subtree of a node"]};
+            this.initOperationMessage("Post-Order Traversal");
+            this.addOperationMessageDecision("Traversing the left subtree of a node");
             this.addOperationMessageDecision("The right subtree of the node");
             this.addOperationMessageDecision("Then the node itself");
+
             this.affectedNodes =  new Set(this.postOrder(this.root, nodes));
+
             this.addOperationMessageDecision("Values: ");
             this.addOperationMessageDecision([...this.affectedNodes]
                 .map(node => node.value)
                 .join(","));
+                
         }
     }
 
@@ -461,8 +475,8 @@ export default class BT {
 
     /////// HELPERS ///////
 
-    
     transplant(node1, node2){
+
         if(!node1.parent){
             this.setRoot(node2);
         } else if(node1 == this.leftOf(this.parentOf(node1))){
@@ -470,6 +484,7 @@ export default class BT {
         } else {
             this.parentOf(node1).setRight(node2);
         }
+
     }
 
     addLeftChild(curr, node){
@@ -600,8 +615,8 @@ export default class BT {
             node.moveToY = svg.clientHeight * 0.3;
         }
 
-        this.resetLayout(node.left);
-        this.resetLayout(node.right);
+        this.resetLayout(this.leftOf(node));
+        this.resetLayout(this.rightOf(node));
     }
 
     findAlteredNodes(node){
@@ -611,8 +626,8 @@ export default class BT {
             this.shiftNodesAnimation.push(node);
         } 
 
-        this.findAlteredNodes(node.left);
-        this.findAlteredNodes(node.right);
+        this.findAlteredNodes(this.leftOf(node));
+        this.findAlteredNodes(this.rightOf(node));
     }
 
     resolveCoords(node){
@@ -621,8 +636,8 @@ export default class BT {
         node.x = node.moveToX;
         node.y = node.moveToY;
 
-        this.resolveCoords(node.left);
-        this.resolveCoords(node.right);
+        this.resolveCoords(this.leftOf(node));
+        this.resolveCoords(this.rightOf(node));
     }
 
     getTreeFromJSON(tree){
@@ -662,8 +677,8 @@ export default class BT {
         nodesCopy.forEach((node,index) => {
 
             if(node.parent) nodesCopy[index].parent = nodesCopy[node.parent.id];
-            if(node.left) nodesCopy[index].left = nodesCopy[node.left.id];
-            if(node.right) nodesCopy[index].right = nodesCopy[node.right.id];
+            if(this.leftOf(node)) nodesCopy[index].left = nodesCopy[this.leftOf(node.id)];
+            if(this.rightOf(node)) nodesCopy[index].right = nodesCopy[this.rightOf(node).id];
 
         });
 

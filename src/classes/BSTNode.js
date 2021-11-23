@@ -31,8 +31,16 @@ export default class BSTNode{
         return this.value < node.value ?  true : false;
     }
 
-    moreThanOrEqual(node){
-        return this.value > node.value ? true : this.value === node.value ? true : false;
+    moreThan(node){
+        return this.value > node.value ? true : false;
+    }
+
+    equalTo(node){
+        return this.value === node.value ? true : false;
+    }
+
+    isLeaf(){
+        return this.left === null && this.right === null ? true : false;
     }
 
 
