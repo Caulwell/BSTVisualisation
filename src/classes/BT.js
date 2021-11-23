@@ -35,6 +35,53 @@ export default class BT {
         }
     }
 
+    incrementNumNodes(){
+        this.numNodes++;
+        this.numInsertedTotal++;
+    }
+
+    decrementNumNodes(){
+        this.numNodes--;
+    }
+
+    initOperationMessage(name){
+        this.operationMessage.name = name;
+        this.operationMessage.decisions = [];
+    }
+
+    addOperationMessageDecision(string){
+        this.operationMessage.decisions.push(string);
+    }
+
+    addInsertionAnimationHighlightNode(node){
+        this.insertionAnimation.highlightNodes.push(node);
+    }
+
+    addInsertionAnimationInsertedNode(node){
+        this.insertionAnimation.node = node;
+    }
+
+    parentOf(node){
+        return node === null ? null : node.getParent();
+    }
+
+    gParentOf(node){
+        return (node === null || node.getParent() == null) ? null : node.getParent().getParent();
+    }
+
+    siblingOf(node){
+        return (node === null || node.getParent() == null) ? null   
+                : (node === node.getParent().getLeft()) ? node.getParent().getRight() : node.getParent().getLeft();
+    }
+
+    leftOf(node){
+        return node === null ? null : node.getLeft();
+    }
+
+    rightOf(node){
+        return node === null ? null : node.getRight();
+    }
+
     getMinNode(){
         this.resetAnimationObjects();
 
@@ -134,51 +181,51 @@ export default class BT {
     insert(value){
 
         this.resetAnimationObjects();
-        this.operationMessage = {name: "Inserting " + value, decisions: []};
+        this.initOperationMessage("Inserting " + value);
 
-        let curr = this.root;
+        let curr = this.getRoot();
         const node = this.createNode(value);
 
         if(this.root === null){
             this.insertAtTop(node);
-            this.insertionAnimation.node = node;
-            this.operationMessage.decisions.push("No root node found, " + value + "is now root");
+            this.addInsertionAnimationInsertedNode(node);
+            this.addOperationMessageDecision("No root node found, " + value + "is now root")
             return node;
 
         } else {
 
             for(;;){
 
-                if(value < curr.value ){
+                if(node.lessThan(curr)){
 
-                    this.operationMessage.decisions.push(value + " < " + curr.value + ": checking " + curr.value + ".left");
+                    this.addOperationMessageDecision(value + " < " + curr.value + ": checking " + curr.value + ".left");
 
-                    this.insertionAnimation.highlightNodes.push(curr);
+                    this.addInsertionAnimationHighlightNode(curr);
 
-                    if(curr.left === null){
+                    if(!this.leftOf(curr)){
                         this.addLeftChild(curr, node);
-                        this.insertionAnimation.node = node;
-                        this.operationMessage.decisions.push(curr.value + ".left is null, inserting " + value + " in place");
+                        this.addInsertionAnimationInsertedNode(node);
+                        this.addOperationMessageDecision(curr.value + ".left is null, inserting " + value + " in place");
                         return node;
                     }
 
-                    curr = curr.left; 
+                    curr = this.leftOf(curr); 
 
-                } else if(value > curr.value || value === curr.value) {
+                } else if(node.moreThanOrEqual(curr)) {
 
-                    if(value === curr.value) this.operationMessage.decisions.push(value + " == " + curr.value + ": checking " + curr.value + ".right");
-                    if(value > curr.value) this.operationMessage.decisions.push(value + " > " + curr.value + ": checking " + curr.value + ".right");
+                    if(value === curr.value) this.addOperationMessageDecision(value + " == " + curr.value + ": checking " + curr.value + ".right");
+                    if(value > curr.value) this.addOperationMessageDecision(value + " > " + curr.value + ": checking " + curr.value + ".right");
 
-                    this.insertionAnimation.highlightNodes.push(curr);
+                    this.addInsertionAnimationHighlightNode(curr);
 
                     if(curr.right === null){
                         this.addRightChild(curr, node);
                         this.insertionAnimation.node = node;
-                        this.operationMessage.decisions.push(curr.value + ".right is null, inserting " + value + " in place");
+                        this.addOperationMessageDecision(curr.value + ".right is null, inserting " + value + " in place");
                         return node;
                     }
 
-                    curr = curr.right; 
+                    curr = this.rightOf(curr); 
                 }
             }
         }
@@ -187,12 +234,9 @@ export default class BT {
     insertAtTop(node){
         this.setRoot(node);
         const svg = document.getElementById("canvas");
-        console.log(svg.clientWidth * 0.5);
-        console.log(svg.clientHeight * 0.3);
         node.setX(svg.clientWidth * 0.5);
         node.setY(svg.clientHeight * 0.3);
-        this.numNodes++;
-        this.numInsertedTotal++;
+        this.incrementNumNodes();
     }
 
     delete(node){
@@ -215,19 +259,19 @@ export default class BT {
         // setting tree attributes for deletion messages
         this.deletionAnimation.highlightNodes.forEach(element => {
             if(node.value < element.value){
-                this.operationMessage.decisions.push(node.value + " < " + element.value + ": checking " + element.value + ".left" );
-                if(element.left === node) this.operationMessage.decisions.push(element.value + ".left === " + node.value + ": deleting " + node.value);
+                this.addOperationMessageDecision(node.value + " < " + element.value + ": checking " + element.value + ".left" );
+                if(element.left === node) this.addOperationMessageDecision(element.value + ".left === " + node.value + ": deleting " + node.value);
             } 
             if(node.value > element.value){
-                this.operationMessage.decisions.push(node.value + " > " + element.value + ": checking " + element.value + ".right" );
-                if(element.right === node) this.operationMessage.decisions.push(element.value + ".right === " + node.value + ": deleting " + node.value);
+                this.addOperationMessageDecision(node.value + " > " + element.value + ": checking " + element.value + ".right" );
+                if(element.right === node) this.addOperationMessageDecision(element.value + ".right === " + node.value + ": deleting " + node.value);
             }
         });
 
         // IS A LEAF NODE
         if(node.left === null && node.right === null){
 
-            this.operationMessage.decisions.push(node.value + " is a leaf node");
+            this.addOperationMessageDecision(node.value + " is a leaf node");
 
             if(node === this.root){
                 // is root node
@@ -241,8 +285,8 @@ export default class BT {
         // ONLY HAS A LEFT CHILD
         } else if (node.left !== null && node.right === null){
 
-            this.operationMessage.decisions.push(node.value + " only has a left child");
-            this.operationMessage.decisions.push(node.left.value + " replaces " + node.value);
+            this.addOperationMessageDecision(node.value + " only has a left child");
+            this.addOperationMessageDecision(node.left.value + " replaces " + node.value);
   
             // is root node
             if(node === this.root){
@@ -263,8 +307,8 @@ export default class BT {
         // ONLY HAS A RIGHT CHILD
         } else if (node.right !== null && node.left === null){
 
-            this.operationMessage.decisions.push(node.value + " only has a right child");
-            this.operationMessage.decisions.push(node.right.value + " replaces " + node.value);
+            this.addOperationMessageDecision(node.value + " only has a right child");
+            this.addOperationMessageDecision(node.right.value + " replaces " + node.value);
 
             // is root node
             if(node === this.root){
@@ -281,9 +325,9 @@ export default class BT {
 
             let replacement = this.getLeftMostElementReal(node.right);
 
-            this.operationMessage.decisions.push(node.value + "  has two children");
-            this.operationMessage.decisions.push(replacement.value + " is leftmost node in right subtree of " + node.value);
-            this.operationMessage.decisions.push(replacement.value + " replaces " + node.value);
+            this.addOperationMessageDecision(node.value + "  has two children");
+            this.addOperationMessageDecision(replacement.value + " is leftmost node in right subtree of " + node.value);
+            this.addOperationMessageDecision(replacement.value + " replaces " + node.value);
 
             if(replacement.right !== null && replacement.parent !== node) replacement.parent.setLeft(replacement.right);
 
@@ -308,7 +352,7 @@ export default class BT {
             } 
 
         }
-        this.numNodes --;
+        this.decrementNumNodes();
         return node.parent;  
     }
 
@@ -316,29 +360,29 @@ export default class BT {
         let nodes = [];
         if(order === "in"){
             this.operationMessage = {name: "In-Order Traversal", decisions: ["Traversing left subtree of a node"]};
-            this.operationMessage.decisions.push("The node itself");
-            this.operationMessage.decisions.push("Then the right subtree of the node");
+            this.addOperationMessageDecision("The node itself");
+            this.addOperationMessageDecision("Then the right subtree of the node");
             this.affectedNodes =  new Set(this.inOrder(this.root, nodes));
-            this.operationMessage.decisions.push("Values: ");
-            this.operationMessage.decisions.push([...this.affectedNodes]
+            this.addOperationMessageDecision("Values: ");
+            this.addOperationMessageDecision([...this.affectedNodes]
                 .map(node => node.value)
                 .join(","));
         } else if(order === "pre"){
             this.operationMessage = {name: "Pre-Order Traversal", decisions: ["Traversing a node"]};
-            this.operationMessage.decisions.push("The left subtree of the node");
-            this.operationMessage.decisions.push("Then the right subtree of the node");
+            this.addOperationMessageDecision("The left subtree of the node");
+            this.addOperationMessageDecision("Then the right subtree of the node");
             this.affectedNodes =  new Set(this.preOrder(this.root, nodes));
-            this.operationMessage.decisions.push("Values: ");
-            this.operationMessage.decisions.push([...this.affectedNodes]
+            this.addOperationMessageDecision("Values: ");
+            this.addOperationMessageDecision([...this.affectedNodes]
                 .map(node => node.value)
                 .join(","));
         } else if(order === "post"){
             this.operationMessage = {name: "Post-Order Traversal", decisions: ["Traversing the left subtree of a node"]};
-            this.operationMessage.decisions.push("The right subtree of the node");
-            this.operationMessage.decisions.push("Then the node itself");
+            this.addOperationMessageDecision("The right subtree of the node");
+            this.addOperationMessageDecision("Then the node itself");
             this.affectedNodes =  new Set(this.postOrder(this.root, nodes));
-            this.operationMessage.decisions.push("Values: ");
-            this.operationMessage.decisions.push([...this.affectedNodes]
+            this.addOperationMessageDecision("Values: ");
+            this.addOperationMessageDecision([...this.affectedNodes]
                 .map(node => node.value)
                 .join(","));
         }
@@ -395,35 +439,45 @@ export default class BT {
             } 
             if(curr.value === value){
                 this.foundNode = curr;
-                this.operationMessage.decisions.push("Found " + curr.value);
+                this.addOperationMessageDecision("Found " + curr.value);
                 break;
             } else if(value < curr.value){
                 this.affectedNodes.add(curr);
-                this.operationMessage.decisions.push(value + " < " + curr.value + ": Checking " + curr.value + ".left");
+                this.addOperationMessageDecision(value + " < " + curr.value + ": Checking " + curr.value + ".left");
                 curr = curr.left;
             } else if(value > curr.value){
                 this.affectedNodes.add(curr);
-                this.operationMessage.decisions.push(value + " > " + curr.value + ": Checking " + curr.value + ".right");
+                this.addOperationMessageDecision(value + " > " + curr.value + ": Checking " + curr.value + ".right");
                 curr = curr.right;
                 
             }
         }
 
         if(this.foundNode === null){
-            this.operationMessage.decisions.push(value + " is not present in this tree");
+            this.addOperationMessageDecision(value + " is not present in this tree");
         }
     }
 
 
     /////// HELPERS ///////
 
+    
+    transplant(node1, node2){
+        if(!node1.parent){
+            this.setRoot(node2);
+        } else if(node1 == this.leftOf(this.parentOf(node1))){
+            this.parentOf(node1).setLeft(node2);
+        } else {
+            this.parentOf(node1).setRight(node2);
+        }
+    }
+
     addLeftChild(curr, node){
         curr.setLeft(node);
         node.setX(node.parent.x -50);
         node.setY(node.parent.y + 50);
 
-        this.numNodes++;
-        this.numInsertedTotal++;
+        this.incrementNumNodes();
 
     }
 
@@ -433,8 +487,7 @@ export default class BT {
         node.setX(node.parent.x + 50);
         node.setY(node.parent.y + 50);
 
-        this.numNodes++;
-        this.numInsertedTotal++;
+        this.incrementNumNodes();
         
         
 

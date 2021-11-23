@@ -29,28 +29,6 @@ export default class RB extends BT {
         return node === null || this.getColour(node) === this.colours.b;
     }
 
-    parentOf(node){
-        return node === null ? null : node.getParent();
-    }
-
-    gParentOf(node){
-        return (node === null || node.getParent() == null) ? null : node.getParent().getParent();
-    }
-
-    siblingOf(node){
-        return (node === null || node.getParent() == null) ? null   
-                : (node === node.getParent().getLeft()) ? node.getParent().getRight() : node.getParent().getLeft();
-    }
-
-    leftOf(node){
-        return node === null ? null : node.getLeft();
-    }
-
-    rightOf(node){
-        return node === null ? null : node.getRight();
-    }
-
-
     createNode(value){
         let node = new RBNode(value, this.numInsertedTotal);
         node.colour = this.colours.r;
@@ -75,15 +53,6 @@ export default class RB extends BT {
         node.colour = this.colours.b;
     }
 
-    transplant(node1, node2){
-        if(!node1.parent){
-            this.setRoot(node2);
-        } else if(node1 == this.leftOf(this.parentOf(node1))){
-            this.parentOf(node1).setLeft(node2);
-        } else {
-            this.parentOf(node1).setRight(node2);
-        }
-    }
 
     delete(node){
         console.log("deleting in RB class");

@@ -27,6 +27,14 @@ export default class BSTNode{
         return this.right;
     }
 
+    lessThan(node){
+        return this.value < node.value ?  true : false;
+    }
+
+    moreThanOrEqual(node){
+        return this.value > node.value ? true : this.value === node.value ? true : false;
+    }
+
 
     setLeft(node){
         this.left = node;
