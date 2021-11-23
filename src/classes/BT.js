@@ -1,6 +1,3 @@
-import { insertAnimation } from "../util/animations";
-import BSTNode from "./BSTNode";
-
 export default class BT { 
 
     constructor(){
@@ -398,16 +395,16 @@ export default class BT {
             this.addOperationMessageDecision([...this.affectedNodes]
                 .map(node => node.value)
                 .join(","));
-                
+
         }
     }
 
     inOrder(top, nodes){
         
         if(top !== null){
-            this.inOrder(top.left, nodes);
+            this.inOrder(this.leftOf(top), nodes);
             if(!nodes.includes(top)) nodes.push(top);
-            this.inOrder(top.right, nodes);
+            this.inOrder(this.rightOf(top), nodes);
         }
 
         if(nodes.length === this.numNodes){
@@ -419,8 +416,8 @@ export default class BT {
     preOrder(top, nodes){
         if(top !== null){
             if(!nodes.includes(top)) nodes.push(top);
-            this.preOrder(top.left, nodes);
-            this.preOrder(top.right, nodes);
+            this.preOrder(this.leftOf(top), nodes);
+            this.preOrder(this.rightOf(top), nodes);
         }
 
         if(nodes.length === this.numNodes){
@@ -430,8 +427,8 @@ export default class BT {
 
     postOrder(top, nodes){
         if(top !== null){
-            this.postOrder(top.left, nodes);
-            this.postOrder(top.right, nodes);
+            this.postOrder(this.leftOf(top), nodes);
+            this.postOrder(this.rightOf(top), nodes);
             if(!nodes.includes(top)) nodes.push(top);
         }
 
@@ -445,7 +442,7 @@ export default class BT {
         this.foundNode = null;
         let curr = this.root;
 
-        this.operationMessage = {name: "Searching for " + value, decisions:[]};
+        this.initOperationMessage("Searching for" + value);
 
         while(true){
             if(curr === null){
@@ -458,11 +455,11 @@ export default class BT {
             } else if(value < curr.value){
                 this.affectedNodes.add(curr);
                 this.addOperationMessageDecision(value + " < " + curr.value + ": Checking " + curr.value + ".left");
-                curr = curr.left;
+                curr = this.leftOf(curr);
             } else if(value > curr.value){
                 this.affectedNodes.add(curr);
                 this.addOperationMessageDecision(value + " > " + curr.value + ": Checking " + curr.value + ".right");
-                curr = curr.right;
+                curr = this.rightOf(curr);
                 
             }
         }
@@ -503,9 +500,6 @@ export default class BT {
         node.setY(node.parent.y + 50);
 
         this.incrementNumNodes();
-        
-        
-
     }
 
     shiftTree(root, side){
@@ -527,13 +521,13 @@ export default class BT {
 
     checkChildrenTrees(root){
         // check leftmost and rightmost node of each tree - if they are too close, move each tree away from each other
-        if(root.left && root.right){
-            const leftsRightMost = this.getRightMostElement(root.left, root.left);
-            const rightsLeftMost = this.getLeftMostElement(root.right, root.right);
+        if(this.leftOf(root) && this.rightOf(root)){
+            const leftsRightMost = this.getRightMostElement(this.leftOf(root), this.leftOf(root));
+            const rightsLeftMost = this.getLeftMostElement(this.rightOf(root), this.rightOf(root));
 
             if(Math.abs(leftsRightMost.moveToX - rightsLeftMost.moveToX) <50 || leftsRightMost.moveToX > rightsLeftMost.moveToX ){
-                this.shiftTree(root.right, "r");
-                this.shiftTree(root.left, "l");
+                this.shiftTree(this.rightOf(root), "r");
+                this.shiftTree(this.leftOf(root), "l");
             }
         }
     }
@@ -543,8 +537,8 @@ export default class BT {
             return;
         } 
 
-        if(top.left != null) leftMost = this.getLeftMostElement(top.left, leftMost);
-        if(top.right != null) leftMost = this.getLeftMostElement(top.right, leftMost);
+        if(this.leftOf(top) != null) leftMost = this.getLeftMostElement(this.leftOf(top), leftMost);
+        if(this.rightOf(top) != null) leftMost = this.getLeftMostElement(this.rightOf(top), leftMost);
 
         if(top != null && top.x < leftMost.x) leftMost = top;
 
@@ -554,10 +548,10 @@ export default class BT {
     getLeftMostElementReal(top){
         let curr = top;
         while(true){
-            if(curr.left === null){
+            if(!this.leftOf(curr)){
                 return curr;
             } else {
-                curr = curr.left;
+                curr = this.leftOf(curr);
             }
         }
     }
@@ -565,10 +559,10 @@ export default class BT {
     getRightMostElementReal(top){
         let curr = top;
         while(true){
-            if(curr.right === null){
+            if(!this.rightOf(curr)){
                 return curr;
             } else {
-                curr = curr.right;
+                curr = this.rightOf(curr);
             }
         }
     }
@@ -579,10 +573,10 @@ export default class BT {
             return;
         } 
 
-        if(top.left != null) rightMost = this.getRightMostElement(top.left, rightMost);
-        if(top.right != null) rightMost = this.getRightMostElement(top.right, rightMost);
+        if(this.leftOf(top)) rightMost = this.getRightMostElement(this.leftOf(top), rightMost);
+        if(this.rightOf(top)) rightMost = this.getRightMostElement(this.rightOf(top), rightMost);
 
-        if(top != null && top.x > rightMost.x) rightMost = top;
+        if(top && top.x > rightMost.x) rightMost = top;
 
         return rightMost;
         
@@ -590,11 +584,10 @@ export default class BT {
   
 
     checkLayout(root){
-        
-
+    
         if(root){
-            this.checkLayout(root.left);
-            this.checkLayout(root.right);
+            this.checkLayout(this.leftOf(root));
+            this.checkLayout(this.rightOf(root));
             this.checkChildrenTrees(root);  
         } else {
             return;
@@ -604,11 +597,11 @@ export default class BT {
     resetLayout(node){
         if(!node) return;
 
-        if(node.parent){
+        if(this.parentOf(node)){
             
-            if(node.lr == "l") node.moveToX = node.parent.moveToX -50;
-            if(node.lr == "r") node.moveToX = node.parent.moveToX + 50;
-            node.moveToY = node.parent.moveToY + 50;
+            if(node.lr == "l") node.moveToX = this.parentOf(node).moveToX -50;
+            if(node.lr == "r") node.moveToX = this.parentOf(node).moveToX + 50;
+            node.moveToY = this.parentOf(node).moveToY + 50;
         } else {
             const svg = document.getElementById("canvas");
             node.moveToX = svg.clientWidth * 0.5;
@@ -659,8 +652,8 @@ export default class BT {
     getArrayOfJsonNodes(root, array){
         if(!root) return;
         array.push(root);
-        this.getArrayOfJsonNodes(root.left, array);
-        this.getArrayOfJsonNodes(root.right, array);
+        this.getArrayOfJsonNodes(this.leftOf(root), array);
+        this.getArrayOfJsonNodes(this.rightOf(root), array);
 
         return array;
     }
@@ -676,7 +669,7 @@ export default class BT {
         // add links to parent, left, right
         nodesCopy.forEach((node,index) => {
 
-            if(node.parent) nodesCopy[index].parent = nodesCopy[node.parent.id];
+            if(this.parentOf(node)) nodesCopy[index].parent = nodesCopy[this.parentOf(node).id];
             if(this.leftOf(node)) nodesCopy[index].left = nodesCopy[this.leftOf(node.id)];
             if(this.rightOf(node)) nodesCopy[index].right = nodesCopy[this.rightOf(node).id];
 

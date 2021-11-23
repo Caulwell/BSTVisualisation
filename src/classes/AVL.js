@@ -24,7 +24,7 @@ export default class AVL extends BT {
     getTreeFromValues(values){
         values.forEach(value => {
             let insertedNode = this.insert(value);
-            if(insertedNode.parent) this.checkBalanceAfterOperation(insertedNode.parent, false);
+            if(this.parentOf(insertedNode)) this.checkBalanceAfterOperation(this.parentOf(insertedNode), false);
         });
     }
 
@@ -36,14 +36,14 @@ export default class AVL extends BT {
         if(node){
             if(Math.abs(node.getBalanceFactor()) > 1){
                 found = true;
-                this.operationMessage.decisions.push(node.value + "has a BF of " + node.getBalanceFactor());
+                this.addOperationMessageDecision(node.value + "has a BF of " + node.getBalanceFactor());
                 this.balance(node);
                 this.checkBalanceAnimation.foundNode = node;
             } else {
                 this.checkBalanceAnimation.checkingNodes.push(node);
             }
 
-            this.checkBalanceAfterOperation(node.parent, found);
+            this.checkBalanceAfterOperation(this.parentOf(node), found);
 
         } else {
             return;
@@ -54,34 +54,34 @@ export default class AVL extends BT {
         // if node not null
         if(node){
 
-            this.operationMessage.decisions.push("balancing " + node.value);
+            this.addOperationMessageDecision("balancing " + node.value);
             
             // if heavy on the left
             if (node.getBalanceFactor() > 1) {
                 // and node.left is right heavy do a left-right rotation
-                if(node.left.getBalanceFactor() <= -1){
-                    this.operationMessage.decisions.push("LR Rotation on " + node.value);
+                if(this.leftOf(node).getBalanceFactor() <= -1){
+                    this.addOperationMessageDecision("LR Rotation on " + node.value);
                     this.leftRightRotation(node);
                     
                     return;
                 } else {
                     // else do a right rotation
                     this.rightRotation(node);
-                    this.operationMessage.decisions.push("R Rotation on " + node.value);
+                    this.addOperationMessageDecision("R Rotation on " + node.value);
                     return;
                 }
 
                 // if heavy on the right
             } else {
                 //and node.right is left heavy do a right-left rotation
-                if(node.right.getBalanceFactor() >= 1){
-                    this.operationMessage.decisions.push("RL Rotation on " + node.value);
+                if(this.rightOf(node).getBalanceFactor() >= 1){
+                    this.addOperationMessageDecision("RL Rotation on " + node.value);
                     this.rightLeftRotation(node);
                     return;
                 } else {
                     // else do a left rotation
                     this.leftRotation(node);
-                    this.operationMessage.decisions.push("L Rotation on " + node.value);
+                    this.addOperationMessageDecision("L Rotation on " + node.value);
                     return;
                 }
                 
@@ -92,20 +92,19 @@ export default class AVL extends BT {
     }
 
     leftRotation(node){
-        console.log("left rotation on node: " + node.value);
         // rotating about node and node's right child
         // rotate the whole subtree rooted at r one place to the left
         // take the left subtree of new root and make it the right subtree of r
 
-        let replacement = node.right;
+        let replacement = this.rightOf(node);
 
-        node.setRight(replacement.left);
+        node.setRight(this.leftOf(replacement));
 
-        if(node.parent){
-            if(node.parent.left === node){
-                node.parent.setLeft(replacement);
-            } else if(node.parent && node.parent.right === node){
-                node.parent.setRight(replacement); 
+        if(this.parentOf(node)){
+            if(this.leftOf(this.parentOf(node)) === node){
+                this.parentOf(node).setLeft(replacement);
+            } else if(this.parentOf(node) && this.rightOf(this.parentOf(node)) === node){
+                this.parentOf(node).setRight(replacement); 
             } 
         }
 
@@ -114,32 +113,23 @@ export default class AVL extends BT {
         if(node === this.root){
             this.setRoot(replacement);
         }
-
-        // replacement.setX(node.x);
-        // replacement.setY(node.y);
-
-        // node.setX(node.x -50);
-        // node.setY(node.y +50);
-
-        // set nodes that need adjustment
         
     }
 
     rightRotation(node){    
-        console.log("right rotation on node: " + node.value);
         // rotating about node and left child
         // rotate whole subtree rooted at node one place to the right
         // right subtree of new root = left subtree of r
 
-        let replacement = node.left;
+        let replacement = this.leftOf(node);
 
-        node.setLeft(replacement.right);
+        node.setLeft(this.rightOf(replacement));
 
-        if(node.parent){
-            if(node.parent.left === node){
-                node.parent.setLeft(replacement);
-            } else if(node.parent && node.parent.right === node){
-                node.parent.setRight(replacement);
+        if(this.parentOf(node)){
+            if(this.leftOf(this.parentOf(node)) === node){
+                this.parentOf(node).setLeft(replacement);
+            } else if(this.parentOf(node) && this.rightOf(this.parentOf(node)) === node){
+                this.parentOf(node).setRight(replacement);
             } 
         }
 
@@ -152,16 +142,14 @@ export default class AVL extends BT {
 
     leftRightRotation(node){
         let nodes = [];
-
-        this.leftRotation(node.left);
+        this.leftRotation(this.leftOf(node));
         this.rightRotation(node);
         
 
     }
 
     rightLeftRotation(node){
-        console.log("rightleft rotation on node: " + node.value);
-        this.rightRotation(node.right);
+        this.rightRotation(this.rightOf(node));
         this.leftRotation(node);
         
     }

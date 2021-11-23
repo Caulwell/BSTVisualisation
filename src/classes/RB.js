@@ -55,7 +55,6 @@ export default class RB extends BT {
 
 
     delete(node){
-        console.log("deleting in RB class");
 
         this.resetAnimationObjects();
 
