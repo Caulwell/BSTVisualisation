@@ -1,3 +1,5 @@
+import shortid from "shortid";
+
 export default class BT { 
 
     constructor(){
@@ -7,7 +9,7 @@ export default class BT {
         this.foundNode = null;
         this.affectedNodes = new Set();
         this.operationAnimation = {highlightNodes: [], node: null};
-        this.operationMessage = {name: "", decisions: []};
+        this.operationMessage = {name: "", decisions: [], id: null};
         this.shiftNodesAnimation = [];
     }
 
@@ -43,6 +45,7 @@ export default class BT {
     initOperationMessage(name){
         this.operationMessage.name = name;
         this.operationMessage.decisions = [];
+        this.operationMessage.id = shortid.generate();
     }
 
     addOperationMessageDecision(string){
@@ -177,6 +180,7 @@ export default class BT {
 
         this.resetAnimationObjects();
         this.initOperationMessage("Inserting " + value);
+
 
         let curr = this.getRoot();
         const node = this.createNode(value);
@@ -476,7 +480,7 @@ export default class BT {
 
         if(!node1.parent){
             this.setRoot(node2);
-        } else if(node1 == this.leftOf(this.parentOf(node1))){
+        } else if(node1 === this.leftOf(this.parentOf(node1))){
             this.parentOf(node1).setLeft(node2);
         } else {
             this.parentOf(node1).setRight(node2);
@@ -599,8 +603,8 @@ export default class BT {
 
         if(this.parentOf(node)){
             
-            if(node.lr == "l") node.moveToX = this.parentOf(node).moveToX -50;
-            if(node.lr == "r") node.moveToX = this.parentOf(node).moveToX + 50;
+            if(node.lr === "l") node.moveToX = this.parentOf(node).moveToX -50;
+            if(node.lr === "r") node.moveToX = this.parentOf(node).moveToX + 50;
             node.moveToY = this.parentOf(node).moveToY + 50;
         } else {
             const svg = document.getElementById("canvas");

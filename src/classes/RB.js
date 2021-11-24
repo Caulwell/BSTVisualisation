@@ -63,11 +63,11 @@ export default class RB extends BT {
         const getNodes = (node) => {
             if(!node) return;
             getNodes(node.parent);
-            this.deletionAnimation.highlightNodes.push(node);
+            this.operationAnimation.highlightNodes.push(node);
         };
 
         getNodes(node.parent);
-        this.deletionAnimation.node = node;
+        this.operationAnimation.node = node;
 
         let deletingNode = node; //z
         let replacement = deletingNode; //y
@@ -86,7 +86,7 @@ export default class RB extends BT {
             
             originalColour = replacement.colour;
             x = this.rightOf(replacement);
-            if(this.parentOf(replacement) == deletingNode){
+            if(this.parentOf(replacement) === deletingNode){
                 if(x) x.parent = replacement;
             } else {
                 this.transplant(replacement, this.rightOf(replacement));
@@ -168,10 +168,9 @@ export default class RB extends BT {
 
     fixOnDelete(node){
 
-        console.log("fixing on delete - " + node.value);
         let u;
 
-        while(this.parentOf(node).colour == this.colours.r){
+        while(this.parentOf(node).colour === this.colours.r){
 
             if(this.parentOf(node) === this.rightOf(this.gParentOf(node))){
                 u = this.leftOf(this.gParentOf(node));
@@ -182,7 +181,7 @@ export default class RB extends BT {
                     this.parentOf(this.parentOf(node)).colour = this.colours.r;
                     node = this.gParentOf(node);
                 } else {
-                    if(node == this.leftOf(this.parentOf(node))){
+                    if(node === this.leftOf(this.parentOf(node))){
                         node = this.parentOf(node);
                         this.rightRotation(node);
                     }
@@ -193,7 +192,7 @@ export default class RB extends BT {
             } else {
                 u = this.rightOf(this.gParentOf(node));
 
-                if( u && u.colour == this.colours.r){
+                if( u && u.colour === this.colours.r){
                     u.colour = this.colours.b;
                     this.parentOf(node).colour = this.colours.b;
                     this.gParentOf(node).colour = this.colours.r;
@@ -208,7 +207,7 @@ export default class RB extends BT {
                     this.rightRotation(this.gParentOf(node));
                 }
             }
-            if(node == this.root) break;
+            if(node === this.root) break;
         }
 
         this.root.colour = this.colours.b;

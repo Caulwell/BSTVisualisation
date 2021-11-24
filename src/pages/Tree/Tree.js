@@ -11,7 +11,6 @@ import { insertAnimation, deleteAnimation, moveNodes, searchAnimation, traversal
 import configureZoom from "../../util/zoomPan";
 import MessageBar from "../../components/MessageBar/MessageBar";
 import TreeMetaPanel from "../../components/TreeMetaPanel/TreeMetaPanel";
-import shortid from "shortid";
 import Modal from "../../components/Modal/Modal";
 import Alert from "../../components/Alert/Alert";
 
@@ -54,6 +53,7 @@ export default function Tree({type}){
     configureZoom(svgEl, svgContainerEl);
 
   },[]);
+
 
   // when showAlert is set to true, set it to false after 5 seconds
   useEffect(() => {
@@ -121,6 +121,7 @@ export default function Tree({type}){
   // method to save tree in memory based on type of tree to facilitate more than 1 current tree
   const saveCurrentTree = () => {
 
+
     if(type === "bst"){
       setUserContext(oldValues => {
         return {...oldValues, currentBST: tree};
@@ -139,7 +140,6 @@ export default function Tree({type}){
 
   // method to save operation messages in memory based on type of tree to facilitate more than 1 current tree
   const saveMessages = () => {
-
     if(type === "bst"){
       setUserContext(oldValues => {
         return {...oldValues, currentBSTMessages: operationMessages};
@@ -157,13 +157,12 @@ export default function Tree({type}){
   };
 
   // method to set operation messages state, to initiate use effect only when new ones added, not when resetting to empty array
-  const getAndSetOperationMessages = () => {
-
-    let operationMessage = tree.operationMessage;
-    operationMessage.id = shortid.generate();
+  const getAndSetOperationMessages = () => {  
+    let operationMessage = {...tree.operationMessage};
     setAddingMessage(true);
     setOperationMessages([operationMessage, ...operationMessages]);
     setAddingMessage(false);
+   
   };
 
   // method to render the tree saved in memory, based on type of tree currently selected
@@ -249,7 +248,7 @@ export default function Tree({type}){
     if(value !== ""){
       setInputsDisabled(true);
       tree.search(parseInt(value));
-      const animationDone = await searchAnimation([...tree.getAffectedNodes()], tree.foundNode, userContext.animationSpeed);
+      await searchAnimation([...tree.getAffectedNodes()], tree.foundNode, userContext.animationSpeed);
       getAndSetOperationMessages();
       setInputsDisabled(false);
     }
@@ -305,7 +304,7 @@ export default function Tree({type}){
   async function traverseTree(order){
     tree.traversal(order);
     setInputsDisabled(true);
-    const animationDone = await traversalAnimation([...tree.getAffectedNodes()], userContext.animationSpeed);
+    await traversalAnimation([...tree.getAffectedNodes()], userContext.animationSpeed);
     setInputsDisabled(false);
     getAndSetOperationMessages();
 
@@ -315,8 +314,7 @@ export default function Tree({type}){
   async function maxNode (){
     setInputsDisabled(true);
     tree.getMaxNode();
-    const animationDone = await traversalAnimation([...tree.getAffectedNodes()], userContext.animationSpeed);
-    console.log(animationDone);
+    await traversalAnimation([...tree.getAffectedNodes()], userContext.animationSpeed);
     setInputsDisabled(false);
     getAndSetOperationMessages();
   };
@@ -325,7 +323,7 @@ export default function Tree({type}){
   async function minNode (){
     setInputsDisabled(true);
     tree.getMinNode();
-    const animationDone = await traversalAnimation([...tree.getAffectedNodes()], userContext.animationSpeed);
+    await traversalAnimation([...tree.getAffectedNodes()], userContext.animationSpeed);
     setInputsDisabled(false);
     getAndSetOperationMessages();
   }
@@ -377,7 +375,6 @@ export default function Tree({type}){
 
     // display error alert if no file specified
     if(!file){
-      console.log("no file");
       setAlert({type: "failure", content: "No file was specified. Please upload a file and then click generate"});
       setShowAlert(true);
       return;
@@ -440,7 +437,8 @@ export default function Tree({type}){
         renderCurrentTree(treeObject, []);
       })
       .catch(err => {
-        console.log(err); // set alert that something went wrong with file loading
+        setAlert({type: "failure", content: "Something went wrong, please try another file"});
+        setShowAlert(true);
       });
 
       

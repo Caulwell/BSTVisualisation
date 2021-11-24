@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import shortid from "shortid";
-import {Accordion, AccordionSummary, AccordionDetails, Typography} from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
 import "./MessageBar.css";
 
 export default function MessageBar({messages}){

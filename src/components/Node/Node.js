@@ -1,13 +1,11 @@
 import {useContext, useEffect, useState} from "react";
-import { Tooltip, Button, ClickAwayListener } from "@mui/material";
+import { Tooltip,ClickAwayListener } from "@mui/material";
 import "./Node.css";
-import { UserContext } from "../../context/UserContext";
 
 export default function Node({node, deleteNode}){
 
     const [inserted, setInserted] = useState(false);
     const [tooltipOpen, setTooltipOpen] = useState(false);
-    const [userContext] = useContext(UserContext);
 
     useEffect(() => {
         setInserted(true);
@@ -55,6 +53,8 @@ export default function Node({node, deleteNode}){
 
     const tooltipText = getTooltipContent();
 
+    const colour = getColor();
+
     return (
         <svg name="viewBox">
         <ClickAwayListener onClickAway={handleTooltipClose}>
@@ -64,7 +64,7 @@ export default function Node({node, deleteNode}){
                 cx="20" 
                 cy="20" 
                 r="20" 
-                stroke={getColor()} 
+                stroke={colour} 
                 strokeWidth="4" 
                 fill="white"
                 className={node.id}
@@ -73,9 +73,9 @@ export default function Node({node, deleteNode}){
             />
             <text className="svg-text" x="20" y="20"
                 textAnchor="middle"
-                stroke={getColor()}
+                stroke={colour}
                 strokeWidth="1px"
-                fill={getColor()}
+                fill={colour}
                 alignmentBaseline="middle"
                 className={node.id}
             >

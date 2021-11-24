@@ -1,7 +1,6 @@
-import {useState, useRef, useContext, useEffect} from "react";
+import {useState,useContext, useEffect} from "react";
 import "./TreeOperationsPanel.css";
 import { UserContext } from "../../context/UserContext";
-import { mergeBreakpointsInOrder } from "@mui/system";
 
 
 export default function TreeOperationsPanel({inputsDisabled, addNode, searchForNode, traverseTree, saveTree, treeFromCSV, treeFromFile, clearTree, randomTree, minNode, maxNode, setShowModal, setModalContent}){
@@ -17,7 +16,6 @@ export default function TreeOperationsPanel({inputsDisabled, addNode, searchForN
     const [open, setOpen] = useState(true);
 
     const handleCSVInput = e => {
-        console.log(e.target.files);
         setSelectedCSV(e.target.files[0]);
     };
 
@@ -33,13 +31,11 @@ export default function TreeOperationsPanel({inputsDisabled, addNode, searchForN
 
 
     const handleSpeedChange = e => {
-        console.log(e.target.value);
         setSpeedInput(e.target.value);
     };
 
     const handleAnimationSpeed = () => {
 
-        console.log(speedInput);
 
       let newSpeed = 1 - (speedInput);
 

@@ -141,11 +141,8 @@ export default class AVL extends BT {
     }
 
     leftRightRotation(node){
-        let nodes = [];
         this.leftRotation(this.leftOf(node));
         this.rightRotation(node);
-        
-
     }
 
     rightLeftRotation(node){
