@@ -8,12 +8,6 @@ export default function MessageBar({messages}){
 
     const [open, setOpen] = useState(false);
     const [messageOpen, setMessageOpen] = useState("");
-
-    useEffect(() => {
-        console.log("re rendering whole bar");
-    },[]);
-
-
     
     const handleClick = () => {
         setOpen(open => !open);

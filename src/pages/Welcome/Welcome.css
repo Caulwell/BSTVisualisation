@@ -2,17 +2,60 @@
     height: 88vh;
     display: flex;
     flex-direction: column;
+    background-color: var(--dark-color);
     
 }
 
 .hero{
     height: 40vh;
+    font-size: 4rem;
+    color: white;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    
+}
+
+.title{
+    padding: 1.5rem;
+}
+
+.title h1{
+    margin: 0;
+}
+
+.call-to-action{
+    display: flex;
+}
+
+.call-to-action button{
+    margin-right: 2rem;
+    width: 16rem;
+    height: 4rem;
+    font-size: 1rem;
+    background-color: var(--dark-color2);
+    border: none;
+    display: flex;
+    padding: 0 1.5rem;
+    align-items: center;
+
+}
+
+.call-to-action button:hover{
+    background-color: var(--lighter-primary-color);
+}
+
+.call-to-action button svg{
+    margin-right: 0.8rem;
+}
+
+.call-to-action button svg.book{
+    margin-right: 2rem;
 }
 
 .tree-links{
+    padding: 4rem;
     display: flex;
     justify-content: space-evenly;
 }
@@ -22,22 +65,32 @@
     flex-direction: column;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
-    height: 30vh;
-    width: 15vw;
-    color:black;
+    min-width: 25vh;
+    max-width: 25vh;
+    color:white;
     border-radius: 5px;
+}
+
+.tree-links a{
+    background-color: var(--dark-color2);
+}
+
+.tree-links a:hover{
+    background-color: var(--lighter-primary-color);
 }
 
 .tree-card:hover{
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    background-color: var(--lighter-primary-color);
 }
 
 .tree-card img{
-    max-height: 9rem;
+    height: 8rem;
     border-radius: 5px 5px 0 0;
 }
 
 .tree-card-content{
+    color: white;
     border-radius: 3px;
     padding: 1rem;
     display: flex;

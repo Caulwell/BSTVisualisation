@@ -157,7 +157,7 @@ export default class BT {
             
           if (node !== null) {
             array.push(node);
-            search(this.leftOf(node, level + 1));
+            search(node.left, level + 1);
             search(node.right, level + 1);
           }
         }
@@ -215,7 +215,7 @@ export default class BT {
 
                     if(curr.right === null){
                         this.addRightChild(curr, node);
-                        this.addOperationAnimationMainNode = node;
+                        this.addOperationAnimationMainNode(node);
                         this.addOperationMessageDecision(curr.value + ".right is null, inserting " + value + " in place");
                         return node;
                     }
@@ -652,8 +652,8 @@ export default class BT {
     getArrayOfJsonNodes(root, array){
         if(!root) return;
         array.push(root);
-        this.getArrayOfJsonNodes(this.leftOf(root), array);
-        this.getArrayOfJsonNodes(this.rightOf(root), array);
+        this.getArrayOfJsonNodes(root.left, array);
+        this.getArrayOfJsonNodes(root.right, array);
 
         return array;
     }
@@ -669,9 +669,9 @@ export default class BT {
         // add links to parent, left, right
         nodesCopy.forEach((node,index) => {
 
-            if(this.parentOf(node)) nodesCopy[index].parent = nodesCopy[this.parentOf(node).id];
-            if(this.leftOf(node)) nodesCopy[index].left = nodesCopy[this.leftOf(node.id)];
-            if(this.rightOf(node)) nodesCopy[index].right = nodesCopy[this.rightOf(node).id];
+            if(node.parent) nodesCopy[index].parent = nodesCopy[node.parent.id];
+            if(node.left) nodesCopy[index].left = nodesCopy[node.left.id];
+            if(node.right) nodesCopy[index].right = nodesCopy[node.right.id];
 
         });
 

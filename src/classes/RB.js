@@ -215,7 +215,6 @@ export default class RB extends BT {
     }
 
     leftRotation(node){
-        console.log("left rotation on node: " + node.value);
         // rotating about node and node's right child
         // rotate the whole subtree rooted at r one place to the left
         // take the left subtree of new root and make it the right subtree of r
@@ -241,7 +240,6 @@ export default class RB extends BT {
     }
 
     rightRotation(node){    
-        console.log("right rotation on node: " + node.value);
         // rotating about node and left child
         // rotate whole subtree rooted at node one place to the right
         // right subtree of new root = left subtree of r

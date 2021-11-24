@@ -1,3 +1,11 @@
+:root{
+    --dark-color: #081c15;
+    --dark-color2: #1b4332;
+    --primary-color: #2d6a4f;
+    --lighter-primary-color: #40916c;
+    --light-color: #52b788;
+}
+
 body{
     max-height: 100vh;
 }

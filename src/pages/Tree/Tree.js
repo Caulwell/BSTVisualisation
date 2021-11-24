@@ -49,9 +49,10 @@ export default function Tree({type}){
   
   /// USE EFFECTS //////
 
-  // On first render - configure zoom and panning on svg element
+  // On first render - configure zoom and panning on svg element - and if coming from random tree button, render random tree
   useEffect(() => {
     configureZoom(svgEl, svgContainerEl);
+
   },[]);
 
   // when showAlert is set to true, set it to false after 5 seconds
@@ -78,6 +79,15 @@ export default function Tree({type}){
       if(userContext.currentRB) renderCurrentTree(userContext.currentRB, userContext.currentRBMessages || []);  
     }
 
+
+    if(userContext.randomTree){
+      randomTree();
+    }
+
+    setUserContext(oldValues => {
+      return {...oldValues, randomTree: false};
+    });
+
     
     
   }, [type]);
@@ -99,8 +109,10 @@ export default function Tree({type}){
 
   // only when tree state changes on uploading csv - save generated tree to memory
   useEffect(() => {
-    generatingTree && saveCurrentTree();
-    setGeneratingTree(false);
+    if(generatingTree){
+      saveCurrentTree();
+      setGeneratingTree(false);
+    }
   },[tree]);
 
 
@@ -108,6 +120,7 @@ export default function Tree({type}){
 
   // method to save tree in memory based on type of tree to facilitate more than 1 current tree
   const saveCurrentTree = () => {
+
     if(type === "bst"){
       setUserContext(oldValues => {
         return {...oldValues, currentBST: tree};
@@ -189,7 +202,7 @@ export default function Tree({type}){
 
       await timer(100);
       // play insertion animation
-      await insertAnimation(tree.insertionAnimation.highlightNodes, tree.insertionAnimation.node, userContext.animationSpeed);
+      await insertAnimation(tree.operationAnimation.highlightNodes, tree.operationAnimation.node, userContext.animationSpeed);
 
 
       // if avl tree - check for unbalanced nodes, animate this checking - balance the tree in memory
@@ -237,7 +250,6 @@ export default function Tree({type}){
       setInputsDisabled(true);
       tree.search(parseInt(value));
       const animationDone = await searchAnimation([...tree.getAffectedNodes()], tree.foundNode, userContext.animationSpeed);
-      console.log(animationDone);
       getAndSetOperationMessages();
       setInputsDisabled(false);
     }
@@ -249,7 +261,7 @@ export default function Tree({type}){
     setInputsDisabled(true);
 
     let deletedParent = tree.delete(node);
-    await deleteAnimation(tree.deletionAnimation.highlightNodes, tree.deletionAnimation.node, userContext.animationSpeed);
+    await deleteAnimation(tree.operationAnimation.highlightNodes, tree.operationAnimation.node, userContext.animationSpeed);
 
     // if avl tree - check for unbalanced nodes, animate this checking - balance the tree in memory
     if(type === "avl" || type === "rb"){
@@ -437,8 +449,9 @@ export default function Tree({type}){
   const randomTree = () => {
 
     const renderTree = type === "bst" ? new BST() : type === "avl" ? new AVL() : new RB();
-    setNodes([]);
     setOperationMessages([]);
+
+   
 
     let data = [];
 
@@ -448,11 +461,9 @@ export default function Tree({type}){
       data.push(Math.floor(Math.random() * 1000));
     }
 
-
-
     createTreeFromArray(renderTree, data);
     
-  }
+  };
 
   const createTreeFromArray = (tree, data) => {
 
