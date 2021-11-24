@@ -238,9 +238,55 @@ export default class BT {
         this.incrementNumNodes();
     }
 
-    delete(node){
+    deleteByValue(value){
+        this.resetAnimationObjects();
+        this.initOperationMessage("Deleting " + value);
+        this.addOperationMessageDecision("Searching for " + value);
 
-        // reset animation and message attributes as new operation
+        let curr = this.root;
+        let nodeToDelete = null;
+
+        // find node
+        for(;;){
+            if(!curr){
+                break;
+            }
+            if(curr.value === value){
+                nodeToDelete = curr;
+                break;
+            } else {
+                this.addOperationAnimationHighlightNode(curr);
+                if(value < curr.value){
+                    this.addOperationMessageDecision(value + " < "  + curr.value + " - checking curr.left");
+                    curr = curr.left;
+                }
+
+                if(value > curr.value){
+                    this.addOperationMessageDecision(value + " > "  + curr.value + " - checking curr.right");
+                    curr = curr.right;
+                }
+            }
+        }
+
+        console.log(nodeToDelete);
+
+        
+        if(!nodeToDelete){
+            // node not in tree
+            this.addOperationMessageDecision("A node with value: " + value + " was not found in this tree");
+            return;
+        } else {
+            // node found with this value - delete it
+            this.addOperationMessageDecision("Found node with value " + value + " - Deleting node");
+            this.addOperationAnimationMainNode(nodeToDelete);
+            this.delete(nodeToDelete);
+
+        }
+
+    }
+
+
+    deleteNode(node){
         this.resetAnimationObjects();
         this.initOperationMessage("Deleting " + node.value);
         this.addOperationMessageDecision("Searching for " + node.value);
@@ -268,6 +314,14 @@ export default class BT {
             }
         });
 
+        this.delete(node);
+
+
+    }
+
+    delete(node){
+
+        console.log(this.operationAnimation);
         // IS A LEAF NODE
         if(node.isLeaf()){
 
@@ -286,7 +340,7 @@ export default class BT {
         } else if (this.leftOf(node) !== null && this.rightOf(node) === null){
 
             this.addOperationMessageDecision(node.value + " only has a left child");
-            this.addOperationMessageDecision(this.leftOf(node.value + " replaces " + node.value));
+            this.addOperationMessageDecision(this.leftOf(node).value + " replaces " + node.value);
   
             // is root node
             if(node === this.root){
@@ -305,7 +359,7 @@ export default class BT {
             
 
         // ONLY HAS A RIGHT CHILD
-        } else if (this.rightOf(node) !== null && this.leftOf(node === null)){
+        } else if (this.rightOf(node) !== null && this.leftOf(node) === null){
 
             this.addOperationMessageDecision(node.value + " only has a right child");
             this.addOperationMessageDecision(this.rightOf(node).value + " replaces " + node.value);
@@ -321,7 +375,7 @@ export default class BT {
            
 
         // HAS TWO CHILDREN
-        } else if (this.rightOf(node) !== null && this.leftOf(node !== null)){
+        } else if (this.rightOf(node) !== null && this.leftOf(node) !== null){
 
             let replacement = this.getLeftMostElementReal(this.rightOf(node));
 
@@ -403,8 +457,7 @@ export default class BT {
         }
     }
 
-    inOrder(top, nodes){
-        
+    inOrder(top, nodes){   
         if(top !== null){
             this.inOrder(this.leftOf(top), nodes);
             if(!nodes.includes(top)) nodes.push(top);

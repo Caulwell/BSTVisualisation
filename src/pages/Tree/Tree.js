@@ -259,8 +259,18 @@ export default function Tree({type}){
     
     setInputsDisabled(true);
 
-    let deletedParent = tree.delete(node);
-    await deleteAnimation(tree.operationAnimation.highlightNodes, tree.operationAnimation.node, userContext.animationSpeed);
+    let deletedParent = null;
+
+    // deletion by typing value in or by clicking node
+    if(typeof node === "string"){
+      deletedParent = tree.deleteByValue(parseInt(node));
+    } else {
+      deletedParent = tree.deleteNode(node);
+    }
+
+    console.log(tree.operationAnimation);
+
+    const animationDone = await deleteAnimation(tree.operationAnimation.highlightNodes, tree.operationAnimation.node, userContext.animationSpeed);
 
     // if avl tree - check for unbalanced nodes, animate this checking - balance the tree in memory
     if(type === "avl" || type === "rb"){
@@ -279,8 +289,6 @@ export default function Tree({type}){
           tree.fixOnDelete(tree.deleteFixNode);
         }
       }
-
-      setInputsDisabled(false);
       
     }
     // add a new operationMessage to display to user - useEffect will also trigger saving tree to context on state change
@@ -297,6 +305,7 @@ export default function Tree({type}){
 
     
     saveCurrentTree();
+    setInputsDisabled(false);
 
   };
 
@@ -489,6 +498,7 @@ export default function Tree({type}){
         inputsDisabled={inputsDisabled}
         addNode={addNode} 
         searchForNode={searchForNode} 
+        deleteNode={deleteNode}
         traverseTree={traverseTree} 
         saveTree={saveTree} 
         treeFromCSV={treeFromCSV} 

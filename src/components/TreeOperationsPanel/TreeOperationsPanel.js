@@ -3,7 +3,7 @@ import "./TreeOperationsPanel.css";
 import { UserContext } from "../../context/UserContext";
 
 
-export default function TreeOperationsPanel({inputsDisabled, addNode, searchForNode, traverseTree, saveTree, treeFromCSV, treeFromFile, clearTree, randomTree, minNode, maxNode, setShowModal, setModalContent}){
+export default function TreeOperationsPanel({inputsDisabled, addNode, searchForNode, deleteNode, traverseTree, saveTree, treeFromCSV, treeFromFile, clearTree, randomTree, minNode, maxNode, setShowModal, setModalContent}){
 
     const [addInput, setAddInput] = useState("");
     const [searchInput, setSearchInput] = useState("");
@@ -58,6 +58,11 @@ export default function TreeOperationsPanel({inputsDisabled, addNode, searchForN
                     searchForNode(searchInput);
                     setSearchInput("");
                 }
+            } else if(e.target.name === "deleteInput"){
+                if(deleteInput !== ""){
+                    deleteNode(deleteInput);
+                    setDeleteInput("");
+                }
             }
           
         }
@@ -72,6 +77,10 @@ export default function TreeOperationsPanel({inputsDisabled, addNode, searchForN
             case "searchButton":
                 searchForNode(searchInput);
                 setSearchInput("");
+                break;
+            case "deleteButton":
+                deleteNode(deleteInput);
+                setDeleteInput("");
                 break;
             case "inOrder":
                 traverseTree("in");
