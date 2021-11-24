@@ -247,10 +247,9 @@ export default class BT {
         let nodeToDelete = null;
 
         // find node
-        for(;;){
-            if(!curr){
-                break;
-            }
+        while(curr){
+            console.log(curr);
+
             if(curr.value === value){
                 nodeToDelete = curr;
                 break;
@@ -259,9 +258,7 @@ export default class BT {
                 if(value < curr.value){
                     this.addOperationMessageDecision(value + " < "  + curr.value + " - checking curr.left");
                     curr = curr.left;
-                }
-
-                if(value > curr.value){
+                } else if(value > curr.value){
                     this.addOperationMessageDecision(value + " > "  + curr.value + " - checking curr.right");
                     curr = curr.right;
                 }

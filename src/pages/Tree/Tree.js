@@ -268,9 +268,13 @@ export default function Tree({type}){
       deletedParent = tree.deleteNode(node);
     }
 
-    console.log(tree.operationAnimation);
-
     const animationDone = await deleteAnimation(tree.operationAnimation.highlightNodes, tree.operationAnimation.node, userContext.animationSpeed);
+
+    if(!deletedParent){
+      getAndSetOperationMessages();
+      setInputsDisabled(false);
+      return;
+    }
 
     // if avl tree - check for unbalanced nodes, animate this checking - balance the tree in memory
     if(type === "avl" || type === "rb"){

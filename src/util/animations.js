@@ -152,7 +152,13 @@ function deleteAnimation(testNodes, node, animationSpeed){
             HTMLnode.classList.remove(`highlighting${node.id}`);
         });
 
-        // insert node
+        // delete node
+
+        if(!node){
+            resolve("done");
+            return;
+        }
+        
         let HTMLnode = document.getElementById(node.id);
         HTMLnode.classList.add(`deleteNode`);
 
