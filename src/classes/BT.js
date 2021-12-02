@@ -11,6 +11,10 @@ export default class BT {
         this.operationAnimation = {highlightNodes: [], node: null};
         this.operationMessage = {name: "", decisions: [], id: null};
         this.shiftNodesAnimation = [];
+
+        if(this.constructor === BT){
+            throw new Error("Instance of Abstract class BT cannot be instantiated");
+        }
     }
 
 
@@ -233,8 +237,16 @@ export default class BT {
     insertAtTop(node){
         this.setRoot(node);
         const svg = document.getElementById("canvas");
-        node.setX(svg.clientWidth * 0.5);
-        node.setY(svg.clientHeight * 0.3);
+        
+        // handle no svg for testing
+        if(!svg){
+            node.setX(400);
+            node.setY(200);
+        }else{
+            node.setX(svg.clientWidth * 0.5);
+            node.setY(svg.clientHeight * 0.3);
+        }
+        
         this.incrementNumNodes();
     }
 
@@ -248,7 +260,6 @@ export default class BT {
 
         // find node
         while(curr){
-            console.log(curr);
 
             if(curr.value === value){
                 nodeToDelete = curr;
@@ -265,7 +276,6 @@ export default class BT {
             }
         }
 
-        console.log(nodeToDelete);
 
         
         if(!nodeToDelete){
@@ -318,7 +328,6 @@ export default class BT {
 
     delete(node){
 
-        console.log(this.operationAnimation);
         // IS A LEAF NODE
         if(node.isLeaf()){
 
