@@ -36,12 +36,6 @@ test("Create node from JSON = AVLNode", () => {
 });
 
 
-
-//test getTreeFromValues
-test("get tree from values method creates tree of correct length", () => {
-    
-});
-
 //create tree, check balance factor
 test("create tree, test if node has correct balanceFactor", () => {
     const values = [8,4,12,19,21];
