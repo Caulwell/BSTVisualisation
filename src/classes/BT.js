@@ -88,29 +88,31 @@ export default class BT {
     getMinNode(){
         this.resetAnimationObjects();
 
-        this.operationMessage = {name: "Get Min Node", decisions: ["Checking root"]};
+        this.initOperationMessage("Get Min Node");
+        
+        this.addOperationMessageDecision("Checking root");
         let nodes = [];
         // get min value of tree
         let curr = this.root;
 
         if(!curr){
-            this.operationMessage.decisions.push("Root is null, terminating operation");
+            this.addOperationMessageDecision("Root is null, terminating operation");
             return;
         }
 
         nodes.push(curr);
-        this.operationMessage.decisions.push("Visiting root: " + curr.value);
+        this.addOperationMessageDecision("Visiting root: " + curr.value);
 
         while(curr.left){
-            this.operationMessage.decisions.push("Checking " + curr.value + ".left: " + curr.left.value);
+            this.addOperationMessageDecision("Checking " + curr.value + ".left: " + curr.left.value);
             curr = curr.left;
-            this.operationMessage.decisions.push("Visiting " + curr.value);
+            this.addOperationMessageDecision("Visiting " + curr.value);
             nodes.push(curr);
 
         }
 
-        this.operationMessage.decisions.push(curr.value + ".left is null");
-        this.operationMessage.decisions.push("Minimum node: " + curr.value);
+        this.addOperationMessageDecision(curr.value + ".left is null");
+        this.addOperationMessageDecision("Minimum node: " + curr.value);
 
         this.affectedNodes =  new Set(nodes);
 
@@ -120,30 +122,30 @@ export default class BT {
     getMaxNode(){
         // get max value of tree
         this.resetAnimationObjects();
-
-        this.operationMessage = {name: "Get Max Node", decisions: ["Checking root"]};
+        this.initOperationMessage("Get Max Node");
+        this.addOperationMessageDecision("Checking root");
         let nodes = [];
         // get min value of tree
         let curr = this.root;
 
         if(!curr){
-            this.operationMessage.decisions.push("Root is null, terminating operation");
+            this.addOperationMessageDecision("Root is null, terminating operation");
             return;
         }
 
         nodes.push(curr);
-        this.operationMessage.decisions.push("Visiting root: " + curr.value);
+        this.addOperationMessageDecision("Visiting root: " + curr.value);
 
         while(curr.right){
-            this.operationMessage.decisions.push("Checking " + curr.value + ".right: " + curr.right.value);
+            this.addOperationMessageDecision("Checking " + curr.value + ".right: " + curr.right.value);
             curr = curr.right;
-            this.operationMessage.decisions.push("Visiting " + curr.value);
+            this.addOperationMessageDecision("Visiting " + curr.value);
             nodes.push(curr);
 
         }
 
-        this.operationMessage.decisions.push(curr.value + ".right is null");
-        this.operationMessage.decisions.push("Maximum node: " + curr.value);
+        this.addOperationMessageDecision(curr.value + ".right is null");
+        this.addOperationMessageDecision("Maximum node: " + curr.value);
 
         this.affectedNodes =  new Set(nodes);
 
