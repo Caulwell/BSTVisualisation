@@ -10,15 +10,15 @@
     /*LAYOUT */
     --navbar-height: 6vh;
 
-    --welcome-height: 88vh;
+    --welcome-height: 94vh;
     --hero-height: 40vh;
 
-    --tree-canvas-height: 88vh;
+    --tree-canvas-height: 94vh;
     --footer-height: 6vh;
 
         /* laptop screen */
         --operations-panel-laptop-width: 28%;
-        --operations-history-laptop-width: 8%;
+        --operations-history-laptop-width: 12%;
 
         /* Desktop screen */
         --operations-panel-desktop-width: 20%;

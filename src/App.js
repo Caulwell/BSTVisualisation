@@ -27,7 +27,6 @@ export default function App() {
           <Tree type="rb" />
         </Route>
       </Switch>
-      <Footer/>
       </div>
     </Router>
 

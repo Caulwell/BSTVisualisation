@@ -1,0 +1,34 @@
+.operation-info-panel{
+    position:fixed;
+    background-color: var(--dark-color);
+    bottom: 0;
+    right: 0.2rem;
+    color: white;
+    padding: 0.5rem 0;
+    font-size: 0.8rem;
+    padding-left: 1rem;
+    margin-bottom: 0.3rem;
+    width: 30rem;
+    max-height: 13rem;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    overflow-y: scroll; 
+    
+}
+
+.operation-info-panel::-webkit-scrollbar{
+    display: none;
+}
+
+.operation-info-panel-title{
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.operation-decision{
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--primary-color);
+}

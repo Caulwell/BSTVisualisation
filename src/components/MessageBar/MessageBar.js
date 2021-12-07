@@ -3,9 +3,9 @@ import shortid from "shortid";
 
 import "./MessageBar.css";
 
-export default function MessageBar({messages}){
+export default function MessageBar({messages, setSelectedOperation, setOperationInfoPanelOpen}){
 
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(true);
     const [messageOpen, setMessageOpen] = useState("");
     
     const handleClick = () => {
@@ -55,8 +55,11 @@ export default function MessageBar({messages}){
         const handleClick = () => {
             if(message.id === messageOpen){
                 setMessageOpen("");
+                setOperationInfoPanelOpen(false);
             } else {
                 setMessageOpen(message.id);
+                setSelectedOperation(message);
+                setOperationInfoPanelOpen(true);
             }
         };
 
@@ -69,30 +72,18 @@ export default function MessageBar({messages}){
                 {icon}
                 {message.name}
                 </div>
-                   
-                    {open && 
-                        <div className="message-bar-operation-content">
-                            {message.decisions.map((decision, index) => {
-                                return (
-                                    <div key={shortid.generate()} className="message-bar-decision">
-                                        {decision}
-                                    </div>
-                                )
-                            })}
-                        </div>
-                    }
             </div>
         )
     }
 
     return (
         <div className="message-bar" >
-            <div className="dropdown-control" onClick={handleClick}>
+        <div className="dropdown-control" onClick={handleClick}>
                 History
             </div>
         {open && 
             <div className="message-bar-content">
-            {messages.map((message, index) => {
+                {messages.map((message, index) => {
                 return (
                     <Operation 
                         message={message} 
@@ -105,6 +96,7 @@ export default function MessageBar({messages}){
             })}
             </div>
         }
+      
         </div>
        
     )

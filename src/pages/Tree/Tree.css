@@ -1,7 +1,7 @@
 .tree-page{
-    height: 88vh;
+    height: var(--tree-canvas-height);
 }
 .svgContainer{
-    height: 82vh;
+    height: 88vh;
 }
 

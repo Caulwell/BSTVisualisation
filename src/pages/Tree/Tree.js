@@ -13,6 +13,7 @@ import MessageBar from "../../components/MessageBar/MessageBar";
 import TreeMetaPanel from "../../components/TreeMetaPanel/TreeMetaPanel";
 import Modal from "../../components/Modal/Modal";
 import Alert from "../../components/Alert/Alert";
+import OperationInfoPanel from "../../components/OperationInfoPanel/OperationInfoPanel";
 
 
 export default function Tree({type}){
@@ -26,6 +27,9 @@ export default function Tree({type}){
   const [generatingTree, setGeneratingTree] = useState(false);
   const svgEl = useRef(null);
   const svgContainerEl = useRef(null);
+
+  const [selectedOperation, setSelectedOperation] = useState(null);
+  const [operationInfoPanelOpen, setOperationInfoPanelOpen] = useState(true);
 
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState({});
@@ -162,6 +166,7 @@ export default function Tree({type}){
     setAddingMessage(true);
     setOperationMessages([operationMessage, ...operationMessages]);
     setAddingMessage(false);
+    setSelectedOperation(operationMessage);
    
   };
 
@@ -519,8 +524,9 @@ export default function Tree({type}){
         setModalContent={setModalContent}
 
       />
-      <MessageBar messages={operationMessages}/>
+      <MessageBar messages={operationMessages} setSelectedOperation={setSelectedOperation} setOperationInfoPanelOpen={setOperationInfoPanelOpen}/>
       <TreeMetaPanel/>
+      
 
         <div id="svgContainer" ref={svgContainerEl}>
         <svg id="canvas" viewBox={`0 0 ${window.innerWidth} ${window.innerHeight * 0.83}`}  ref={svgEl}>
@@ -529,6 +535,7 @@ export default function Tree({type}){
               })}
         </svg>
       </div>
+      <OperationInfoPanel operation={selectedOperation} open={operationInfoPanelOpen} setOpen={setOperationInfoPanelOpen}/>
       
     </div>
     )

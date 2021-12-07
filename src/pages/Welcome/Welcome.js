@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import bstImage from "../../images/BST.png";
 import avlImage from "../../images/AVL.png";
 import rbImage from "../../images/RB.png";
+import Footer from "../../components/Footer/Footer";
 
 import {UserContext} from "../../context/UserContext";
 import { useHistory } from "react-router";
