@@ -9,7 +9,7 @@ export default class BT {
         this.foundNode = null;
         this.affectedNodes = new Set();
         this.operationAnimation = {highlightNodes: [], node: null};
-        this.operationMessage = {name: "", decisions: [], id: null};
+        this.operationMessage = {name: "", decisions: [], id: null, type: ""};
         this.shiftNodesAnimation = [];
 
         if(this.constructor === BT){
@@ -46,10 +46,11 @@ export default class BT {
         this.numNodes--;
     }
 
-    initOperationMessage(name){
+    initOperationMessage(name, type){
         this.operationMessage.name = name;
         this.operationMessage.decisions = [];
         this.operationMessage.id = shortid.generate();
+        this.operationMessage.type = type;
     }
 
     addOperationMessageDecision(string){
@@ -88,7 +89,7 @@ export default class BT {
     getMinNode(){
         this.resetAnimationObjects();
 
-        this.initOperationMessage("Get Min Node");
+        this.initOperationMessage("Min", "get");
         
         this.addOperationMessageDecision("Checking root");
         let nodes = [];
@@ -122,7 +123,7 @@ export default class BT {
     getMaxNode(){
         // get max value of tree
         this.resetAnimationObjects();
-        this.initOperationMessage("Get Max Node");
+        this.initOperationMessage("Max", "get");
         this.addOperationMessageDecision("Checking root");
         let nodes = [];
         // get min value of tree
@@ -185,7 +186,7 @@ export default class BT {
     insert(value){
 
         this.resetAnimationObjects();
-        this.initOperationMessage("Inserting " + value);
+        this.initOperationMessage(value, "insert");
 
 
         let curr = this.getRoot();
@@ -254,7 +255,7 @@ export default class BT {
 
     deleteByValue(value){
         this.resetAnimationObjects();
-        this.initOperationMessage("Deleting " + value);
+        this.initOperationMessage(value, "delete");
         this.addOperationMessageDecision("Searching for " + value);
 
         let curr = this.root;
@@ -297,7 +298,7 @@ export default class BT {
 
     deleteNode(node){
         this.resetAnimationObjects();
-        this.initOperationMessage("Deleting " + node.value);
+        this.initOperationMessage(node.value, "delete");
         this.addOperationMessageDecision("Searching for " + node.value);
 
         // get nodes to animate
@@ -424,7 +425,7 @@ export default class BT {
     traversal(order){
         let nodes = [];
         if(order === "in"){
-            this.initOperationMessage("In-Order Traversal");
+            this.initOperationMessage("In-Order", "traverse");
             this.addOperationMessageDecision("Traversing left subtree of a node")
             this.addOperationMessageDecision("The node itself");
             this.addOperationMessageDecision("Then the right subtree of the node");
@@ -437,7 +438,7 @@ export default class BT {
                 .join(","));
 
         } else if(order === "pre"){
-            this.initOperationMessage("Pre-Order Traversal");
+            this.initOperationMessage("Pre-Order", "traverse");
             this.addOperationMessageDecision("Traversing a node")
             this.addOperationMessageDecision("The left subtree of the node");
             this.addOperationMessageDecision("Then the right subtree of the node");
@@ -450,7 +451,7 @@ export default class BT {
                 .join(","));
 
         } else if(order === "post"){
-            this.initOperationMessage("Post-Order Traversal");
+            this.initOperationMessage("Post-Order", "traverse");
             this.addOperationMessageDecision("Traversing the left subtree of a node");
             this.addOperationMessageDecision("The right subtree of the node");
             this.addOperationMessageDecision("Then the node itself");
@@ -507,7 +508,7 @@ export default class BT {
         this.foundNode = null;
         let curr = this.root;
 
-        this.initOperationMessage("Searching for" + value);
+        this.initOperationMessage(value, "search");
 
         while(true){
             if(curr === null){

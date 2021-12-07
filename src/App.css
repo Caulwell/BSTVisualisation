@@ -16,11 +16,11 @@
 
         /* laptop screen */
         --operations-panel-laptop-width: 28%;
-        --operations-history-max-width: 22%;
+        --operations-history-laptop-width: 8%;
 
         /* Desktop screen */
         --operations-panel-desktop-width: 20%;
-        --operations-history-min-width: 15%;
+        --operations-history-desktop-width: 15%;
        
 
     /* INPUTS AND BUTTONS */
