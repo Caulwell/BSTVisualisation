@@ -135,7 +135,7 @@ export default function TreeOperationsPanel({inputsDisabled, addNode, searchForN
 
                     {/* add node */}
                     <div className="dropdown-menu-item insert-node-menu">
-                        Insert
+                    <div className="dropdown-menu-item-label">Insert</div>
                         <input
                             type="number" 
                             autoComplete="off" 
@@ -156,7 +156,7 @@ export default function TreeOperationsPanel({inputsDisabled, addNode, searchForN
 
                     {/* search for node */}
                     <div className="dropdown-menu-item search-node-menu">
-                        Search
+                    <div className="dropdown-menu-item-label">Search</div>
                         <input
                             type="number" 
                             autoComplete="off" 
@@ -177,7 +177,7 @@ export default function TreeOperationsPanel({inputsDisabled, addNode, searchForN
 
                     {/* delete node */}
                     <div className="dropdown-menu-item delete-node-menu">
-                        Delete
+                    <div className="dropdown-menu-item-label">Delete</div>
                         <input
                             type="number" 
                             autoComplete="off" 
@@ -198,7 +198,7 @@ export default function TreeOperationsPanel({inputsDisabled, addNode, searchForN
 
                     {/* traverse tree */}
                     <div className="dropdown-menu-item traverse-tree-menu">
-                        Traverse
+                    <div className="dropdown-menu-item-label">Traverse</div>
                         <div className="btn-group">
                         <button  
                             name="inOrder" 
@@ -230,7 +230,7 @@ export default function TreeOperationsPanel({inputsDisabled, addNode, searchForN
 
                     {/* get min */}
                     <div className="dropdown-menu-item traverse-tree-menu">
-                        Get Min
+                    <div className="dropdown-menu-item-label">Get Min</div>
                         <button  
                             name="getMinButton" 
                             onClick={handleButtonPress}
@@ -242,7 +242,7 @@ export default function TreeOperationsPanel({inputsDisabled, addNode, searchForN
 
                     {/* get max */}
                     <div className="dropdown-menu-item traverse-tree-menu">
-                        Get Max
+                    <div className="dropdown-menu-item-label">Get Max</div>
                         <button  
                             name="getMaxButton" 
                             onClick={handleButtonPress}
@@ -252,13 +252,13 @@ export default function TreeOperationsPanel({inputsDisabled, addNode, searchForN
                         </button>
                     </div>
 
-                    <div className="dropdown-control" >
+                    <div className="dropdown-header" >
                         Tree
                     </div>
 
                     {/* generate random tree */}
                     <div className="dropdown-menu-item random-tree-menu">
-                        Generate Random Tree
+                    <div className="dropdown-menu-item-label">Generate Random Tree</div>
                         <button name="randomTreeButton" onClick={handleButtonPress} disabled={inputsDisabled}>
                             Generate
                         </button>
@@ -266,7 +266,7 @@ export default function TreeOperationsPanel({inputsDisabled, addNode, searchForN
 
                     {/* csv tree generation */}
                     <div className="dropdown-menu-item csv-tree-menu">
-                        Generate Using CSV
+                    <div className="dropdown-menu-item-label">Generate Using CSV</div>
                         <input className="fileInput" id="fileInput" type="file" accept="*.csv" onChange={handleCSVInput} disabled={inputsDisabled}/>
                         <label className="fileInputLabel" for="fileInput">{selectedCSV ? selectedCSV.name : "Upload"}</label>
                         <button  name="generateButton" onClick={handleButtonPress} disabled={inputsDisabled}>
@@ -276,7 +276,7 @@ export default function TreeOperationsPanel({inputsDisabled, addNode, searchForN
 
                     {/* clear tree */}
                     <div className="dropdown-menu-item clear-tree-menu">
-                        Clear Tree
+                    <div className="dropdown-menu-item-label">Clear Tree</div>
                         <button className="button-warning" name="clearButton" onClick={handleButtonPress} disabled={inputsDisabled}>
                             Clear 
                         </button>
@@ -284,7 +284,7 @@ export default function TreeOperationsPanel({inputsDisabled, addNode, searchForN
 
                     {/* save to file */}
                     <div className="dropdown-menu-item clear-tree-menu">
-                        Save to file
+                    <div className="dropdown-menu-item-label">Save To File</div>
                         <button  name="saveButton" onClick={handleButtonPress} disabled={inputsDisabled}>
                             Save
                         </button>
@@ -292,7 +292,7 @@ export default function TreeOperationsPanel({inputsDisabled, addNode, searchForN
 
                     {/* load from file */}
                     <div className="dropdown-menu-item clear-tree-menu">
-                        Load from file
+                    <div className="dropdown-menu-item-label">Load From File</div>
                         <input className="fileInput" id="txtFileInput" type="file" accept="*.txt" onChange={handleTXTInput} disabled={inputsDisabled}/>
                         <label className="fileInputLabel" for="txtFileInput">{selectedTXT ? selectedTXT.name : "Upload"}</label>
                         <button  name="txtGenerateButton" onClick={handleButtonPress} disabled={inputsDisabled}>
@@ -301,12 +301,12 @@ export default function TreeOperationsPanel({inputsDisabled, addNode, searchForN
                     </div> 
 
 
-                    <div className="dropdown-control" >
+                    <div className="dropdown-header" >
                         Animations
                     </div>
 
                     <div className="dropdown-menu-item speed-change">
-                    Animation Speed
+                    <div className="dropdown-menu-item-label">Animation Speed</div>
                 <input 
                     type="range"
                     className="speedInput"

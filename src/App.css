@@ -1,9 +1,47 @@
 :root{
+    /* COLOURS */
     --dark-color: #081c15;
     --dark-color2: #1b4332;
     --primary-color: #2d6a4f;
     --lighter-primary-color: #40916c;
     --light-color: #52b788;
+    --highlight-color: #74C69D;
+
+    /*LAYOUT */
+    --navbar-height: 10%;
+    --tree-canvas-height: 80%;
+    --operations-panel-height: 80%;
+    --operations-history-height: 80%;
+    --footer-height: 10%;
+
+        /* laptop screen */
+        --operations-panel-laptop-width: 28%;
+        --operations-history-max-width: 22%;
+
+        /* Desktop screen */
+        --operations-panel-desktop-width: 20%;
+        --operations-history-min-width: 15%;
+       
+
+    /* INPUTS AND BUTTONS */
+    
+        /* laptop screen */ 
+        --input-laptop-width: 6rem;
+        --input-laptop-height: 1rem;
+        --button-laptop-width: 6rem;
+        --button-laptop-padding: 0.2rem 0;
+
+        /* Desktop screen */
+        --input-desktop-width: 6rem;
+        --input-desktop-padding: 0.2rem 0;
+
+        --button-desktop-width: 6rem;
+        --button-desktop-padding: 0.2rem 0; 
+
+
+
+
+
 }
 
 body{
@@ -33,17 +71,18 @@ button, .fileInputLabel{
     border-radius: 6px;
     color: white;
     background-color: transparent;
-    border: 2px solid #74C69D;
+    border: 2px solid var(--highlight-color);
     cursor: pointer;
-    width: 6rem;
-    padding: 0.2rem 0;
+    width: var(--button-laptop-width);
+    padding: var(--button-laptop-padding);
 }
 
 button:hover, .fileInputLabel:hover{
-    background-color: #74C69D;
+    background-color: var(--highlight-color);
 }
 
 .button-warning{
+    background-color: red;
     border: 2px solid red;
 }
 

@@ -1,21 +1,31 @@
 .operations-drop-down{
-    background-color: #081C15;
+    background-color: var(--dark-color);
     position: absolute;
-    width: 20%;
+    width:var(--operations-panel-laptop-width);
     color: white;
     margin-left: 2px;
     margin-top: 2px;
 }
 
+
+
 .dropdown-control{
     cursor: pointer;
-    background-color: #1b4332;
+    background-color: var(--dark-color2);
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 0.3rem;
-    font-size: 0.8rem;
-    
+    font-size: 0.8rem;  
+}
+
+.dropdown-header{
+    background-color: var(--dark-color2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.2rem;
+    font-size: 0.8rem;  
 }
 
 .dropdown-content{
@@ -25,13 +35,17 @@
 }
 
 .dropdown-menu-item{
-    padding: 0.5rem 0;
+    padding: 0.3rem 0;
     font-size: 0.8rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 0.3rem;
-    border-bottom: 1px solid #2D6A4F;
+    border-bottom: 1px solid var(--primary-color);
+}
+
+.dropdown-menu-item-label{
+    min-width: 3rem;
 }
 
 .fileInput{
@@ -45,4 +59,19 @@
     display: flex;
     justify-content: center;
     cursor: pointer;
+    padding: 0;
+}
+
+
+/* FOR SCREENS BIGGER THAN A LAPTOP */
+@media screen and (min-width: 1400px) {
+    .operations-drop-down{
+        background-color: var(--dark-color);
+        position: absolute;
+        width: var(--operations-panel-desktop-width);
+        color: white;
+        margin-left: 2px;
+        margin-top: 2px;
+    }
+    
 }
