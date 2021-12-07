@@ -10,12 +10,12 @@
 const avlTree = new AVL();
 
  // test instance of BT
-test("BST instance of BT", () => {
+test("AVL instance of BT", () => {
     expect(avlTree instanceof BT).toBeTruthy();
 });
 
 // test createNode is correct type
-test("Create node = BSTNode", () => {
+test("Create node = AVLNode", () => {
     expect(avlTree.createNode(5) instanceof AVLNode).toBeTruthy();
 });
 

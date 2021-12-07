@@ -286,7 +286,7 @@ export default class BT {
             // node found with this value - delete it
             this.addOperationMessageDecision("Found node with value " + value + " - Deleting node");
             this.addOperationAnimationMainNode(nodeToDelete);
-            this.delete(nodeToDelete);
+            return this.delete(nodeToDelete);
 
         }
 
@@ -321,7 +321,7 @@ export default class BT {
             }
         });
 
-        this.delete(node);
+        return this.delete(node);
 
 
     }

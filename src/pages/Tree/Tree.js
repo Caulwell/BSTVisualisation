@@ -271,6 +271,7 @@ export default function Tree({type}){
     const animationDone = await deleteAnimation(tree.operationAnimation.highlightNodes, tree.operationAnimation.node, userContext.animationSpeed);
 
     if(!deletedParent){
+      console.log("no deleted parent");
       getAndSetOperationMessages();
       setInputsDisabled(false);
       return;
@@ -289,7 +290,10 @@ export default function Tree({type}){
         }
 
       } else if(type === "rb"){
+        console.log("type is rb");
+        console.log(tree.deleteFixNode);
         if(tree.deleteFixNode){
+          console.log("calling fixOnDelete");
           tree.fixOnDelete(tree.deleteFixNode);
         }
       }

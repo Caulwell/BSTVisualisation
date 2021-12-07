@@ -15,7 +15,7 @@ test("BST instance of BT", () => {
 });
 
 // test createNode is correct type
-test("Create node = BSTNode", () => {
+test("Create node = RBNode", () => {
     expect(rbTree.createNode(5) instanceof RBNode).toBeTruthy();
 });
 

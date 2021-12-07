@@ -53,6 +53,19 @@ export default class RB extends BT {
         node.colour = this.colours.b;
     }
 
+    // rbTransplant(u,v){
+    //     if(!u.parent){  // u is root
+    //         this.root = v;
+    //     } else if(u === u.parent.left){
+    //         u.parent.left = v;
+    //         if(v)v.lr = "l";
+    //     } else {
+    //         u.parent.right = v;
+    //         if(v)v.lr = "r";
+    //     }
+    //     if(v) v.parent = u.parent;
+    // }
+
 
     delete(node){
 
@@ -106,6 +119,63 @@ export default class RB extends BT {
         this.numNodes--;
         return deletingNode.parent;
     }
+
+    // delete(node){
+
+    //     let y = node;
+    //     let x;
+    //     let y_original_colour = y.colour;
+
+    //     if(!node.left){ // no children or only has right child
+    //         x = node.right;
+    //         this.rbTransplant(node, node.right);
+    //     } else if(!node.right){ // only has left child
+    //         x = node.left;
+    //         this.rbTransplant(node, node.left);
+    //     } else { //both children
+    //         y = this.getLeftMostElementReal(node.right);
+    //         y_original_colour = y.colour;
+    //         x = y.right;
+    //         if(y.parent === node){ // y is direct child of node to be deleted
+    //             x.parent = y;
+    //         } else {
+    //             this.rbTransplant(y, y.right);
+    //             y.right = node.right;
+    //             y.right.parent = y;
+    //         }
+    //         this.rbTransplant(node, y);
+    //         y.left = node.left;
+    //         y.left.parent = y;
+    //         y.colour = node.colour;
+    //     }
+
+    //     if(y_original_colour === "black"){
+
+    //         if(!x){
+    //             x = new RBNode(null,null);
+    //             x.colour = "black";
+    //             x.parent = node.parent;
+                
+    //             if(node === node.parent.left){
+    //                 node.parent.left = x;
+    //             } else {
+    //                 node.parent.right = x;
+    //             }
+    //         }
+            
+    //         this.deleteFixNode = x;
+    //         console.log(x);
+
+            
+    //         console.log("y original colour = " + y_original_colour);
+    //         console.log("going to call fixOnDelete with node: " + node);
+    //     } else {
+    //         this.deleteFixNode = null;
+    //     }
+
+    //     return node.parent;
+
+    // }
 
     fixOnInsertion(node){
         
@@ -165,6 +235,67 @@ export default class RB extends BT {
         this.root.colour = this.colours.b;
 
     }
+
+    // fixOnDelete(node){
+    //     console.log("calling fixOnDelete with node: " + node.value);
+    //     console.log("node colour == " + node.colour);
+
+    //     let w;
+    //     while(node && node !== this.root && node.colour === "black"){
+    //         console.log("gets into the for loop");
+    //         if(node === node.parent.left){
+    //             w = node.parent.right;
+    //             if(w.colour === "red"){ // case 1
+    //                 w.colour = "black";
+    //                 node.parent.colour = "red";
+    //                 this.leftRotation(node.parent);
+    //                 w = node.parent.right;
+    //             }
+    //             if(w.left.colour === "black" && w.right.colour === "black"){ // case 2
+    //                 w.colour = "red";
+    //                 node = node.parent;
+    //             }else { //case 3/4
+    //                 if(w.right.colour === "black"){ // case 3
+    //                     w.left.colour = "black";
+    //                     w.colour = "red";
+    //                     this.rightRotation(w);
+    //                     w = node.parent.right;
+    //                 }
+    //                 // case 4
+    //                 w.colour = node.parent.colour;
+    //                 node.parent.colour = "black";
+    //                 w.right.colour = "black";
+    //                 this.leftRotation(node.parent);
+    //                 node = this.root;
+    //             }
+    //         } else {
+    //             w = node.parent.left;
+    //             if(w.colour === "red"){
+    //                 w.colour = "black";
+    //                 node.parent.colour = "red";
+    //                 this.rightRotation(node.parent);
+    //                 w = node.parent.left;
+    //             }
+    //             if( w.right.colour === "black" &&  w.left.colour === "black"){
+    //                 w.colour = "red";
+    //                 node = node.parent;
+    //             } else {
+    //                 if( w.left.colour === "black"){
+    //                     w.right.colour = "black";
+    //                     w.colour = "red";
+    //                     this.leftRotation(w);
+    //                     w = node.parent.left;
+    //                 }
+    //                 w.colour = node.parent.colour;
+    //                 node.parent.colour = "black";
+    //                 w.left.colour = "black";
+    //                 this.rightRotation(node.parent);
+    //                 node = this.root;
+    //             }
+    //         }
+    //     }
+    //     if(node) node.colour = "black";
+    // }
 
     fixOnDelete(node){
 
