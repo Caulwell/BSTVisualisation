@@ -9,15 +9,20 @@
     padding-left: 1rem;
     margin-bottom: 0.3rem;
     width: 30rem;
+    max-height: 15rem;
+    
+    
+}
+
+.operation-info-panel-content::-webkit-scrollbar{
+    display: none;
+}
+
+.operation-info-panel-content{
     max-height: 13rem;
     -ms-overflow-style: none;
     scrollbar-width: none;
     overflow-y: scroll; 
-    
-}
-
-.operation-info-panel::-webkit-scrollbar{
-    display: none;
 }
 
 .operation-info-panel-title{

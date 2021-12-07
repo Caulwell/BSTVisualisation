@@ -524,7 +524,7 @@ export default function Tree({type}){
         setModalContent={setModalContent}
 
       />
-      <MessageBar messages={operationMessages} setSelectedOperation={setSelectedOperation} setOperationInfoPanelOpen={setOperationInfoPanelOpen}/>
+      <MessageBar messages={operationMessages} selectedOperation={selectedOperation} setSelectedOperation={setSelectedOperation} setOperationInfoPanelOpen={setOperationInfoPanelOpen}/>
       <TreeMetaPanel/>
       
 

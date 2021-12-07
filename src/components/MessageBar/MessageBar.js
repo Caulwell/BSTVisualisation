@@ -3,14 +3,12 @@ import shortid from "shortid";
 
 import "./MessageBar.css";
 
-export default function MessageBar({messages, setSelectedOperation, setOperationInfoPanelOpen}){
+export default function MessageBar({messages, selectedOperation, setSelectedOperation, setOperationInfoPanelOpen}){
 
     const [open, setOpen] = useState(true);
-    const [messageOpen, setMessageOpen] = useState("");
     
     const handleClick = () => {
         setOpen(open => !open);
-        setMessageOpen("");
     };
 
 
@@ -53,11 +51,9 @@ export default function MessageBar({messages, setSelectedOperation, setOperation
     const Operation = ({message, open, setMessageOpen}) => {
 
         const handleClick = () => {
-            if(message.id === messageOpen){
-                setMessageOpen("");
+            if(message.id === selectedOperation.id){
                 setOperationInfoPanelOpen(false);
             } else {
-                setMessageOpen(message.id);
                 setSelectedOperation(message);
                 setOperationInfoPanelOpen(true);
             }
@@ -68,7 +64,7 @@ export default function MessageBar({messages, setSelectedOperation, setOperation
 
         return (
             <div className="message-bar-item"  >
-                <div className={messageOpen === message.id ? "selectedMessage message-bar-item-title" : "message-bar-item-title"} onClick={handleClick}>
+                <div className={selectedOperation.id === message.id ? "selectedMessage message-bar-item-title" : "message-bar-item-title"} onClick={handleClick}>
                 {icon}
                 {message.name}
                 </div>
@@ -88,9 +84,7 @@ export default function MessageBar({messages, setSelectedOperation, setOperation
                     <Operation 
                         message={message} 
                         key={message.id}
-                        open={messageOpen === message.id ? true : false} 
-                        messageOpen={messageOpen}
-                        setMessageOpen={setMessageOpen}
+                        open={selectedOperation.id === message.id ? true : false} 
                     />
                 )
             })}

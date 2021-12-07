@@ -14,7 +14,7 @@
 
 .message-bar-content{
     color: white;
-    max-height: 55vh;
+    max-height: 49vh;
     transition: 1s; 
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -28,17 +28,15 @@
 }
 
 .message-bar-item{
-    margin-top: 0.5rem;
+    margin-top: 0.2rem;
     border-radius: 5px;
     background-color: var(--dark-color);
-    margin-bottom: 0.6rem;
     max-height: 3rem;
 }
 
 .message-bar-item-title{
     padding: 0.5rem 1rem;
     font-size: 1rem;
-    margin-bottom: 0.3rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
