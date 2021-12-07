@@ -8,11 +8,13 @@
     --highlight-color: #74C69D;
 
     /*LAYOUT */
-    --navbar-height: 10%;
-    --tree-canvas-height: 80%;
-    --operations-panel-height: 80%;
-    --operations-history-height: 80%;
-    --footer-height: 10%;
+    --navbar-height: 6vh;
+
+    --welcome-height: 88vh;
+    --hero-height: 40vh;
+
+    --tree-canvas-height: 88vh;
+    --footer-height: 6vh;
 
         /* laptop screen */
         --operations-panel-laptop-width: 28%;
