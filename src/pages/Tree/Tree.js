@@ -533,7 +533,9 @@ export default function Tree({type}){
 
   const convertTree = (treeTo) =>{
 
-    const currentTreeAsArray = nodes.map(node => node.value);
+    const currentTreeAsArray = nodes
+      .sort((a,b) => a.id - b.id)
+      .map(node => node.value);
 
     const renderTree = treeTo === "bst" ? new BST() : treeTo === "avl" ? new AVL() : new RB();
 
