@@ -64,7 +64,7 @@ export default function MessageBar({messages, selectedOperation, setSelectedOper
 
         return (
             <div className="message-bar-item"  >
-                <div className={selectedOperation.id === message.id ? "selectedMessage message-bar-item-title" : "message-bar-item-title"} onClick={handleClick}>
+                <div className={selectedOperation && selectedOperation.id === message.id ? "selectedMessage message-bar-item-title" : "message-bar-item-title"} onClick={handleClick}>
                 {icon}
                 {message.name}
                 </div>
@@ -84,7 +84,7 @@ export default function MessageBar({messages, selectedOperation, setSelectedOper
                     <Operation 
                         message={message} 
                         key={message.id}
-                        open={selectedOperation.id === message.id ? true : false} 
+                        open={selectedOperation && selectedOperation.id === message.id ? true : false} 
                     />
                 )
             })}
