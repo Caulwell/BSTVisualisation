@@ -91,3 +91,8 @@ button:hover, .fileInputLabel:hover{
 .button-warning:hover{
     background-color: red;
 }
+
+.svg-arrow{
+    fill:white;
+    font-size: 0.8rem;
+}

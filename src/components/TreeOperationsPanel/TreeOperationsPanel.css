@@ -11,7 +11,7 @@
 
 .dropdown-control{
     cursor: pointer;
-    background-color: var(--dark-color2);
+    background-color: var(--dark-color);
     display: flex;
     align-items: center;
     justify-content: center;

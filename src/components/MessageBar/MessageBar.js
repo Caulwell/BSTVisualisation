@@ -75,7 +75,11 @@ export default function MessageBar({messages, selectedOperation, setSelectedOper
         <div className="message-bar" >
         <div className="dropdown-control" onClick={handleClick}>
                 History
-            </div>
+
+                <svg className="svg-arrow" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24">
+                        {open ? <path xmlns="http://www.w3.org/2000/svg" d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z"/> : <path xmlns="http://www.w3.org/2000/svg" d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z"/>}
+                    </svg>
+        </div>
         {open && 
             <div className="message-bar-content">
                 {messages.map((message, index) => {
