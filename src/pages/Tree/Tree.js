@@ -558,17 +558,17 @@ export default function Tree({type}){
 
     if(treeTo === "bst"){
       setUserContext(oldValues => {
-        return {...oldValues, currentBST: renderTree};
+        return {...oldValues, currentBST: renderTree, currentBSTMessages: [], selectedBSTOperation: null};
       });
       history.push("/bst");
     } else if (treeTo === "avl"){
       setUserContext(oldValues => {
-        return {...oldValues, currentAVL: renderTree};
+        return {...oldValues, currentAVL: renderTree, currentAVLMessages: [], selectedAVLOperation: null};
       });
       history.push("/avl");
     } else {
       setUserContext(oldValues => {
-        return {...oldValues, currentRB: renderTree};
+        return {...oldValues, currentRB: renderTree, currentRBMessages: [], selectedRBOperation: null};
       });
       history.push("/red-black");
     }

@@ -1,23 +1,6 @@
 import "./TreeMetaPanel.css";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
-
 export default function TreeMetaPanel({type}){
-
-    useEffect(() => {
-        console.log("type changed to: " + type);
-    },[type])
-
-    // const [selectedButton, setSelectedButton] = useState(null);
-
-    // useEffect(() => {
-    //     setSelectedButton(window.location.pathname);
-        
-    // },[type]);
-
-    // const handleClick = (e) => {
-    //     setSelectedButton(e.target.name);
-    // };
 
     return (
         <div className="tree-meta-panel">

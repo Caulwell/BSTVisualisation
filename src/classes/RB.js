@@ -44,7 +44,6 @@ export default class RB extends BT {
     getTreeFromValues(values){
         values.forEach(value => {
             let insertedNode = this.insert(value);
-            console.log("in rb operations here");
             if(insertedNode.parent) this.fixOnInsertion(insertedNode);
         });
     }
