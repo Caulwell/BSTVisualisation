@@ -261,6 +261,12 @@ export default function Tree({type}){
 
   // deletion method
   async function deleteNode(node){
+
+    if(!nodes.length){
+      setAlert({type: "failure", content: "The Tree is Empty!"});
+      setShowAlert(true);
+      return;
+    }
     
     setInputsDisabled(true);
 
@@ -324,6 +330,11 @@ export default function Tree({type}){
 
   // traversal method
   async function traverseTree(order){
+    if(!nodes.length){
+      setAlert({type: "failure", content: "The Tree is Empty!"});
+      setShowAlert(true);
+      return;
+    }
     tree.traversal(order);
     setInputsDisabled(true);
     await traversalAnimation([...tree.getAffectedNodes()], userContext.animationSpeed);
@@ -334,6 +345,11 @@ export default function Tree({type}){
 
   // max node
   async function maxNode (){
+    if(!nodes.length){
+      setAlert({type: "failure", content: "The Tree is Empty!"});
+      setShowAlert(true);
+      return;
+    }
     setInputsDisabled(true);
     tree.getMaxNode();
     await traversalAnimation([...tree.getAffectedNodes()], userContext.animationSpeed);
@@ -343,6 +359,11 @@ export default function Tree({type}){
 
   // min node
   async function minNode (){
+    if(!nodes.length){
+      setAlert({type: "failure", content: "The Tree is Empty!"});
+      setShowAlert(true);
+      return;
+    }
     setInputsDisabled(true);
     tree.getMinNode();
     await traversalAnimation([...tree.getAffectedNodes()], userContext.animationSpeed);
