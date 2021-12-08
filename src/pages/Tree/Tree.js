@@ -14,6 +14,8 @@ import TreeMetaPanel from "../../components/TreeMetaPanel/TreeMetaPanel";
 import Modal from "../../components/Modal/Modal";
 import Alert from "../../components/Alert/Alert";
 import OperationInfoPanel from "../../components/OperationInfoPanel/OperationInfoPanel";
+import Converter from "../../components/Converter/Converter";
+import { useHistory } from "react-router";
 
 
 export default function Tree({type}){
@@ -38,6 +40,8 @@ export default function Tree({type}){
   const [showAlert, setShowAlert] = useState(false);
 
   const [inputsDisabled, setInputsDisabled] = useState(false);
+
+  const history = useHistory();
 
   const timer = ms => new Promise(res => setTimeout(res, ms));
 
@@ -527,6 +531,36 @@ export default function Tree({type}){
     
   };
 
+  const convertTree = (treeTo) =>{
+
+    const currentTreeAsArray = nodes.map(node => node.value);
+
+    const renderTree = treeTo === "bst" ? new BST() : treeTo === "avl" ? new AVL() : new RB();
+
+    renderTree.getTreeFromValues(currentTreeAsArray);
+    renderTree.resetLayout(renderTree.getRoot());
+    renderTree.checkLayout(renderTree.getRoot());
+    renderTree.resolveCoords(renderTree.getRoot());
+
+    if(treeTo === "bst"){
+      setUserContext(oldValues => {
+        return {...oldValues, currentBST: renderTree};
+      });
+      history.push("/bst");
+    } else if (treeTo === "avl"){
+      setUserContext(oldValues => {
+        return {...oldValues, currentAVL: renderTree};
+      });
+      history.push("/avl");
+    } else {
+      setUserContext(oldValues => {
+        return {...oldValues, currentRB: renderTree};
+      });
+      history.push("/red-black");
+    }
+
+  }
+
   const createTreeFromArray = (tree, data) => {
 
       setLoadingTree(true);
@@ -574,7 +608,8 @@ export default function Tree({type}){
         setOperationInfoPanelOpen={setOperationInfoPanelOpen}
 
       />
-      <TreeMetaPanel/>
+      <TreeMetaPanel type={type}/>
+      <Converter type={type} convertTree={convertTree}/>
       
 
         <div id="svgContainer" ref={svgContainerEl}>

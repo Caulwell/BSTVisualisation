@@ -55,7 +55,7 @@ export default function MessageBar({messages, selectedOperation, setSelectedOper
                 setOperationInfoPanelOpen(!operationInfoPanelOpen);
             } else {
                 setSelectedOperation(message);
-                setOperationInfoPanelOpen(!operationInfoPanelOpen);
+                setOperationInfoPanelOpen(true);
             }
         };
 

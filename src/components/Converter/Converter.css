@@ -1,0 +1,17 @@
+.converter-panel{
+    display: flex;
+    color: white;
+    margin: 0 auto;
+    margin-right: 18vw;
+    align-items: center;
+    justify-content: space-evenly;
+    position: absolute;
+    top: 11%;
+    right: 25%;
+}
+
+.converter-panel button{
+    background-color: var(--primary-color);
+    border: 0;
+    padding: 0.4rem;
+}

@@ -24,6 +24,7 @@ export default class AVL extends BT {
     getTreeFromValues(values){
         values.forEach(value => {
             let insertedNode = this.insert(value);
+            console.log("in avl tree operations here");
             if(this.parentOf(insertedNode)) this.checkBalanceAfterOperation(this.parentOf(insertedNode), false);
         });
     }
