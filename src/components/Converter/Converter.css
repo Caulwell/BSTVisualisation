@@ -2,16 +2,30 @@
     display: flex;
     color: white;
     margin: 0 auto;
-    margin-right: 18vw;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: space-between;
     position: absolute;
-    top: 11%;
-    right: 25%;
+    width: 15rem;
+    top: 11.5%;
+    right: 39.3%;
 }
 
 .converter-panel button{
-    background-color: var(--primary-color);
+    background-color: var(--dark-color2);
     border: 0;
     padding: 0.4rem;
+    width: 7rem;
+    height: 2rem;
+}
+
+.converter-panel button:hover{
+    background-color: var(--highlight-color);
+}
+
+@media screen and (min-width: 1400px){
+
+    .converter-panel{
+        right: 41.7%;
+    }
+
 }

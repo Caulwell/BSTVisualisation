@@ -539,6 +539,12 @@ export default function Tree({type}){
 
   const convertTree = (treeTo) =>{
 
+    if(!nodes.length){
+      setAlert({type: "failure", content: "The Tree is Empty!"});
+      setShowAlert(true);
+      return;
+    }
+
     const currentTreeAsArray = nodes
       .sort((a,b) => a.id - b.id)
       .map(node => node.value);
