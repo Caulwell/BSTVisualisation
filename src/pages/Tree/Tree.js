@@ -450,7 +450,9 @@ export default function Tree({type}){
 
     const renderTree = type === "bst" ? new BST() : type === "avl" ? new AVL() : new RB();
     setNodes([]);
+    setAddingMessage(true);
     setOperationMessages([]);
+    setSelectedOperation(null);
     
     let reader = new FileReader();
 
@@ -489,7 +491,9 @@ export default function Tree({type}){
 
     setGeneratingTree(true);
     setNodes([]);
+    setAddingMessage(true);
     setOperationMessages([]);
+    setSelectedOperation(null);
 
     let tree = "";
 
@@ -515,7 +519,9 @@ export default function Tree({type}){
   const randomTree = () => {
 
     const renderTree = type === "bst" ? new BST() : type === "avl" ? new AVL() : new RB();
+    setAddingMessage(true);
     setOperationMessages([]);
+    setSelectedOperation(null);
 
    
 
