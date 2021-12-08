@@ -12,6 +12,7 @@ export default function TreeOperationsPanel({inputsDisabled, addNode, searchForN
     const [speedInput, setSpeedInput] = useState(1);
     const [selectedCSV, setSelectedCSV] = useState(null);
     const [selectedTXT, setSelectedTXT] = useState(null);
+    const [lastFocused, setLastFocused] = useState(null);
 
     const [open, setOpen] = useState(true);
 
@@ -21,13 +22,17 @@ export default function TreeOperationsPanel({inputsDisabled, addNode, searchForN
 
     const handleTXTInput = e => {
         setSelectedTXT(e.target.files[0]);
-    }
+    };
 
     useEffect(() => {
         setUserContext(oldValues => {
             return {...oldValues, animationSpeed: 1 - (speedInput)};
         });
     }, []);
+
+    useEffect(() => {
+        lastFocused && lastFocused.focus();
+    },[inputsDisabled]);
 
 
     const handleSpeedChange = e => {
@@ -52,16 +57,19 @@ export default function TreeOperationsPanel({inputsDisabled, addNode, searchForN
                 if(addInput !== ""){
                     addNode(addInput);
                     setAddInput("");
+                    e.target.focus();
                   } 
             } else if(e.target.name === "searchInput"){
                 if(searchInput !== ""){
                     searchForNode(searchInput);
                     setSearchInput("");
+                    e.target.focus();
                 }
             } else if(e.target.name === "deleteInput"){
                 if(deleteInput !== ""){
                     deleteNode(deleteInput);
                     setDeleteInput("");
+                    e.target.focus();
                 }
             }
           
@@ -121,6 +129,20 @@ export default function TreeOperationsPanel({inputsDisabled, addNode, searchForN
         
       };
 
+      const handleNumberInput = (e) => {
+
+        if(e.target.value.length >= 5){
+            e.target.value = e.target.value.slice(0,4);
+            return;
+        } 
+
+        if(e.target.name==="addInput") setAddInput(e.target.value);
+        if(e.target.name==="searchInput") setSearchInput(e.target.value);
+        if(e.target.name==="deleteInput") setDeleteInput(e.target.value);
+    
+        
+      }
+
       const handleDropDownClick = () => {
             setOpen( open => !open);
       };
@@ -141,9 +163,11 @@ export default function TreeOperationsPanel({inputsDisabled, addNode, searchForN
                             autoComplete="off" 
                             value={addInput}  
                             name="addInput" 
-                            onChange={e => setAddInput(e.target.value)} 
+                            onChange={handleNumberInput} 
                             onKeyPress={handleKeypress}
                             disabled={inputsDisabled}
+                            onFocus={e => setLastFocused(e.target)}
+
                         />
                         <button  
                             name="addButton" 
@@ -162,9 +186,10 @@ export default function TreeOperationsPanel({inputsDisabled, addNode, searchForN
                             autoComplete="off" 
                             value={searchInput}  
                             name="searchInput" 
-                            onChange={e => setSearchInput(e.target.value)} 
+                            onChange={handleNumberInput} 
                             onKeyPress={handleKeypress}
                             disabled={inputsDisabled}
+                            onFocus={e => setLastFocused(e.target)}
                         />
                         <button  
                             name="searchButton" 
@@ -183,9 +208,10 @@ export default function TreeOperationsPanel({inputsDisabled, addNode, searchForN
                             autoComplete="off" 
                             value={deleteInput}  
                             name="deleteInput" 
-                            onChange={e => setDeleteInput(e.target.value)} 
+                            onChange={handleNumberInput} 
                             onKeyPress={handleKeypress}
                             disabled={inputsDisabled}
+                            onFocus={e => setLastFocused(e.target)}
                         />
                         <button  
                             name="deleteButton" 

@@ -60,7 +60,6 @@ export default function MessageBar({messages, selectedOperation, setSelectedOper
         };
 
         const icon = getIcon(message.type);
-        console.log(icon);
 
         return (
             <div className="message-bar-item"  >
