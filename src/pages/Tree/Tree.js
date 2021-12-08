@@ -72,15 +72,16 @@ export default function Tree({type}){
   useEffect(() => {
     setNodes([]);
     setOperationMessages([]);
+    setSelectedOperation(null);
     if(type === "bst"){
       setTree(new BST());
-      if(userContext.currentBST) renderCurrentTree(userContext.currentBST, userContext.currentBSTMessages || []);
+      if(userContext.currentBST) renderCurrentTree(userContext.currentBST, userContext.currentBSTMessages || [], userContext.selectedBSTOperation);
     } else if(type === "avl"){
       setTree(new AVL());
-      if(userContext.currentAVL) renderCurrentTree(userContext.currentAVL, userContext.currentAVLMessages || []);
+      if(userContext.currentAVL) renderCurrentTree(userContext.currentAVL, userContext.currentAVLMessages || [], userContext.selectedAVLOperation);
     } else {
       setTree(new RB());
-      if(userContext.currentRB) renderCurrentTree(userContext.currentRB, userContext.currentRBMessages || []);  
+      if(userContext.currentRB) renderCurrentTree(userContext.currentRB, userContext.currentRBMessages || [], userContext.selectedRBOperation);  
     }
 
 
@@ -110,6 +111,24 @@ export default function Tree({type}){
   useEffect(() => {
     addingMessage && saveMessages();
   },[operationMessages]);
+
+  useEffect(() => {
+
+    if(type === "bst"){
+      setUserContext(oldValues => {
+        return {...oldValues,selectedBSTOperation: selectedOperation};
+      });
+    } else if(type === "avl"){
+      setUserContext(oldValues => {
+        return {...oldValues, selectedAVLOperation: selectedOperation};
+      });
+    } else {
+      setUserContext(oldValues => {
+        return {...oldValues,selectedRBOperation: selectedOperation};
+      });
+    }
+
+  },[selectedOperation])
 
   // only when tree state changes on uploading csv - save generated tree to memory
   useEffect(() => {
@@ -146,15 +165,15 @@ export default function Tree({type}){
   const saveMessages = () => {
     if(type === "bst"){
       setUserContext(oldValues => {
-        return {...oldValues, currentBSTMessages: operationMessages};
+        return {...oldValues, currentBSTMessages: operationMessages, selectedBSTOperation: selectedOperation};
       });
     } else if(type === "avl"){
       setUserContext(oldValues => {
-        return {...oldValues, currentAVLMessages: operationMessages};
+        return {...oldValues, currentAVLMessages: operationMessages, selectedAVLOperation: selectedOperation};
       });
     } else {
       setUserContext(oldValues => {
-        return {...oldValues, currentRBMessages: operationMessages};
+        return {...oldValues, currentRBMessages: operationMessages, selectedRBOperation: selectedOperation};
       });
     }
 
@@ -166,12 +185,13 @@ export default function Tree({type}){
     setAddingMessage(true);
     setOperationMessages([operationMessage, ...operationMessages]);
     setAddingMessage(false);
+
     setSelectedOperation(operationMessage);
    
   };
 
   // method to render the tree saved in memory, based on type of tree currently selected
-  const renderCurrentTree = (tree, messages) => {
+  const renderCurrentTree = (tree, messages, operation) => {
 
     setLoadingTree(true);
 
@@ -181,6 +201,7 @@ export default function Tree({type}){
 
     let nodesToRender = renderTree.values(renderTree.getRoot());
     setOperationMessages(messages);
+    setSelectedOperation(operation);
     setNodes(nodesToRender);
 
     renderTree.numNodes = nodesToRender.length;
@@ -545,7 +566,14 @@ export default function Tree({type}){
         setModalContent={setModalContent}
 
       />
-      <MessageBar messages={operationMessages} selectedOperation={selectedOperation} setSelectedOperation={setSelectedOperation} setOperationInfoPanelOpen={setOperationInfoPanelOpen}/>
+      <MessageBar 
+        messages={operationMessages} 
+        selectedOperation={selectedOperation} 
+        setSelectedOperation={setSelectedOperation} 
+        operationInfoPanelOpen={operationInfoPanelOpen}
+        setOperationInfoPanelOpen={setOperationInfoPanelOpen}
+
+      />
       <TreeMetaPanel/>
       
 

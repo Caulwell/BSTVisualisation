@@ -3,7 +3,7 @@ import shortid from "shortid";
 
 import "./MessageBar.css";
 
-export default function MessageBar({messages, selectedOperation, setSelectedOperation, setOperationInfoPanelOpen}){
+export default function MessageBar({messages, selectedOperation, setSelectedOperation, operationInfoPanelOpen, setOperationInfoPanelOpen}){
 
     const [open, setOpen] = useState(true);
     
@@ -52,10 +52,10 @@ export default function MessageBar({messages, selectedOperation, setSelectedOper
 
         const handleClick = () => {
             if(message.id === selectedOperation.id){
-                setOperationInfoPanelOpen(false);
+                setOperationInfoPanelOpen(!operationInfoPanelOpen);
             } else {
                 setSelectedOperation(message);
-                setOperationInfoPanelOpen(true);
+                setOperationInfoPanelOpen(!operationInfoPanelOpen);
             }
         };
 
