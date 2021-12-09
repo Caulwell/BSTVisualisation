@@ -46,6 +46,18 @@ export default class BTNode{
         return this.left === null && this.right === null ? true : false;
     }
 
+    isDescendantOf(node){
+
+        let curr = this;
+
+        while(curr.parent){
+            if(curr.parent === node) return true;
+            curr = curr.parent;
+        }
+
+        return false;
+    }
+
 
     setLeft(node){
         this.left = node;

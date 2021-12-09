@@ -647,6 +647,12 @@ export default class BT {
         return rightMost;
         
     }
+
+    correctCords(){
+        this.resetLayout(this.root);
+        this.checkLayout(this.root);
+        this.findAlteredNodes(this.root);
+    }
   
 
     checkLayout(root){
@@ -654,10 +660,70 @@ export default class BT {
         if(root){
             this.checkLayout(this.leftOf(root));
             this.checkLayout(this.rightOf(root));
-            this.checkChildrenTrees(root);  
+            this.setInitialCoords(root);
+            this.checkChildrenTrees(root);
         } else {
             return;
         }
+    }
+
+
+    setInitialCoords(node){
+
+        if(!node) return;
+
+        // 1. if it has 2 children, place it in the middle of its children
+        if(node.left && node.right){
+            node.moveToX = node.left.moveToX + ((node.right.moveToX - node.left.moveToX) / 2);
+        } 
+
+        // if it has one left child, place it +50x of left child
+        if(!node.right && node.left) node.moveToX = node.left.moveToX + 50;
+
+        if(!node.left && node.right) node.moveToX = node.right.moveToX - 50;
+
+        let curr = node;
+
+        while(curr){
+
+            if(!(curr.left && curr.right)){
+                curr = curr.parent;
+                continue;
+            } 
+            
+            if(curr.right && node.isDescendantOf(curr.right)){
+                if(node.moveToX <= curr.moveToX){
+                    this.shiftTree(curr.right, "r");
+                }
+            }
+
+            if(curr.left && node.isDescendantOf(curr.left)){
+                if(node.moveToX >= curr.moveToX){
+                    this.shiftTree(curr.left, "l");
+                }
+            }
+
+            curr = curr.parent;
+        }
+        // 2. if node is descendent of right subtree of root, dont let it drift further left than root
+        if(this.root.right && node.isDescendantOf(this.root.right)){
+            if(node.moveToX <= this.root.moveToX){
+                this.shiftTree(this.root.right, "r");
+            }
+        }
+
+
+        // 2. if node is descendent of left subtree of root, dont let it drift further right than root
+        if(this.root.left && node.isDescendantOf(this.root.left)){
+            if(node.moveToX >= this.root.moveToX){
+                this.shiftTree(this.root.left, "l");
+            }
+        }
+
+        
+
+
+
     }
 
     resetLayout(node){

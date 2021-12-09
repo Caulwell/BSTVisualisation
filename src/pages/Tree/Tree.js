@@ -215,6 +215,25 @@ export default function Tree({type}){
     
   };
 
+  async function postOperation(){
+    // add a new operationMessage to display to user
+    getAndSetOperationMessages();
+
+    // give nodes new coordinates to minimise overlap
+    tree.correctCords();
+
+    // animate only the nodes for which moveTo is different to current x and y
+    tree.findAlteredNodes(tree.getRoot());
+    await moveNodes(tree.shiftNodesAnimation, userContext.animationSpeed);
+
+    // reset x and ys to moveTo
+    tree.resolveCoords(tree.getRoot());
+
+    setNodes(tree.values(tree.getRoot()));
+    saveCurrentTree();
+    setInputsDisabled(false);
+  }
+
   /////// OPERATIONS /////
 
   // insertion method
@@ -251,25 +270,8 @@ export default function Tree({type}){
 
       }
 
-      // add a new operationMessage to display to user
-      getAndSetOperationMessages();
-
-      // reset x and ys to original values - new attribute moveTo
-      tree.resetLayout(tree.getRoot());
-
-      // check for overlaps - change moveTo again
-      tree.checkLayout(tree.getRoot());
-
-      // animate only the nodes for which moveTo is different to current x and y
-      tree.findAlteredNodes(tree.getRoot());
-      await moveNodes(tree.shiftNodesAnimation, userContext.animationSpeed);
-
-      // reset x and ys to moveTo
-      tree.resolveCoords(tree.getRoot());
-
-      setNodes(tree.values(tree.getRoot()));
-      saveCurrentTree();
-      setInputsDisabled(false);
+      postOperation();
+      
     }
   }
 
@@ -335,21 +337,8 @@ export default function Tree({type}){
       }
       
     }
-    // add a new operationMessage to display to user - useEffect will also trigger saving tree to context on state change
-    getAndSetOperationMessages();
-
-    tree.resetLayout(tree.getRoot());
-    tree.checkLayout(tree.getRoot());
-    tree.findAlteredNodes(tree.getRoot());
-    await moveNodes(tree.shiftNodesAnimation, userContext.animationSpeed);
-
     
-    setNodes(tree.values(tree.getRoot()));
-    tree.resolveCoords(tree.getRoot());
-
-    
-    saveCurrentTree();
-    setInputsDisabled(false);
+    postOperation();
 
   };
 
@@ -552,8 +541,7 @@ export default function Tree({type}){
     const renderTree = treeTo === "bst" ? new BST() : treeTo === "avl" ? new AVL() : new RB();
 
     renderTree.getTreeFromValues(currentTreeAsArray);
-    renderTree.resetLayout(renderTree.getRoot());
-    renderTree.checkLayout(renderTree.getRoot());
+    renderTree.correctCords();
     renderTree.resolveCoords(renderTree.getRoot());
 
     if(treeTo === "bst"){
@@ -581,8 +569,7 @@ export default function Tree({type}){
       setGeneratingTree(true);
 
       tree.getTreeFromValues(data);
-      tree.resetLayout(tree.getRoot());
-      tree.checkLayout(tree.getRoot());
+      tree.correctCords();
       tree.resolveCoords(tree.getRoot());
 
       setNodes(tree.values(tree.getRoot()));
