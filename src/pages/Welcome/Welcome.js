@@ -15,6 +15,7 @@ export default function Welcome(){
     let history = useHistory();
 
 
+    //  PICK RANDOM TYPE AND SET USER CONTEXT RANDOMTREE TO TRUE, WILL BE READ ON RENDER OF TREE PAGE
     const handleRandomTree = () => {
 
         let randomNum = Math.random();
@@ -35,7 +36,7 @@ export default function Welcome(){
 
 
         
-
+        // REDIRECT TO RANDOM TREE PAGE
         history.push(tree);
 
     }
@@ -90,7 +91,7 @@ export default function Welcome(){
                 </svg>
                     Generate Random Tree
                 </button>
-                <button>
+                {/* <button> to be added in future
                     <svg
                         className="book"
                         width="24"
@@ -107,7 +108,8 @@ export default function Welcome(){
                         />
                     </svg>
                     Learn Some More
-                </button>
+                </button> */}
+
             </div>
             
         </div>

@@ -3,11 +3,15 @@ import "./Alert.css";
 
 export default function Alert({type, content, handleClose, show}){
 
+    // HANDLES WHETHER TO SHOW OR HIDE - TRIGGERED BY SHOW PROP SENT FROM TREE COMPONENT
     const showHideClass = show ? "alert display-block" : "alert display-none";
 
+    // STYLES DICTATED BY TYPE - WARNING, FAILURE, SUCCESS ETC
     const classes = showHideClass + " " + type;
 
 
+    // CONTENT OF ALERT SENT FROM TREE COMPONENT
+    // CLICKING X TRIGGERS HANDLECLOSE IN TREE COMPONENT
     return (
         <div className={classes}>
            <section className="alert-top">

@@ -1,6 +1,8 @@
 import anime from "animejs";
 
 function searchAnimation(nodes, foundNode, animationSpeed){
+    //CYCLES THROUGH NODES, HIGHLIGHTING EACH ONE, THEN HIGHLIGHTS FOUND NODE
+    
 
     return new Promise((resolve, reject) => {
 
@@ -10,6 +12,7 @@ function searchAnimation(nodes, foundNode, animationSpeed){
         
         });
 
+        // IF NO FOUND NODE, RESOLVES DONE ON LAST ITERATION OF NODES
         const testFinalAnimationDone = i => {
 
             if(i === nodes.length -1){
@@ -39,6 +42,7 @@ function searchAnimation(nodes, foundNode, animationSpeed){
         
         }
     
+        // PLAYS ANIMATION THEN ON COMPLETION, RESOLVES PROMISE
         if(foundNode){
             let HTMLnode = document.getElementById(foundNode.id);
             HTMLnode.classList.add("foundNodeHighlight");
@@ -66,6 +70,7 @@ function searchAnimation(nodes, foundNode, animationSpeed){
 }
 
 function insertAnimation(testNodes, node, animationSpeed){
+    // HIGHLIGHTS EACH TESTNODES, THEN PLAYS INSERT ANIMATION ON NODE, THEN RESOLVES PROMISE
 
     return new Promise((resolve, reject) => {
 
@@ -99,6 +104,7 @@ function insertAnimation(testNodes, node, animationSpeed){
 
         // insert node
 
+        // node initially set not on x coordinate, but 20,20, animate from this coordinate to true coordinates
         const differenceX = node.x-20;
         const differenceY = node.y-20;
 
@@ -121,6 +127,9 @@ function insertAnimation(testNodes, node, animationSpeed){
 }
 
 function deleteAnimation(testNodes, node, animationSpeed){
+
+    // HIGHLIGHTS EACH TESTNODES, THEN PLAYS DELETE ANIMATION ON NODE, THEN RESOLVES PROMISE
+    // IF NO NODE, RESOLVES PROMISE
 
     return new Promise((resolve, reject) => {
 
@@ -186,6 +195,8 @@ function deleteAnimation(testNodes, node, animationSpeed){
 }
 
 function checkBalanceAnimation(testNodes, foundNode, animationSpeed){
+
+    // PLAYS ANIMATION ON ALL TESTNODES, THEN IF NO FOUNDNODE, RESOLVES PROMISE
 
     return new Promise((resolve, reject) => {
 
@@ -253,6 +264,9 @@ function checkBalanceAnimation(testNodes, foundNode, animationSpeed){
 
 function moveNodes(nodes, animationSpeed){
 
+    // QUICKLY SHIFTS ALL NODES TO NEW POSITIONS
+    // ON COMPLETION, RESOLVES PROMISE
+
     return new Promise((resolve, reject) => {
 
         if(nodes.length === 0) resolve("done");
@@ -295,6 +309,8 @@ function moveNodes(nodes, animationSpeed){
 
 function traversalAnimation(nodes, animationSpeed){
 
+    // PLAYS ANIMATION ON ALL NODES THEN RESOLVES PROMISE
+
     return new Promise((resolve, reject) => {
 
         const maxDuration = 1000;
@@ -334,6 +350,8 @@ function traversalAnimation(nodes, animationSpeed){
 }
 
 function quickInsert(node){
+
+    // QUICK INSERTION TO MOVE ALL NODES IN A GENERATED TREE TO TRUE COORDINATES
     
     const differenceX = node.x -20;
     const differenceY = node.y -20;

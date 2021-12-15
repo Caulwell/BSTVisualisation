@@ -3,11 +3,12 @@ import "./Converter.css";
 
 export default function Converter({type, convertTree}){
 
-
+    // CLICKING TRIGGERS FUNCTION PASSED DOWN FROM TREE COMPONENT
     const handleClick = (e) => {
         convertTree(e.target.name);
     }
 
+    // IF TYPE IS BST, RETURN TWO BUTTONS: AVL AND RB  - ETC
     const getButtons = () => {
         
         if(type === "bst"){

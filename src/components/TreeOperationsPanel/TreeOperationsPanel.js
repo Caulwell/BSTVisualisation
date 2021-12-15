@@ -5,17 +5,23 @@ import { UserContext } from "../../context/UserContext";
 
 export default function TreeOperationsPanel({inputsDisabled, addNode, searchForNode, deleteNode, traverseTree, saveTree, treeFromCSV, treeFromFile, clearTree, randomTree, minNode, maxNode, setShowModal, setModalContent}){
 
+    // user context
+    const [userContext, setUserContext] = useContext(UserContext);
+
+    // input state variables
     const [addInput, setAddInput] = useState("");
     const [searchInput, setSearchInput] = useState("");
     const [deleteInput, setDeleteInput] = useState("");
-    const [userContext, setUserContext] = useContext(UserContext);
     const [speedInput, setSpeedInput] = useState(1);
     const [selectedCSV, setSelectedCSV] = useState(null);
     const [selectedTXT, setSelectedTXT] = useState(null);
-    const [lastFocused, setLastFocused] = useState(null);
 
+    // additional sate variables
+    const [lastFocused, setLastFocused] = useState(null);
     const [open, setOpen] = useState(true);
 
+
+    // state change methods
     const handleCSVInput = e => {
         setSelectedCSV(e.target.files[0]);
     };
@@ -23,17 +29,6 @@ export default function TreeOperationsPanel({inputsDisabled, addNode, searchForN
     const handleTXTInput = e => {
         setSelectedTXT(e.target.files[0]);
     };
-
-    useEffect(() => {
-        setUserContext(oldValues => {
-            return {...oldValues, animationSpeed: 1 - (speedInput)};
-        });
-    }, []);
-
-    useEffect(() => {
-        lastFocused && lastFocused.focus();
-    },[inputsDisabled]);
-
 
     const handleSpeedChange = e => {
         setSpeedInput(e.target.value);
@@ -51,6 +46,41 @@ export default function TreeOperationsPanel({inputsDisabled, addNode, searchForN
           }
     };
 
+    const handleNumberInput = (e) => {
+        // handle number input, set state, disallow length above 4
+
+        if(e.target.value.length >= 5){
+            e.target.value = e.target.value.slice(0,4);
+            return;
+        } 
+
+        if(e.target.name==="addInput") setAddInput(e.target.value);
+        if(e.target.name==="searchInput") setSearchInput(e.target.value);
+        if(e.target.name==="deleteInput") setDeleteInput(e.target.value);
+    
+        
+      };
+
+      const handleDropDownClick = () => {
+          // collapse/show panel
+            setOpen( open => !open);
+      };
+
+    // set speed input context on first render
+    useEffect(() => {
+        setUserContext(oldValues => {
+            return {...oldValues, animationSpeed: 1 - (speedInput)};
+        });
+    }, []);
+
+    // when inputsDisabled changes, if lastFocused, focus back on this input
+    useEffect(() => {
+        lastFocused && lastFocused.focus();
+    },[inputsDisabled]);
+
+
+
+    // handle form send via key and click
     const handleKeypress = e => {
         if(e.key === "Enter"){
             if(e.target.name === "addInput"){
@@ -129,23 +159,7 @@ export default function TreeOperationsPanel({inputsDisabled, addNode, searchForN
         
       };
 
-      const handleNumberInput = (e) => {
-
-        if(e.target.value.length >= 5){
-            e.target.value = e.target.value.slice(0,4);
-            return;
-        } 
-
-        if(e.target.name==="addInput") setAddInput(e.target.value);
-        if(e.target.name==="searchInput") setSearchInput(e.target.value);
-        if(e.target.name==="deleteInput") setDeleteInput(e.target.value);
-    
-        
-      };
-
-      const handleDropDownClick = () => {
-            setOpen( open => !open);
-      };
+     
 
     return (
         <div className="operations-drop-down">

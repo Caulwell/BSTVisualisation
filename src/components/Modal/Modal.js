@@ -3,8 +3,10 @@ import "./Modal.css";
 
 export default function Modal({show, content, handleClose}){
 
+    // DISPLAY DICTATED BY TREE STATE SENT DOWN AS PROP
     const showHideClass = show ? "modal display-block" : "modal display-none";
 
+    // FUNCTION SENT DOWN BY TREE COMPONENT TO BE RAN ON APPROVAL - CLOSE MODAL ALSO
     const handleClick = () => {
         content.approveFunction();
         handleClose();

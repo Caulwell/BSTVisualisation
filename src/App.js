@@ -8,6 +8,7 @@ export default function App() {
 
   return (
 
+    // React router to handle routes - handles welcome page, and depending on path, passes down type prop to tree, handling type change
     <Router>
       <div id="App">
       <CssBaseline/>

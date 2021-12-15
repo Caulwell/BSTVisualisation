@@ -4,6 +4,7 @@ import "./OperationInfoPanel.css";
 
 export default function OperationInfoPanel({operation, open, setOpen}){
 
+    // get title based on operation name
     const getTitle = () => {
         switch(operation.type){
             case "insert":
@@ -22,6 +23,7 @@ export default function OperationInfoPanel({operation, open, setOpen}){
     };
 
 
+    // use tree component method to close from props
     const handleToggleOpen = () => {
         setOpen(!open);
     }

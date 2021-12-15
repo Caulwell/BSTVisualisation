@@ -3,24 +3,50 @@ import AVLNode from "./AVLNode";
 
 export default class AVL extends BT { 
 
+    /*
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                            CONSTRUCTOR
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    */
+
     constructor(){
         super();
         this.checkBalanceAnimation = {checkingNodes: [], foundNode: null};
     }
+
+     /*
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                            GETTERS/SETTERS
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    */
 
     resetAnimationObjects(){
         super.resetAnimationObjects();
         this.checkBalanceAnimation = {checkingNodes: [], foundNode: null};
     }
 
+
+    /*
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                            TREE GENERATION HELPERS
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    */
+
+    
+    // used by generic BT insert method to create correct node type
     createNode(value){
         return new AVLNode(value, this.numInsertedTotal);
     }
 
+    // used to load from file
     createNodeFromJSON(node){
         return new AVLNode(node.value, node.id, node.parent, node.left, node.right, node.depth, node.x, node.y, node.lr);
     }
 
+    // used to convert between trees or generate tree from CSV
     getTreeFromValues(values){
         values.forEach(value => {
             let insertedNode = this.insert(value);
@@ -28,9 +54,17 @@ export default class AVL extends BT {
         });
     }
 
+     /*
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                            TREE OPERATIONS
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    */
+
+    // this is run after insert and delete - runs up the tree from inserted node/deleted node's parent to check for BF absolute value over 1
     checkBalanceAfterOperation(node, found){
 
+        // will only balance the first node it finds so exit if node already balanced
         if(found === true) return;
 
         if(node){
@@ -43,6 +77,7 @@ export default class AVL extends BT {
                 this.checkBalanceAnimation.checkingNodes.push(node);
             }
 
+            // recurse through parents
             this.checkBalanceAfterOperation(this.parentOf(node), found);
 
         } else {
@@ -141,11 +176,13 @@ export default class AVL extends BT {
     }
 
     leftRightRotation(node){
+        // left right is just left rotation on node.left, and right rotation on node
         this.leftRotation(this.leftOf(node));
         this.rightRotation(node);
     }
 
     rightLeftRotation(node){
+        // right left is just right rotation on node.right, and left rotation on node
         this.rightRotation(this.rightOf(node));
         this.leftRotation(node);
         

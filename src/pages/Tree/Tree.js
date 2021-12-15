@@ -20,43 +20,61 @@ import { useHistory } from "react-router";
 
 export default function Tree({type}){
 
+  /*
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                           STATE VARIABLES
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    */
+
+    const [tree, setTree] = useState();
+    const [nodes, setNodes] = useState([]);
+    const [operationMessages, setOperationMessages] = useState([]);
+    const [selectedOperation, setSelectedOperation] = useState(null);
+    const [alert, setAlert] = useState({type: "", content: ""});
+    const [modalContent, setModalContent] = useState({});
+    const timer = ms => new Promise(res => setTimeout(res, ms));
+    
+
+    // BOOLEAN FLAGS
+    const [loadingTree, setLoadingTree] = useState(true);
+    const [addingMessage, setAddingMessage] = useState(false);
+    const [generatingTree, setGeneratingTree] = useState(false);
+    const [showAlert, setShowAlert] = useState(false);
+    const [inputsDisabled, setInputsDisabled] = useState(false);
+    const [operationInfoPanelOpen, setOperationInfoPanelOpen] = useState(true);
+    const [showModal, setShowModal] = useState(false);
+
   const [userContext, setUserContext] = useContext(UserContext);
-  const [tree, setTree] = useState();
-  const [nodes, setNodes] = useState([]);
-  const [operationMessages, setOperationMessages] = useState([]);
-  const [loadingTree, setLoadingTree] = useState(true);
-  const [addingMessage, setAddingMessage] = useState(false);
-  const [generatingTree, setGeneratingTree] = useState(false);
+  
+  
+  // REFS
   const svgEl = useRef(null);
   const svgContainerEl = useRef(null);
-
-  const [selectedOperation, setSelectedOperation] = useState(null);
-  const [operationInfoPanelOpen, setOperationInfoPanelOpen] = useState(true);
-
-  const [showModal, setShowModal] = useState(false);
-  const [modalContent, setModalContent] = useState({});
-
-  const [alert, setAlert] = useState({type: "", content: ""});
-  const [showAlert, setShowAlert] = useState(false);
-
-  const [inputsDisabled, setInputsDisabled] = useState(false);
-
   const history = useHistory();
-
-  const timer = ms => new Promise(res => setTimeout(res, ms));
-
-
-  const closeModal = () => {
-    setShowModal(false);
-  };
-
-  const closeAlert = () => {
-    setShowAlert(false);
-  };
   
-  /// USE EFFECTS //////
+  /*
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                           STATE VARIABLE FUNCTIONS
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // On first render - configure zoom and panning on svg element - and if coming from random tree button, render random tree
+    */
+    const closeModal = () => {
+      setShowModal(false);
+    };
+  
+    const closeAlert = () => {
+      setShowAlert(false);
+    };
+
+  /*
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                           USE EFFECTS
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    */
+  
+    // On first render - configure zoom and panning on svg element - and if coming from random tree button, render random tree
   useEffect(() => {
     configureZoom(svgEl, svgContainerEl);
 
@@ -141,9 +159,15 @@ export default function Tree({type}){
       setGeneratingTree(false);
     }
   },[tree]);
+  
+  
+/*
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                           HELPER METHODS
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    */
 
-  /// HELPER METHODS ////
 
   // method to save tree in memory based on type of tree to facilitate more than 1 current tree
   const saveCurrentTree = () => {
@@ -234,7 +258,12 @@ export default function Tree({type}){
     setInputsDisabled(false);
   }
 
-  /////// OPERATIONS /////
+  /*
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                           OPERATIONS
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    */
 
   // insertion method
   async function addNode(value){
@@ -516,8 +545,10 @@ export default function Tree({type}){
 
     let data = [];
 
+    // CREATE MIN 3, MAX 20 NODES
     let numNodes = Math.floor(Math.random() * (20 - 3) + 3);
 
+    // ALL BETWEEN 0 AND 1000
     for(let i = 0; i < numNodes; i++){
       data.push(Math.floor(Math.random() * 1000));
     }
@@ -534,6 +565,7 @@ export default function Tree({type}){
       return;
     }
 
+    // SORT BY ID - WHICH WAS GENERATED SEQUENTIALLY, SO INSERTS NODES IN ORDER OF INSERTION, NOT HEIGHT
     const currentTreeAsArray = nodes
       .sort((a,b) => a.id - b.id)
       .map(node => node.value);
@@ -544,6 +576,7 @@ export default function Tree({type}){
     renderTree.correctCords();
     renderTree.resolveCoords(renderTree.getRoot());
 
+    // SAVE TO CURRENT TREE THEN REDIRECT TO CORRECT TREE TYPE
     if(treeTo === "bst"){
       setUserContext(oldValues => {
         return {...oldValues, currentBST: renderTree, currentBSTMessages: [], selectedBSTOperation: null};

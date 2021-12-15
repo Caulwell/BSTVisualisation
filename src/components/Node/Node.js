@@ -4,18 +4,22 @@ import "./Node.css";
 
 export default function Node({node, deleteNode}){
 
+    // STATE VARIABLES
     const [inserted, setInserted] = useState(false);
     const [tooltipOpen, setTooltipOpen] = useState(false);
 
+    // ON FIRST RENDER, SET INSERTED TO TRUE
     useEffect(() => {
         setInserted(true);
     },[]);
 
+    // CLICKING ON DELETE BUTTON IN TOOLTIP
     const handleClick = e => {
         if(e.target.name === "deleteButton") deleteNode(node);
          
     };
 
+    // TOOLTIP EFFECTS
     const handleTooltipClose = () => {
         setTooltipOpen(false);
     };
@@ -24,6 +28,7 @@ export default function Node({node, deleteNode}){
         setTooltipOpen(!tooltipOpen);
     };
 
+    // IF RED-BLACK NODE, RETURN COLOUR, OTHERWISE, GREEN
     const getColor = () => {
         if(node.colour){
             return node.colour;
@@ -32,6 +37,7 @@ export default function Node({node, deleteNode}){
         }
     };
 
+    // TOOLTIP GENERATED BASED ON APPEARANCE OF VARIABLES - TO HANDLE AVL ATTRIBUTES
     const getTooltipContent = () => {
         return (
             <div className="node-tooltip">

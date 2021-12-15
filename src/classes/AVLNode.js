@@ -9,7 +9,9 @@ export default class AVLNode extends BTNode{
         this.type = "avl";
     }
 
+
     getHeight(){
+        // HEIGHT IS MAX HEIGHT OF LEFT/RIGHT SUBTREE + 1
         if(!this.left && !this.right){
             return 0;
         } else {
@@ -21,6 +23,7 @@ export default class AVLNode extends BTNode{
     }
 
     getBalanceFactor(){
+        // BALANCE FACTOR IS DIFFERENCE BETWEEN LEFT AND RIGHT SUBTREE HEIGHT
         let nodeLeftHeight = this.left ? this.left.getHeight() : -1;
         let nodeRightHeight = this.right ? this.right.getHeight() : -1;
 

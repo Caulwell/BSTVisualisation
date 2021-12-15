@@ -3,6 +3,13 @@ import RBNode from "./RBNode";
 
 export default class RB extends BT { 
 
+    /*
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                           CONSTRUCTOR
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    */
+
     constructor(){
         super();
         this.colours = {
@@ -11,36 +18,34 @@ export default class RB extends BT {
         };
     }
 
+    /*
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                            TREE GENERATION HELPERS
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    */
+
     resetAnimationObjects(){
         super.resetAnimationObjects();
         this.deleteFixNode = null;
 
     }
 
-    getColour(node){
-        return node === null ? this.colours.b : node.colour;
-    }
-
-    isRed(node){
-        return node !== null && this.getColour(node) === this.colours.r;
-    }
-
-    isBlack(node){
-        return node === null || this.getColour(node) === this.colours.b;
-    }
-
+    // used by generic BT insert method to create correct node type
     createNode(value){
         let node = new RBNode(value, this.numInsertedTotal);
         node.colour = this.colours.r;
         return node;
     }
 
+    // used to load from file
     createNodeFromJSON(node){
         let newNode = new  RBNode(node.value, node.id, node.parent, node.left, node.right, node.depth, node.x, node.y, node.lr);
         newNode.colour = node.colour;
         return newNode;
     }
 
+    // used to convert between trees or generate tree from CSV
     getTreeFromValues(values){
         values.forEach(value => {
             let insertedNode = this.insert(value);
@@ -48,24 +53,19 @@ export default class RB extends BT {
         });
     }
 
+    /*
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                            TREE OPERATIONS
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    */
+
+
+    // overrides generic method to set root as black
     insertAtTop(node){
         super.insertAtTop(node);
         node.colour = this.colours.b;
     }
-
-    // rbTransplant(u,v){
-    //     if(!u.parent){  // u is root
-    //         this.root = v;
-    //     } else if(u === u.parent.left){
-    //         u.parent.left = v;
-    //         if(v)v.lr = "l";
-    //     } else {
-    //         u.parent.right = v;
-    //         if(v)v.lr = "r";
-    //     }
-    //     if(v) v.parent = u.parent;
-    // }
-
 
     delete(node){
 
@@ -120,111 +120,66 @@ export default class RB extends BT {
         return deletingNode.parent;
     }
 
-    // delete(node){
-
-    //     let y = node;
-    //     let x;
-    //     let y_original_colour = y.colour;
-
-    //     if(!node.left){ // no children or only has right child
-    //         x = node.right;
-    //         this.rbTransplant(node, node.right);
-    //     } else if(!node.right){ // only has left child
-    //         x = node.left;
-    //         this.rbTransplant(node, node.left);
-    //     } else { //both children
-    //         y = this.getLeftMostElementReal(node.right);
-    //         y_original_colour = y.colour;
-    //         x = y.right;
-    //         if(y.parent === node){ // y is direct child of node to be deleted
-    //             x.parent = y;
-    //         } else {
-    //             this.rbTransplant(y, y.right);
-    //             y.right = node.right;
-    //             y.right.parent = y;
-    //         }
-    //         this.rbTransplant(node, y);
-    //         y.left = node.left;
-    //         y.left.parent = y;
-    //         y.colour = node.colour;
-    //     }
-
-    //     if(y_original_colour === "black"){
-
-    //         if(!x){
-    //             x = new RBNode(null,null);
-    //             x.colour = "black";
-    //             x.parent = node.parent;
-                
-    //             if(node === node.parent.left){
-    //                 node.parent.left = x;
-    //             } else {
-    //                 node.parent.right = x;
-    //             }
-    //         }
-            
-    //         this.deleteFixNode = x;
-    //         console.log(x);
-
-            
-    //         console.log("y original colour = " + y_original_colour);
-    //         console.log("going to call fixOnDelete with node: " + node);
-    //     } else {
-    //         this.deleteFixNode = null;
-    //     }
-
-    //     return node.parent;
-
-    // }
-
     fixOnInsertion(node){
-        
-        while(this.parentOf(node) !== null && this.parentOf(node).colour === this.colours.r){
+        // this is called by component if insertedNode has a parent
 
+        // if parent of node is red - will cause double red so fix - otherwise exit loop
+        while(this.parentOf(node) && this.parentOf(node).colour === this.colours.r){
+
+            
             this.operationMessage.decisions.push(node.value + "'s parent is a red node - fixing RB properties");
 
             let uncle = null;
 
+            // if parent is left child
             if(this.parentOf(node) === this.leftOf(this.gParentOf(node))){
+                // uncle is node's parent's sibling
                 uncle = this.rightOf(this.gParentOf(node));
 
-                if(uncle !== null && uncle.colour === this.colours.r){
-
+                // if uncle is red
+                if(uncle && uncle.colour === this.colours.r){
+                    // set node.parent.colour to black, uncle to black, gparent to red, and set node to gparent
                     this.parentOf(node).colour = this.colours.b;
                     uncle.colour = this.colours.b;
                     this.gParentOf(node).colour = this.colours.r;
                     node = this.gParentOf(node);
                     continue;
                 }
-
+                // if node is right child
                 if(node === this.rightOf(this.parentOf(node))){
+                    // set node to parent, left rotate on node
                     node = this.parentOf(node);
                     this.operationMessage.decisions.push(node.value + "L Rotation on " + node.value);
                     this.leftRotation(node);
                 }
-
+                // set parent colour to black, gparent to red, right rotation on gparent
                 this.parentOf(node).colour = this.colours.b;
                 this.gParentOf(node).colour = this.colours.r;
                 this.operationMessage.decisions.push("R Rotation on " + this.gParentOf(node).value);
                 this.rightRotation(this.gParentOf(node));
-            } else {
 
+            } else { // if parent is right child
+
+                // uncle is node's parent's sibling
                 uncle = this.leftOf(this.gParentOf(node));
 
+                // if uncle is black
                 if(uncle !== null && uncle.colour === this.colours.r){
+                    // set node.parent.colour to black, uncle to black, gparent to red, and set node to gparent
                     this.parentOf(node).colour = this.colours.b;
                     uncle.colour = this.colours.b;
                     this.gParentOf(node).colour = this.colours.r;
                     node = this.gParentOf(node);
                     continue;
                 }
-
+                 // if node is left child
                 if(node === this.leftOf(this.parentOf(node))){
+                     // set node to parent, right rotate on node
                     node = this.parentOf(node);
                     this.operationMessage.decisions.push(node.value + "R Rotation on " + node.value);
                     this.rightRotation(node);
                 }
-
+                 // set parent colour to black, gparent to red, left rotation on gparent
                 this.parentOf(node).colour = this.colours.b;
                 this.gParentOf(node).colour = this.colours.r;
                 this.operationMessage.decisions.push("L Rotation on " + this.gParentOf(node).value);
@@ -232,70 +187,10 @@ export default class RB extends BT {
             }
         }
 
+        // in all cases, set root colour to black
         this.root.colour = this.colours.b;
 
     }
-
-    // fixOnDelete(node){
-    //     console.log("calling fixOnDelete with node: " + node.value);
-    //     console.log("node colour == " + node.colour);
-
-    //     let w;
-    //     while(node && node !== this.root && node.colour === "black"){
-    //         console.log("gets into the for loop");
-    //         if(node === node.parent.left){
-    //             w = node.parent.right;
-    //             if(w.colour === "red"){ // case 1
-    //                 w.colour = "black";
-    //                 node.parent.colour = "red";
-    //                 this.leftRotation(node.parent);
-    //                 w = node.parent.right;
-    //             }
-    //             if(w.left.colour === "black" && w.right.colour === "black"){ // case 2
-    //                 w.colour = "red";
-    //                 node = node.parent;
-    //             }else { //case 3/4
-    //                 if(w.right.colour === "black"){ // case 3
-    //                     w.left.colour = "black";
-    //                     w.colour = "red";
-    //                     this.rightRotation(w);
-    //                     w = node.parent.right;
-    //                 }
-    //                 // case 4
-    //                 w.colour = node.parent.colour;
-    //                 node.parent.colour = "black";
-    //                 w.right.colour = "black";
-    //                 this.leftRotation(node.parent);
-    //                 node = this.root;
-    //             }
-    //         } else {
-    //             w = node.parent.left;
-    //             if(w.colour === "red"){
-    //                 w.colour = "black";
-    //                 node.parent.colour = "red";
-    //                 this.rightRotation(node.parent);
-    //                 w = node.parent.left;
-    //             }
-    //             if( w.right.colour === "black" &&  w.left.colour === "black"){
-    //                 w.colour = "red";
-    //                 node = node.parent;
-    //             } else {
-    //                 if( w.left.colour === "black"){
-    //                     w.right.colour = "black";
-    //                     w.colour = "red";
-    //                     this.leftRotation(w);
-    //                     w = node.parent.left;
-    //                 }
-    //                 w.colour = node.parent.colour;
-    //                 node.parent.colour = "black";
-    //                 w.left.colour = "black";
-    //                 this.rightRotation(node.parent);
-    //                 node = this.root;
-    //             }
-    //         }
-    //     }
-    //     if(node) node.colour = "black";
-    // }
 
     fixOnDelete(node){
 

@@ -2,6 +2,13 @@ import shortid from "shortid";
 
 export default class BT { 
 
+    /*
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                            CONSTRUCTOR
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    */
+
     constructor(){
         this.root = null;
         this.numNodes = 0;
@@ -12,6 +19,7 @@ export default class BT {
         this.operationMessage = {name: "", decisions: [], id: null, type: ""};
         this.shiftNodesAnimation = [];
 
+        // ABSTRACT CLASS BEHAVIOUR
         if(this.constructor === BT){
             throw new Error("Instance of Abstract class BT cannot be instantiated");
         }
@@ -19,7 +27,12 @@ export default class BT {
 
 
 
-    ///// GETTERS AND SETTERS ///////
+     /*
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                            GETTERS AND SETTERS
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    */
     getRoot(){
         return this.root;
     }
@@ -28,6 +41,28 @@ export default class BT {
         // depth of tree is 1 + max depth of left/right branch
         if(! root) return 0;
         return 1 + Math.max(this.getDepth(root.left), this.getDepth(root.right));
+    }
+
+    getAffectedNodes(){
+        // AFFECTEDNODES FOR NODE PLACEMENT MOVEMENT - A SET SO NO DUPLICATES
+        return this.affectedNodes;
+    }
+
+    values(top) {
+        // get all nodes in an array
+        if (!top) return [];
+        var array = [];
+        search(top, 1);
+    
+        function search(node, level) {
+            
+          if (node !== null) {
+            array.push(node);
+            search(node.left, level + 1);
+            search(node.right, level + 1);
+          }
+        }
+        return array;
     }
 
     setRoot(node){
@@ -46,7 +81,15 @@ export default class BT {
         this.numNodes--;
     }
 
+    resetAnimationObjects(){
+        // perform this at beginning of any operation to ensure no duplicates
+        this.affectedNodes = new Set();
+        this.operationAnimation = {highlightNodes: [], node: null};
+        this.shiftNodesAnimation = [];
+    }
+
     initOperationMessage(name, type){
+        // RESETS AND ADDS NAME, TYPE AND GENERATES A UNIQUE ID TO CATER FOR REACT KEY CONSTRAINTS
         this.operationMessage.name = name;
         this.operationMessage.decisions = [];
         this.operationMessage.id = shortid.generate();
@@ -65,6 +108,7 @@ export default class BT {
         this.operationAnimation.node = node;
     }
 
+    // GETTERS TO DEAL WITH NULL POINTERS
     parentOf(node){
         return node === null ? null : node.getParent();
     }
@@ -86,7 +130,15 @@ export default class BT {
         return node === null ? null : node.getRight();
     }
 
+      /*
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                           TREE OPERATIONS
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    */
+
     getMinNode(){
+        // GET ALL NODES TO HIGHLIGHT DURING ANIMATION AND RETURN FINAL NODE
         this.resetAnimationObjects();
 
         this.initOperationMessage("Min", "get");
@@ -121,12 +173,11 @@ export default class BT {
     }
 
     getMaxNode(){
-        // get max value of tree
+        // GET ALL NODES TO HIGHLIGHT DURING ANIMATION AND RETURN FINAL NODE
         this.resetAnimationObjects();
         this.initOperationMessage("Max", "get");
         this.addOperationMessageDecision("Checking root");
         let nodes = [];
-        // get min value of tree
         let curr = this.root;
 
         if(!curr){
@@ -152,36 +203,6 @@ export default class BT {
 
         return curr.value;
     }
-
-    getAffectedNodes(){
-        return this.affectedNodes;
-    }
-
-    values(top) {
-        // get all nodes in an array
-        if (!top) return [];
-        var array = [];
-        search(top, 1);
-    
-        function search(node, level) {
-            
-          if (node !== null) {
-            array.push(node);
-            search(node.left, level + 1);
-            search(node.right, level + 1);
-          }
-        }
-        return array;
-    }
-
-    resetAnimationObjects(){
-        // perform this at beginning of any operation to ensure no duplicates
-        this.affectedNodes = new Set();
-        this.operationAnimation = {highlightNodes: [], node: null};
-        this.shiftNodesAnimation = [];
-    }
-
-    ///// OPERATIONS ////////
     
     insert(value){
 
@@ -190,8 +211,11 @@ export default class BT {
 
 
         let curr = this.getRoot();
+
+        //CREATE CORRECT NODE TYPE
         const node = this.createNode(value);
 
+        // IF ROOT NULL, INSERT AS ROOT
         if(this.root === null){
             this.insertAtTop(node);
             this.addOperationAnimationMainNode(node);
@@ -202,12 +226,14 @@ export default class BT {
 
             for(;;){
 
+                // TRAVERSE LEFT OF CURR
                 if(node.lessThan(curr)){
 
                     this.addOperationMessageDecision(value + " < " + curr.value + ": checking " + curr.value + ".left");
 
                     this.addOperationAnimationHighlightNode(curr);
 
+                    // INSERT NODE
                     if(!this.leftOf(curr)){
                         this.addLeftChild(curr, node);
                         this.addOperationAnimationMainNode(node);
@@ -215,8 +241,10 @@ export default class BT {
                         return node;
                     }
 
+                    // NEXT LOOP ON LEFT OF CURR
                     curr = this.leftOf(curr); 
 
+                    // TRAVERSE RIGHT OF CURR
                 } else if(node.moreThan(curr) || node.equalTo(curr)) {
 
                     if(value === curr.value) this.addOperationMessageDecision(value + " == " + curr.value + ": checking " + curr.value + ".right");
@@ -224,6 +252,7 @@ export default class BT {
 
                     this.addOperationAnimationHighlightNode(curr);
 
+                    // INSERT NODE
                     if(curr.right === null){
                         this.addRightChild(curr, node);
                         this.addOperationAnimationMainNode(node);
@@ -231,6 +260,7 @@ export default class BT {
                         return node;
                     }
 
+                    // NEXT LOOP ON RIGHT OF CURR
                     curr = this.rightOf(curr); 
                 }
             }
@@ -254,6 +284,7 @@ export default class BT {
     }
 
     deleteByValue(value){
+        // TO BE USED WHEN USER DELETES USING NUMBER INPUT
         this.resetAnimationObjects();
         this.initOperationMessage(value, "delete");
         this.addOperationMessageDecision("Searching for " + value);
@@ -289,6 +320,7 @@ export default class BT {
             // node found with this value - delete it
             this.addOperationMessageDecision("Found node with value " + value + " - Deleting node");
             this.addOperationAnimationMainNode(nodeToDelete);
+            // RETURN PRODUCT OF DELETE FUNCTION
             return this.delete(nodeToDelete);
 
         }
@@ -297,6 +329,7 @@ export default class BT {
 
 
     deleteNode(node){
+        // TO BE USED WHEN USER CLICKS A NODE TO DELETE
         this.resetAnimationObjects();
         this.initOperationMessage(node.value, "delete");
         this.addOperationMessageDecision("Searching for " + node.value);
@@ -323,13 +356,14 @@ export default class BT {
                 if(this.rightOf(element) === node) this.addOperationMessageDecision(element.value + ".right === " + node.value + ": deleting " + node.value);
             }
         });
-
+        // RETURN PRODUCT OF DELETE FUNCTION
         return this.delete(node);
 
 
     }
 
     delete(node){
+        // NODE IS FOUND - DELETE AND REARRANGE IF NEEDED
 
         // IS A LEAF NODE
         if(node.isLeaf()){
@@ -418,9 +452,6 @@ export default class BT {
         this.decrementNumNodes();
         return node.parent;  
     }
-
-
-
 
     traversal(order){
         let nodes = [];
@@ -536,7 +567,14 @@ export default class BT {
     }
 
 
-    /////// HELPERS ///////
+    /*
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                            OPERATION HELPERS
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    */
+
+
 
     transplant(node1, node2){
 
@@ -568,8 +606,71 @@ export default class BT {
         this.incrementNumNodes();
     }
 
-    shiftTree(root, side){
+    getLeftMostElement(top, leftMost){
+        // LEFT MOST IN COORDINATE CONTEXT
+        if(top===null){
+            return;
+        } 
 
+        if(this.leftOf(top) != null) leftMost = this.getLeftMostElement(this.leftOf(top), leftMost);
+        if(this.rightOf(top) != null) leftMost = this.getLeftMostElement(this.rightOf(top), leftMost);
+
+        if(top != null && top.x < leftMost.x) leftMost = top;
+
+        return leftMost;
+    }
+
+    getLeftMostElementReal(top){
+        // LEFTMOST IN TREE STRUCTURE CONTEXT
+        let curr = top;
+        while(true){
+            if(!this.leftOf(curr)){
+                return curr;
+            } else {
+                curr = this.leftOf(curr);
+            }
+        }
+    }
+
+    getRightMostElement(top, rightMost){
+        // RIGHTMOST IN COORDINATE CONTEXT
+        if(top===null){
+            return;
+        } 
+
+        if(this.leftOf(top)) rightMost = this.getRightMostElement(this.leftOf(top), rightMost);
+        if(this.rightOf(top)) rightMost = this.getRightMostElement(this.rightOf(top), rightMost);
+
+        if(top && top.x > rightMost.x) rightMost = top;
+
+        return rightMost;
+        
+    }
+
+    getRightMostElementReal(top){
+        // RIGHTMOST IN TREE STRUCTURE CONTEXT
+        let curr = top;
+        while(true){
+            if(!this.rightOf(curr)){
+                return curr;
+            } else {
+                curr = this.rightOf(curr);
+            }
+        }
+    }
+
+    
+
+    /*
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                            NODE PLACEMENT HELPERS
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    */
+    
+
+    shiftTree(root, side){
+        // SHIFTS ALL NODES DESCENDING FROM ROOT THE LEFT OR RIGHT BY 50 UNITS RECURSIVELY
         if(root){
             if(side === "l"){
                 root.moveToX -=50;
@@ -598,65 +699,15 @@ export default class BT {
         }
     }
 
-    getLeftMostElement(top, leftMost){
-        if(top===null){
-            return;
-        } 
-
-        if(this.leftOf(top) != null) leftMost = this.getLeftMostElement(this.leftOf(top), leftMost);
-        if(this.rightOf(top) != null) leftMost = this.getLeftMostElement(this.rightOf(top), leftMost);
-
-        if(top != null && top.x < leftMost.x) leftMost = top;
-
-        return leftMost;
-    }
-
-    getLeftMostElementReal(top){
-        let curr = top;
-        while(true){
-            if(!this.leftOf(curr)){
-                return curr;
-            } else {
-                curr = this.leftOf(curr);
-            }
-        }
-    }
-
-    getRightMostElementReal(top){
-        let curr = top;
-        while(true){
-            if(!this.rightOf(curr)){
-                return curr;
-            } else {
-                curr = this.rightOf(curr);
-            }
-        }
-    }
-
-    getRightMostElement(top, rightMost){
-        
-        if(top===null){
-            return;
-        } 
-
-        if(this.leftOf(top)) rightMost = this.getRightMostElement(this.leftOf(top), rightMost);
-        if(this.rightOf(top)) rightMost = this.getRightMostElement(this.rightOf(top), rightMost);
-
-        if(top && top.x > rightMost.x) rightMost = top;
-
-        return rightMost;
-        
-    }
-
     correctCords(){
+        // PARENT METHOD FOR CHECKING OVERLAPS
         this.resetLayout(this.root);
         this.checkLayout(this.root);
         this.findAlteredNodes(this.root);
     }
   
-
     checkLayout(root){
-    
+        // RECURSIVELY CHECKS IN POST-ORDER FASHION
         if(root){
             this.checkLayout(this.leftOf(root));
             this.checkLayout(this.rightOf(root));
@@ -667,12 +718,11 @@ export default class BT {
         }
     }
 
-
     setInitialCoords(node){
 
         if(!node) return;
 
-        // 1. if it has 2 children, place it in the middle of its children
+        // if it has 2 children, place it in the middle of its children
         if(node.left && node.right){
             node.moveToX = node.left.moveToX + ((node.right.moveToX - node.left.moveToX) / 2);
         } 
@@ -684,6 +734,7 @@ export default class BT {
 
         let curr = node;
 
+        // CHECKS IF ANY NODE IS TO LEFT/RIGHT OF ITS ANCESTORS
         while(curr){
 
             if(!(curr.left && curr.right)){
@@ -705,7 +756,7 @@ export default class BT {
 
             curr = curr.parent;
         }
-        // 2. if node is descendent of right subtree of root, dont let it drift further left than root
+        //if node is descendent of right subtree of root, dont let it drift further left than root
         if(this.root.right && node.isDescendantOf(this.root.right)){
             if(node.moveToX <= this.root.moveToX){
                 this.shiftTree(this.root.right, "r");
@@ -713,7 +764,7 @@ export default class BT {
         }
 
 
-        // 2. if node is descendent of left subtree of root, dont let it drift further right than root
+        // if node is descendent of left subtree of root, dont let it drift further right than root
         if(this.root.left && node.isDescendantOf(this.root.left)){
             if(node.moveToX >= this.root.moveToX){
                 this.shiftTree(this.root.left, "l");
@@ -727,6 +778,7 @@ export default class BT {
     }
 
     resetLayout(node){
+        // RETURNS NODES TO +50/-50 OF PARENT DEPENDING ON SIDE - IF ROOT, SET TO CANVAS WIDTH/2
         if(!node) return;
 
         if(this.parentOf(node)){
@@ -745,6 +797,7 @@ export default class BT {
     }
 
     findAlteredNodes(node){
+        // GET NODES WHICH COORDINATES HAVE BEEN MOVED BY OVERLAP CHECKS - TO BE GATHERED FOR ANIMATION OF MOVEMENT
         if(!node) return;
 
         if(node.x !== node.moveToX || node.y !== node.moveToY){
@@ -756,6 +809,7 @@ export default class BT {
     }
 
     resolveCoords(node){
+        // AFTER ALTERED NODES FOUND, SET COORDINATES TO BE EQUAL TO MOVED COORDINATES SO WILL NOT APPEAR IN ALTERED NODES UNECESSARILY
         if(!node) return;
 
         node.x = node.moveToX;
@@ -765,8 +819,16 @@ export default class BT {
         this.resolveCoords(this.rightOf(node));
     }
 
+    /*
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                           TREE GENERATION
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    */
+
     getTreeFromJSON(tree){
 
+        // RETURNS ROOT OF TREE AFTER CONVERSION FROM JSON TO TREE OF CORRECT TYPE
         let arrayNodes = this.getArrayOfJsonNodes(tree.root, []);
 
         arrayNodes.forEach((node, index) => {
@@ -782,6 +844,7 @@ export default class BT {
     }
 
     getArrayOfJsonNodes(root, array){
+        // FROM JSON STRUCTURE TO ARRAY OF JSON NODES
         if(!root) return;
         array.push(root);
         this.getArrayOfJsonNodes(root.left, array);
@@ -791,6 +854,7 @@ export default class BT {
     }
 
     addLinksToNodeArray(nodes){
+        // ENSURE THAT NODES REFERENCE EACHOTHER - BEFOREHAND THEY ONLY REFERENCE THE ID OF NODE
         let nodesCopy = [];
 
         // sort so id corresponds to index

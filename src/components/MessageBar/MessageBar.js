@@ -4,6 +4,7 @@ import "./MessageBar.css";
 
 export default function MessageBar({messages, selectedOperation, setSelectedOperation, operationInfoPanelOpen, setOperationInfoPanelOpen}){
 
+    // STATE VARIABLES
     const [open, setOpen] = useState(true);
     
     const handleClick = () => {
@@ -11,6 +12,7 @@ export default function MessageBar({messages, selectedOperation, setSelectedOper
     };
 
 
+    // ICON IS DICTATED BY TYPE OF MESSAGE - INSERT = (+) ICON ETC
     const getIcon = (type) => {
         let icon = null;
 
@@ -49,12 +51,17 @@ export default function MessageBar({messages, selectedOperation, setSelectedOper
         return icon;
     }
 
+    // INNER COMPONENT - FOR EACH OPERATION GENERATE A DIV
     const Operation = ({message, open, setMessageOpen}) => {
 
+        // ONLY ONE OPERATION CAN BE SELECTED AT A TIME - STORED SELECTED OPERATION IN TREE COMPONENT
+        
         const handleClick = () => {
+            // IF ALREADY SELECTED, SET SELECTED OPERATION PANEL NOT OPEN, BUT STILL SELECTED OPERATION
             if(message.id === selectedOperation.id){
                 setOperationInfoPanelOpen(!operationInfoPanelOpen);
             } else {
+            // IF NOT SELECTED, SET SELECTED OPERATION PANEL OPEN, SET THIS TO SELECTED OPERATION
                 setSelectedOperation(message);
                 setOperationInfoPanelOpen(true);
             }
@@ -72,6 +79,7 @@ export default function MessageBar({messages, selectedOperation, setSelectedOper
         )
     }
 
+    // MESSAGE BAR RETURNS TOP BAR WHICH CAN BE OPENED AND CLOSED, IF OPEN, RETURN ALL OPERATIONS LISTED BELOW
     return (
         <div className="message-bar" >
         <div className="dropdown-control" onClick={handleClick}>

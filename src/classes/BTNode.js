@@ -14,9 +14,18 @@ export default class BTNode{
         this.moveToY = y;
 
         if(this.constructor === BTNode){
+            // SIMULATE ABSTRACT CLASS NATURE
             throw new Error("Instance of Abstract class BTNode cannot be instantiated");
         }
     }
+
+    /*
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                           GETTERS/SETTERS
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    */
+
 
     getParent(){
         return this.parent;
