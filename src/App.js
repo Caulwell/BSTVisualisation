@@ -3,15 +3,14 @@ import Tree from "./pages/Tree/Tree";
 import Header from "./components/Header/Header";
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import Welcome from "./pages/Welcome/Welcome";
-import Footer from "./components/Footer/Footer";
-
+import { CssBaseline } from "@mui/material";
 export default function App() {
 
   return (
 
     <Router>
       <div id="App">
-      
+      <CssBaseline/>
       <Header/>
       <Switch>
         <Route exact path="/">

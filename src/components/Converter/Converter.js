@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import "./Converter.css";
 
 
@@ -28,7 +27,7 @@ export default function Converter({type, convertTree}){
             
             {buttons.map((button, index) => {
                 return (
-                    <button name={button} onClick={handleClick}>
+                    <button name={button} onClick={handleClick} key={index}>
                         {"Convert to " + button.toUpperCase()}
                     </button>
                 )

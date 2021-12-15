@@ -1,4 +1,4 @@
-import {useContext, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import { Tooltip,ClickAwayListener } from "@mui/material";
 import "./Node.css";
 
@@ -71,13 +71,13 @@ export default function Node({node, deleteNode}){
                 name={"node"+node.id}
                
             />
-            <text className="svg-text" x="20" y="20"
+            <text  x="20" y="20"
                 textAnchor="middle"
                 stroke={colour}
                 strokeWidth="1px"
                 fill={colour}
                 alignmentBaseline="middle"
-                className={node.id}
+                className={"svg-text " + node.id}
             >
             {node.value}
             </text>

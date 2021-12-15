@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import bstImage from "../../images/BST.png";
 import avlImage from "../../images/AVL.png";
 import rbImage from "../../images/RB.png";
-import Footer from "../../components/Footer/Footer";
 
 import {UserContext} from "../../context/UserContext";
 import { useHistory } from "react-router";
@@ -12,7 +11,7 @@ import { useContext } from "react";
 export default function Welcome(){
 
 
-    const [userContext, setUserContext] = useContext(UserContext);
+    const [,setUserContext] = useContext(UserContext);
     let history = useHistory();
 
 
@@ -116,7 +115,7 @@ export default function Welcome(){
         <div className="tree-links">
         <Link to="/bst">
             <div className="BST-card tree-card">
-                <img src={bstImage}/>
+                <img src={bstImage} alt="A Binary Search Tree"/>
                 <div className="tree-card-content">
                     <h3>Binary Search Tree</h3>
                 </div>
@@ -124,7 +123,7 @@ export default function Welcome(){
         </Link>
         <Link to="/avl">
             <div className="AVL-card tree-card">
-                <img src={avlImage}/>
+                <img src={avlImage} alt="An AVL Tree"/>
                 <div className="tree-card-content">
                     <h3>AVL Tree</h3>
                 </div>
@@ -132,7 +131,7 @@ export default function Welcome(){
         </Link>
         <Link to="/red-black">
             <div className="RB-card tree-card">
-                <img src={rbImage}/>
+                <img src={rbImage} alt="A Red-Black Tree"/>
                 <div className="tree-card-content">
                     <h3>Red-Black Tree</h3>
                 </div>

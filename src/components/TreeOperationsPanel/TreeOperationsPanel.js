@@ -141,7 +141,7 @@ export default function TreeOperationsPanel({inputsDisabled, addNode, searchForN
         if(e.target.name==="deleteInput") setDeleteInput(e.target.value);
     
         
-      }
+      };
 
       const handleDropDownClick = () => {
             setOpen( open => !open);
@@ -297,7 +297,7 @@ export default function TreeOperationsPanel({inputsDisabled, addNode, searchForN
                     <div className="dropdown-menu-item csv-tree-menu">
                     <div className="dropdown-menu-item-label">Generate Using CSV</div>
                         <input className="fileInput" id="fileInput" type="file" accept="*.csv" onChange={handleCSVInput} disabled={inputsDisabled}/>
-                        <label className="fileInputLabel" for="fileInput">{selectedCSV ? selectedCSV.name : "Upload"}</label>
+                        <label className="fileInputLabel" htmlFor="fileInput">{selectedCSV ? selectedCSV.name : "Upload"}</label>
                         <button  name="generateButton" onClick={handleButtonPress} disabled={inputsDisabled}>
                             Generate
                         </button>
@@ -323,7 +323,7 @@ export default function TreeOperationsPanel({inputsDisabled, addNode, searchForN
                     <div className="dropdown-menu-item clear-tree-menu">
                     <div className="dropdown-menu-item-label">Load From File</div>
                         <input className="fileInput" id="txtFileInput" type="file" accept="*.txt" onChange={handleTXTInput} disabled={inputsDisabled}/>
-                        <label className="fileInputLabel" for="txtFileInput">{selectedTXT ? selectedTXT.name : "Upload"}</label>
+                        <label className="fileInputLabel" htmlFor="txtFileInput">{selectedTXT ? selectedTXT.name : "Upload"}</label>
                         <button  name="txtGenerateButton" onClick={handleButtonPress} disabled={inputsDisabled}>
                             Generate
                         </button>

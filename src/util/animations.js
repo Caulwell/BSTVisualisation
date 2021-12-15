@@ -198,7 +198,7 @@ function checkBalanceAnimation(testNodes, foundNode, animationSpeed){
         
         // function to resolve promise if !foundNode and loop of animations finished
         const checkLoopComplete = index => {
-            if(index == testNodes.length -1){
+            if(index === testNodes.length -1){
                 if(!foundNode) resolve("done");
             }
         };
@@ -265,7 +265,7 @@ function moveNodes(nodes, animationSpeed){
 
         // function to resolve promise if loop of animations finished
         const checkLoopComplete = index => {
-            if(index == nodes.length -1){
+            if(index === nodes.length -1){
                 resolve("done");
             }
         };
