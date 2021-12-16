@@ -104,4 +104,4 @@ test("delete node, check rotation", () => {
     expect(rbTree.getRoot().right.value === 57 && rbTree.getRoot().right.colour === "black").toBe(true);
     expect(rbTree.getRoot().right.left.value === 29 && rbTree.getRoot().right.left.colour === "red").toBe(true);
 
-})
+});

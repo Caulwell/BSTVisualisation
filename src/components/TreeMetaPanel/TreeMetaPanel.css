@@ -4,7 +4,7 @@
     height: 5vh;
     width: 60vw;
     margin: 0 auto;
-    margin-right: 18vw;
+    margin-right: 11vw;
     align-items: center;
     justify-content: space-evenly;
 }
@@ -58,3 +58,14 @@
     background-color: #40916c !important;
 }
 
+.tree-dets{
+    color: black;
+}
+
+/* FOR SCREENS BIGGER THAN A LAPTOP */
+@media screen and (min-width: 1400px) {
+    .tree-meta-panel{
+        margin-right: 12vw;
+    }
+    
+}

@@ -81,6 +81,10 @@ export default class BT {
         this.numNodes--;
     }
 
+    getNumNodes(){
+        return this.numNodes;
+    }
+
     resetAnimationObjects(){
         // perform this at beginning of any operation to ensure no duplicates
         this.affectedNodes = new Set();
@@ -441,6 +445,8 @@ export default class BT {
             
             // replacement cannot have a left, so set it to node's left
             replacement.setLeft(this.leftOf(node));
+            replacement.moveToX = node.moveToX;
+            replacement.moveToY = node.moveToY;
 
             // don't want to set right to itself, but if node did have a right, set it for replacement
             if(this.rightOf(node) !== replacement && this.rightOf(node) !== null){

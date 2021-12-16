@@ -1,6 +1,6 @@
 import "./TreeMetaPanel.css";
 import { Link } from "react-router-dom";
-export default function TreeMetaPanel({type}){
+export default function TreeMetaPanel({type, tree}){
 
     return (
         <div className="tree-meta-panel">
@@ -25,8 +25,14 @@ export default function TreeMetaPanel({type}){
                 </Link>
 
                 </div>
+                <div className="tree-meta-item tree-type-item tree-dets">
+                    <p>Depth: {(tree && tree.getDepth(tree.getRoot())) || 0}</p>
+                    <p>Num Nodes: {(tree && tree.getNumNodes()) || 0}</p>
+                </div>
+               
                
             </div>
+            
         </div>
     )
 }

@@ -338,8 +338,8 @@ export default function Tree({type}){
     const animationDone = await deleteAnimation(tree.operationAnimation.highlightNodes, tree.operationAnimation.node, userContext.animationSpeed);
 
     if(!deletedParent){
-      console.log("no deleted parent");
       getAndSetOperationMessages();
+      postOperation();
       setInputsDisabled(false);
       return;
     }
@@ -357,16 +357,12 @@ export default function Tree({type}){
         }
 
       } else if(type === "rb"){
-        console.log("type is rb");
-        console.log(tree.deleteFixNode);
         if(tree.deleteFixNode){
-          console.log("calling fixOnDelete");
           tree.fixOnDelete(tree.deleteFixNode);
         }
       }
       
     }
-    
     postOperation();
 
   };
@@ -642,7 +638,7 @@ export default function Tree({type}){
         setOperationInfoPanelOpen={setOperationInfoPanelOpen}
 
       />
-      <TreeMetaPanel type={type}/>
+      <TreeMetaPanel type={type} tree={tree}/>
       <Converter type={type} convertTree={convertTree}/>
       
 
