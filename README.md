@@ -18,7 +18,7 @@ TreeVis is a web-based, interactive visualisation tool for students of algorithm
 
 Application hosted on Netlify: [https://treevis.netlify.app/]
 
-![](https://i.imgur.com/5EDrS0P.gif)
+![](https://i.imgur.com/PkJfK48.gif)
 
 
 ## Features
@@ -48,13 +48,13 @@ Application hosted on Netlify: [https://treevis.netlify.app/]
 Clone the project
 
 ```bash
-  git clone https://link-to-project
+  git clone https://github.com/Caulwell/BSTVisualisation
 ```
 
 Go to the project directory
 
 ```bash
-  cd my-project
+  cd BSTVisualisation
 ```
 
 Install dependencies
@@ -63,9 +63,15 @@ Install dependencies
   npm install
 ```
 
-Start the server
+Go to the client directory
 
 ```bash
-  npm run start
+  cd client
+```
+
+Start the client
+
+```bash
+  npm start
 ```
 
